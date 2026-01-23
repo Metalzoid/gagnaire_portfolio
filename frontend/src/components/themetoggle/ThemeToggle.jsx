@@ -2,7 +2,7 @@ import { useTheme } from '../../contexts/ThemeContext'
 import './ThemeToggle.scss'
 
 const ThemeToggle = () => {
-  const { theme, toggleTheme, isDark } = useTheme()
+  const { toggleTheme, isDark } = useTheme()
 
   return (
     <button
