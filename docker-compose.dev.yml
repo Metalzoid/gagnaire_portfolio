@@ -1,0 +1,61 @@
+# =============================================================================
+# Docker Compose - DEVELOPMENT (Local)
+# Ports exposés + volumes pour hot reload
+# =============================================================================
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src:delegated
+      - ./frontend/public:/app/public:delegated
+      - ./frontend/index.html:/app/index.html:delegated
+      - ./frontend/vite.config.js:/app/vite.config.js:delegated
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3001/api
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/src:/app/src:delegated
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

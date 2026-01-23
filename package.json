@@ -1,0 +1,28 @@
+{
+  "name": "gagnaire-portfolio",
+  "version": "1.0.0",
+  "description": "Monorepo - Frontend React + Backend ExpressJS",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspaces --if-present",
+    "build:frontend": "npm run build --workspace=frontend",
+    "install:all": "npm install",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up --build",
+    "docker:dev:detach": "docker compose -f docker-compose.dev.yml up --build -d",
+    "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker compose up --build",
+    "docker:prod:detach": "docker compose up --build -d",
+    "docker:prod:down": "docker compose down",
+    "docker:clean": "docker compose down -v --rmi local && docker compose -f docker-compose.dev.yml down -v --rmi local"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
