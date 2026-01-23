@@ -1,0 +1,57 @@
+// ============================================
+// Component - Theme Toggle
+// ============================================
+
+@use '../../styles/abstracts/variables' as *;
+@use '../../styles/abstracts/mixins' as *;
+
+.theme-toggle {
+  position: fixed;
+  top: $spacing-md;
+  right: $spacing-md;
+  z-index: $z-index-tooltip;
+
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  border: $border-width solid var(--color-border);
+
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+
+  @include transition(all, $transition-base);
+
+  &:hover {
+    background-color: var(--color-bg-tertiary);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px var(--color-shadow);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus,
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &__icon {
+    font-size: $font-size-lg;
+    line-height: 1;
+  }
+
+  &__text {
+    @media (max-width: $breakpoint-tablet) {
+      display: none;
+    }
+  }
+}
