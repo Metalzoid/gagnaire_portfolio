@@ -1,0 +1,12 @@
+// ============================================
+// Layout - Container
+// ============================================
+
+@use '../abstracts/variables' as *;
+
+#root {
+  max-width: $breakpoint-large;
+  margin: 0 auto;
+  padding: $spacing-xl;
+  text-align: center;
+}
