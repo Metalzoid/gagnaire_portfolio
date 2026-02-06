@@ -11,17 +11,19 @@ services:
       args:
         - NODE_ENV=development
     ports:
-      - "5173:5173"
+      - "3000:3000"
     volumes:
-      - ./frontend/src:/app/src:delegated
+      - ./frontend/app:/app/app:delegated
       - ./frontend/public:/app/public:delegated
-      - ./frontend/index.html:/app/index.html:delegated
-      - ./frontend/vite.config.js:/app/vite.config.js:delegated
+      - ./frontend/next.config.ts:/app/next.config.ts:delegated
+      - ./frontend/tsconfig.json:/app/tsconfig.json:delegated
     environment:
       - NODE_ENV=development
-      - VITE_API_URL=http://localhost:3001/api
+      - NEXT_PUBLIC_API_URL=http://localhost:3001/api
+      # Détection des changements de fichiers avec volumes Docker (Mac/Windows)
+      - CHOKIDAR_USEPOLLING=true
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
