@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const THEME_COOKIE_NAME = "theme-color-mode@";
+const THEME_COOKIE_NAME = "theme-color-mode";
 
 export type Theme = "dark" | "light";
 
