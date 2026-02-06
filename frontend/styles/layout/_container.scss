@@ -1,0 +1,31 @@
+// ==========================================================================
+// Container fluide - Padding latéral responsive (pas de max-width global)
+// ==========================================================================
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.container {
+  width: 100%;
+  padding-left: var(--spacing-3xl);
+  padding-right: var(--spacing-3xl);
+
+  @include respond-to("wide") {
+    padding-left: var(--spacing-2xl);
+    padding-right: var(--spacing-2xl);
+  }
+
+  @include respond-to("desktop") {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+
+  @include respond-to("tablet") {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+
+  @include respond-to("mobile") {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+}
