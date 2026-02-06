@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { getThemeCookie } from "@/app/actions/theme";
 import "./globals.scss";
 
 const geistSans = Geist({
@@ -18,15 +20,17 @@ export const metadata: Metadata = {
     "Portfolio professionnel de Gagnaire Florian, développeur full stack",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = (await getThemeCookie()) ?? "dark";
+
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme={theme}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
       </body>
     </html>
   );
