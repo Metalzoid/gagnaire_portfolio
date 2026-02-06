@@ -1,0 +1,163 @@
+// ==========================================================================
+// Typographie - Styles globaux
+// ==========================================================================
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+// --------------------------------------------------------------------------
+// Body
+// --------------------------------------------------------------------------
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: $line-height-normal;
+  font-weight: $font-weight-normal;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  @include theme-transition;
+}
+
+// --------------------------------------------------------------------------
+// Titres (h1 - h6)
+// --------------------------------------------------------------------------
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-5xl);
+
+  @include respond-to("tablet") {
+    font-size: var(--font-size-4xl);
+  }
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+h2 {
+  font-size: var(--font-size-4xl);
+
+  @include respond-to("tablet") {
+    font-size: var(--font-size-3xl);
+  }
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+h3 {
+  font-size: var(--font-size-3xl);
+
+  @include respond-to("tablet") {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+h4 {
+  font-size: var(--font-size-2xl);
+
+  @include respond-to("tablet") {
+    font-size: var(--font-size-xl);
+  }
+}
+
+h5 {
+  font-size: var(--font-size-xl);
+}
+
+h6 {
+  font-size: var(--font-size-lg);
+}
+
+// --------------------------------------------------------------------------
+// Paragraphes
+// --------------------------------------------------------------------------
+p {
+  line-height: $line-height-relaxed;
+  color: var(--color-text-secondary);
+}
+
+// --------------------------------------------------------------------------
+// Liens
+// --------------------------------------------------------------------------
+a {
+  color: var(--color-link);
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-accent-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Code
+// --------------------------------------------------------------------------
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+}
+
+code {
+  background-color: var(--color-bg-secondary);
+  padding: 0.15em 0.4em;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-accent-secondary);
+}
+
+pre {
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  overflow-x: auto;
+
+  code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Texte en gras et italique
+// --------------------------------------------------------------------------
+strong,
+b {
+  font-weight: $font-weight-bold;
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+// --------------------------------------------------------------------------
+// Petite typographie utilitaire
+// --------------------------------------------------------------------------
+small {
+  font-size: var(--font-size-sm);
+}
+
+mark {
+  background-color: var(--color-highlight);
+  color: var(--color-bg-primary);
+  padding: 0.1em 0.3em;
+  border-radius: var(--border-radius-sm);
+}

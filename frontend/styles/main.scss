@@ -1,0 +1,17 @@
+// ==========================================================================
+// Point d'entrée SCSS - Importe tout dans l'ordre
+// ==========================================================================
+
+// 1. Abstracts (variables, theme, mixins) - pas de CSS généré directement
+//    sauf _theme.scss qui injecte les custom properties
+@use "abstracts/variables";
+@use "abstracts/theme";
+@use "abstracts/mixins";
+
+// 2. Base (reset, typographie, animations)
+@use "base/reset";
+@use "base/typography";
+@use "base/animations";
+
+// 3. Layout (containers, grilles)
+@use "layout/container";

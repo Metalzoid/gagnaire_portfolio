@@ -1,0 +1,106 @@
+// ==========================================================================
+// Reset CSS moderne
+// ==========================================================================
+
+// Box-sizing global
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Suppression des marges par défaut
+* {
+  margin: 0;
+  padding: 0;
+}
+
+// Prévention du débordement horizontal
+html {
+  overflow-x: hidden;
+  // Scroll fluide (désactivé si prefers-reduced-motion)
+  scroll-behavior: smooth;
+  // Hauteur dynamique pour mobile (barre d'adresse)
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+  // Rendu typographique optimisé
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// Images et médias responsives
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Héritage des polices pour les éléments de formulaire
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+// Suppression des styles par défaut des boutons
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+// Liens : héritage de couleur par défaut
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Listes sans style par défaut
+ul,
+ol {
+  list-style: none;
+}
+
+// Tableaux avec bordures fusionnées
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Éléments de texte : éviter les débordements
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+// Comportement de scroll réduit si préférence utilisateur
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

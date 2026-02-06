@@ -1,0 +1,90 @@
+// ==========================================================================
+// Theme - Injection des CSS custom properties (dark/light)
+// ==========================================================================
+@use "variables" as *;
+
+// --------------------------------------------------------------------------
+// Dark mode (défaut / :root)
+// --------------------------------------------------------------------------
+:root,
+[data-theme="dark"] {
+  // Couleurs
+  --color-bg-primary: #{$dracula-bg};
+  --color-bg-secondary: #{$dracula-current};
+  --color-text-primary: #{$dracula-fg};
+  --color-text-secondary: #{$dracula-comment};
+  --color-accent-primary: #{$dracula-purple};
+  --color-accent-secondary: #{$dracula-pink};
+  --color-link: #{$dracula-cyan};
+  --color-success: #{$dracula-green};
+  --color-warning: #{$dracula-orange};
+  --color-error: #{$dracula-red};
+  --color-info: #{$dracula-cyan};
+  --color-highlight: #{$dracula-yellow};
+  --color-border: #{$dracula-current};
+
+  // Espacement
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+  --spacing-2xl: #{$spacing-2xl};
+  --spacing-3xl: #{$spacing-3xl};
+
+  // Transitions
+  --transition-fast: #{$transition-fast};
+  --transition-normal: #{$transition-normal};
+  --transition-slow: #{$transition-slow};
+
+  // Typographie
+  --font-family-sans: #{$font-family-sans};
+  --font-family-mono: #{$font-family-mono};
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-2xl: #{$font-size-2xl};
+  --font-size-3xl: #{$font-size-3xl};
+  --font-size-4xl: #{$font-size-4xl};
+  --font-size-5xl: #{$font-size-5xl};
+
+  // Bordures & rayons
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-md: #{$border-radius-md};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-xl: #{$border-radius-xl};
+  --border-radius-full: #{$border-radius-full};
+
+  // Ombres
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+}
+
+// --------------------------------------------------------------------------
+// Light mode
+// --------------------------------------------------------------------------
+[data-theme="light"] {
+  --color-bg-primary: #{$light-bg};
+  --color-bg-secondary: #{$light-current};
+  --color-text-primary: #{$light-fg};
+  --color-text-secondary: #{$light-comment};
+  --color-accent-primary: #{$light-purple};
+  --color-accent-secondary: #{$light-pink};
+  --color-link: #{$light-cyan};
+  --color-success: #{$light-green};
+  --color-warning: #{$light-orange};
+  --color-error: #{$light-red};
+  --color-info: #{$light-cyan};
+  --color-highlight: #{$light-yellow};
+  --color-border: darken($light-current, 10%);
+
+  // Ombres plus douces en light mode
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+}
