@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { NavigationWrapper } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { getThemeCookie } from "@/app/actions/theme";
 import "./globals.scss";
@@ -33,9 +34,10 @@ export default async function RootLayout({
     <html lang="fr" data-theme={theme}>
       <body className={`${inter.variable} ${geistMono.variable}`}>
         <ThemeProvider initialTheme={theme}>
-          {/* BurgerButton + NavigationMenu seront ajoutés en Phase 1D */}
-          <main id="main-content">{children}</main>
-          <Footer />
+          <NavigationWrapper>
+            <main id="main-content">{children}</main>
+            <Footer />
+          </NavigationWrapper>
         </ThemeProvider>
       </body>
     </html>

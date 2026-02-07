@@ -1,0 +1,84 @@
+// ==========================================================================
+// BurgerButton - Bouton hamburger / croix
+// ==========================================================================
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
+
+.burger {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: $z-burger;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 48px;
+  height: 48px;
+  padding: 10px;
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+
+  @include respond-to("mobile") {
+    right: var(--spacing-md);
+  }
+
+  &:hover {
+    background-color: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+
+    .bar {
+      background-color: var(--color-bg-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Barres (hamburger → croix)
+// --------------------------------------------------------------------------
+.bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-text-primary);
+  border-radius: 2px;
+  transition:
+    transform var(--transition-normal),
+    opacity var(--transition-normal);
+  transform-origin: center;
+}
+
+// État ouvert : croix
+.burger--open {
+  .bar {
+    &:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    &:nth-child(2) {
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+}
+
+// Réduction des animations si préférence utilisateur
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+}

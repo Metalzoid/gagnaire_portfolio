@@ -1,0 +1,104 @@
+// ==========================================================================
+// NavigationMenu - Menu morph plein écran (slide depuis la droite)
+// ==========================================================================
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
+
+// --------------------------------------------------------------------------
+// Overlay (fond semi-transparent + blur)
+// --------------------------------------------------------------------------
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-overlay;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+// --------------------------------------------------------------------------
+// Menu panel (slide depuis la droite)
+// --------------------------------------------------------------------------
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: $z-modal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 380px;
+  height: 100dvh;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  background-color: var(--color-bg-primary);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xl);
+  overflow-y: auto;
+
+  @include respond-to("mobile") {
+    width: 100%;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    border-left: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Liste de liens
+// --------------------------------------------------------------------------
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+}
+
+.link {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-radius: var(--border-radius-md);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-accent-primary);
+    background-color: var(--color-bg-secondary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-xl);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Footer du menu (toggle thème)
+// --------------------------------------------------------------------------
+.footer {
+  margin-top: auto;
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+// --------------------------------------------------------------------------
+// Réduction des animations si préférence utilisateur
+// --------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .menu {
+    transition: none;
+    animation: none;
+  }
+}
