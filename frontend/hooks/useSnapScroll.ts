@@ -52,6 +52,14 @@ const useSnapScroll = ({
     context.setCurrentSection(currentSection);
   }, [currentSection, context]);
 
+  // Retirer l'ancre de l'URL après un scroll (évite de garder #section dans la barre d'adresse)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, [currentSection]);
+
   const goToSection = useCallback(
     (index: number) => {
       if (!containerRef.current || index < 0 || index >= totalSections) return;
