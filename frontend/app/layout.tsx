@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { SnapScrollProvider } from "@/contexts/SnapScrollContext";
 import { NavigationWrapper } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { getThemeCookie } from "@/app/actions/theme";
+import { homeSections } from "@/data/sections";
 import "./globals.scss";
 
 const inter = Inter({
@@ -34,10 +36,12 @@ export default async function RootLayout({
     <html lang="fr" data-theme={theme}>
       <body className={`${inter.variable} ${geistMono.variable}`}>
         <ThemeProvider initialTheme={theme}>
-          <NavigationWrapper>
-            <main id="main-content">{children}</main>
-            <Footer />
-          </NavigationWrapper>
+          <SnapScrollProvider sections={homeSections}>
+            <NavigationWrapper>
+              <main id="main-content">{children}</main>
+              <Footer />
+            </NavigationWrapper>
+          </SnapScrollProvider>
         </ThemeProvider>
       </body>
     </html>

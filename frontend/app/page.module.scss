@@ -1,0 +1,85 @@
+// ==========================================================================
+// Home - Snap scroll container & sections
+// ==========================================================================
+@use "../styles/abstracts/mixins" as *;
+
+// --------------------------------------------------------------------------
+// Container snap scroll
+// --------------------------------------------------------------------------
+.snapContainer {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100dvh;
+  // Masquer la scrollbar native
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE/Edge
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari
+  }
+}
+
+// --------------------------------------------------------------------------
+// Section snap
+// --------------------------------------------------------------------------
+.snapSection {
+  scroll-snap-align: start;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-3xl);
+
+  @include respond-to("desktop") {
+    padding: var(--spacing-2xl);
+  }
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-xl);
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+}
+
+.snapSection--withFooter {
+  justify-content: flex-start;
+  padding-bottom: 0;
+}
+
+.sectionContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// --------------------------------------------------------------------------
+// Titres de section placeholder
+// --------------------------------------------------------------------------
+.sectionTitle {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.sectionText {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  max-width: 600px;
+}
+
+// --------------------------------------------------------------------------
+// Désactiver snap si prefers-reduced-motion
+// --------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .snapContainer {
+    scroll-snap-type: none;
+    overflow-y: auto;
+  }
+
+  .snapSection {
+    scroll-snap-align: unset;
+  }
+}
