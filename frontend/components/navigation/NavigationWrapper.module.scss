@@ -1,0 +1,29 @@
+// ==========================================================================
+// NavigationWrapper - Gestion du décalage morph du contenu
+// ==========================================================================
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  transition: transform 300ms ease;
+  will-change: transform;
+}
+
+// Quand le menu est ouvert, le contenu se décale et se réduit
+.content--shifted {
+  transform: scale(0.95) translateX(-10%);
+  pointer-events: none;
+  user-select: none;
+}
+
+// Réduction des animations si préférence utilisateur
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    transition: none;
+  }
+
+  .content--shifted {
+    transform: none;
+  }
+}
