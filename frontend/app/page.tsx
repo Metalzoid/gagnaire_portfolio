@@ -11,7 +11,7 @@ export default function Home() {
     useSnapScroll({ totalSections: homeSections.length });
 
   return (
-    <div className="page page--home">
+    <div className={`page page--home ${styles.homeWrapper}`}>
       <ProgressBar
         currentSection={currentSection}
         totalSections={totalSections}
