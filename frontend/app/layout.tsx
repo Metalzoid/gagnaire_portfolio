@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Footer } from "@/components/footer";
 import { getThemeCookie } from "@/app/actions/theme";
 import "./globals.scss";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -29,8 +31,12 @@ export default async function RootLayout({
 
   return (
     <html lang="fr" data-theme={theme}>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
+      <body className={`${inter.variable} ${geistMono.variable}`}>
+        <ThemeProvider initialTheme={theme}>
+          {/* BurgerButton + NavigationMenu seront ajoutés en Phase 1D */}
+          <main id="main-content">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

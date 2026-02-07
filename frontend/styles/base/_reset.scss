@@ -27,10 +27,18 @@ html {
 body {
   min-height: 100%;
   overflow-x: hidden;
+  // Layout flex colonne pour coller le footer en bas
+  display: flex;
+  flex-direction: column;
   // Rendu typographique optimisé
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+// Le main prend tout l'espace restant (pousse le footer en bas)
+main {
+  flex: 1;
 }
 
 // Images et médias responsives
