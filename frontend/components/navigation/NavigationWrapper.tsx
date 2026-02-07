@@ -5,6 +5,7 @@ import useLockBodyScroll from "@/hooks/useLockBodyScroll";
 import useKeyPress from "@/hooks/useKeyPress";
 import BurgerButton from "./BurgerButton";
 import NavigationMenu from "./NavigationMenu";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import styles from "./NavigationWrapper.module.scss";
 
 interface NavigationWrapperProps {
@@ -30,10 +31,17 @@ const NavigationWrapper = ({ children }: NavigationWrapperProps) => {
 
   return (
     <>
-      <BurgerButton isOpen={menuOpen} onClick={toggleMenu} />
+      <div className={styles.topBar}>
+        <div className={styles.themeToggleDesktop}>
+          <ThemeToggle />
+        </div>
+        <BurgerButton isOpen={menuOpen} onClick={toggleMenu} />
+      </div>
       <NavigationMenu isOpen={menuOpen} onClose={closeMenu} />
       <div
-        className={`${styles.content} ${menuOpen ? styles["content--shifted"] : ""}`}
+        className={`${styles.content} ${
+          menuOpen ? styles["content--shifted"] : ""
+        }`}
       >
         {children}
       </div>

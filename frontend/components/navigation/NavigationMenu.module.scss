@@ -93,12 +93,17 @@
 }
 
 // --------------------------------------------------------------------------
-// Footer du menu (toggle thème)
+// Footer du menu (toggle thème) — visible uniquement sur mobile
 // --------------------------------------------------------------------------
 .footer {
+  display: none;
   margin-top: auto;
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--color-border);
+
+  @include respond-to("mobile") {
+    display: block;
+  }
 }
 
 // --------------------------------------------------------------------------

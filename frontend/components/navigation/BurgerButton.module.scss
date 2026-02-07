@@ -1,14 +1,8 @@
 // ==========================================================================
 // BurgerButton - Bouton hamburger / croix
 // ==========================================================================
-@use "../../styles/abstracts/variables" as *;
-@use "../../styles/abstracts/mixins" as *;
 
 .burger {
-  position: fixed;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
-  z-index: $z-burger;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,10 +18,6 @@
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast);
-
-  @include respond-to("mobile") {
-    right: var(--spacing-md);
-  }
 
   &:hover {
     background-color: var(--color-accent-primary);

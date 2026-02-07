@@ -1,7 +1,35 @@
 // ==========================================================================
 // NavigationWrapper - Gestion du décalage morph du contenu
 // ==========================================================================
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
 
+// --------------------------------------------------------------------------
+// Barre supérieure (burger + theme toggle)
+// --------------------------------------------------------------------------
+.topBar {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: $z-burger;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  @include respond-to("mobile") {
+    right: var(--spacing-md);
+  }
+}
+
+.themeToggleDesktop {
+  @include respond-to("mobile") {
+    display: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Contenu principal
+// --------------------------------------------------------------------------
 .content {
   display: flex;
   flex-direction: column;
