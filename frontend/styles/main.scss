@@ -13,5 +13,6 @@
 @use "base/typography";
 @use "base/animations";
 
-// 3. Layout (containers, grilles)
+// 3. Layout (containers, grilles, footer)
 @use "layout/container";
+@use "layout/footer";
