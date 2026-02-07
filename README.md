@@ -155,6 +155,15 @@ npm run docker:prod:detach
 npm run docker:prod:down
 ```
 
+### Déploiement Coolify / Traefik
+
+Après un déploiement, Traefik ne route le trafic **que vers les conteneurs que Docker considère "healthy"**. Les healthchecks du `docker-compose.yml` sont donc volontairement **serrés** (intervalle 5s, `start_period` 15s frontend / 10s backend) pour que le site soit accessible en ligne rapidement (souvent sous 30–45s) au lieu de plusieurs minutes.
+
+- **404 Not Found** : Traefik n’a pas encore de backend "healthy" pour cette route (ancien conteneur arrêté, nouveau pas encore healthy).
+- **502 Bad Gateway** : Traefik route vers le conteneur mais l’app n’accepte pas encore les requêtes (transition courte).
+
+Si le délai reste long côté Coolify, vérifier dans l’UI que le **health check** de l’application pointe bien vers `/api/health` (ou la path configurée) et que les **health checks sont activés** pour que Traefik n’envoie le trafic qu’une fois le service prêt. Traefik v2.10 peut aussi avoir des délais de propagation ; un passage à une version plus récente (2.11+ ou v3) peut améliorer le comportement.
+
 ## 📜 Scripts npm disponibles
 
 Tous les scripts sont exécutables depuis la racine du projet :

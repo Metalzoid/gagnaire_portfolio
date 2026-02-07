@@ -23,13 +23,14 @@ services:
       NODE_ENV: production
       PORT: 3001
 
+    # Healthcheck serré pour que Traefik route vite après un déploiement (Coolify)
     healthcheck:
       test:
         ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
 
     restart: unless-stopped
 
@@ -54,13 +55,14 @@ services:
       backend:
         condition: service_healthy
 
+    # Healthcheck serré pour que Traefik route vite après un déploiement (Coolify)
     healthcheck:
       test:
         ["CMD-SHELL", "curl -fsS http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
 
     restart: unless-stopped
 
