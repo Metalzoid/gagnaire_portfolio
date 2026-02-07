@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
 import styles from "./NavigationMenu.module.scss";
@@ -61,6 +62,8 @@ const linkVariants = {
 // --------------------------------------------------------------------------
 const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
   const menuRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
   const { sections, currentSection, goToSectionById } = useSnapScrollContext();
 
   // Focus trap : piège le focus dans le menu quand ouvert
@@ -142,9 +145,9 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
             aria-label="Menu principal"
           >
             <ul className={styles.list}>
-              {/* Sections de la home (ancres) */}
+              {/* Sections de la home : boutons (home) ou liens réels (autres pages) */}
               {sections.map((section, i) => {
-                const isActive = currentSection === i;
+                const isActive = isHomePage && currentSection === i;
                 return (
                   <motion.li
                     key={section.id}
@@ -154,19 +157,29 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
                     animate="open"
                     custom={i}
                   >
-                    <button
-                      type="button"
-                      className={`${styles.link} ${
-                        isActive ? styles["link--active"] : ""
-                      }`}
-                      onClick={() => {
-                        goToSectionById(section.id);
-                        onClose();
-                      }}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {section.label}
-                    </button>
+                    {isHomePage ? (
+                      <button
+                        type="button"
+                        className={`${styles.link} ${
+                          isActive ? styles["link--active"] : ""
+                        }`}
+                        onClick={() => {
+                          goToSectionById(section.id);
+                          onClose();
+                        }}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {section.label}
+                      </button>
+                    ) : (
+                      <Link
+                        href={`/#${section.id}`}
+                        className={styles.link}
+                        onClick={onClose}
+                      >
+                        {section.label}
+                      </Link>
+                    )}
                   </motion.li>
                 );
               })}
