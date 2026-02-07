@@ -1,0 +1,50 @@
+// ==========================================================================
+// Footer - Pied de page discret
+// ==========================================================================
+@use "../../styles/abstracts/mixins" as *;
+
+.footer {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-3xl);
+  border-top: 1px solid var(--color-border);
+  @include theme-transition;
+
+  @include respond-to("wide") {
+    padding-left: var(--spacing-2xl);
+    padding-right: var(--spacing-2xl);
+  }
+
+  @include respond-to("desktop") {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+
+  @include respond-to("tablet") {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+
+  @include respond-to("mobile") {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+
+  @include respond-to("mobile") {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm);
+  }
+}
+
+.copyright {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
