@@ -1,0 +1,11 @@
+// ==========================================================================
+// Footer layout - Masque le footer du layout sur les pages avec snap scroll
+// qui intègrent déjà leur propre footer (ex: homepage)
+// ==========================================================================
+
+// La homepage utilise la classe globale .page--home et embarque son propre
+// footer dans le snap scroll. On masque donc le footer du layout (frère de
+// <main>) pour éviter un doublon.
+main:has(.page--home) ~ footer {
+  display: none;
+}
