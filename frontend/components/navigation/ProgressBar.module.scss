@@ -1,0 +1,77 @@
+// ==========================================================================
+// ProgressBar - Indicateur latéral de section
+// ==========================================================================
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
+
+.progressBar {
+  position: fixed;
+  right: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: $z-sticky;
+
+  // Masquée sur mobile
+  @include respond-to("mobile") {
+    display: none;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+}
+
+.dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--border-radius-full);
+  transition: transform var(--transition-fast);
+
+  &:hover {
+    transform: scale(1.3);
+
+    .indicator {
+      background-color: var(--color-accent-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+}
+
+.indicator {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--border-radius-full);
+  background-color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+// Dot actif
+.dot--active {
+  .indicator {
+    background-color: var(--color-accent-primary);
+    transform: scale(1.5);
+  }
+}

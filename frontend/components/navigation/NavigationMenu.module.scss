@@ -63,9 +63,13 @@
   font-size: var(--font-size-2xl);
   font-weight: 600;
   color: var(--color-text-primary);
+  background: none;
+  border: none;
   border-radius: var(--border-radius-md);
-  transition:
-    color var(--transition-fast),
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color var(--transition-fast),
     background-color var(--transition-fast);
 
   &:hover {
@@ -76,6 +80,11 @@
   &:focus-visible {
     outline: 2px solid var(--color-accent-primary);
     outline-offset: 2px;
+  }
+
+  &--active {
+    color: var(--color-accent-primary);
+    background-color: var(--color-bg-secondary);
   }
 
   @include respond-to("mobile") {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
 import styles from "./NavigationMenu.module.scss";
 
 // --------------------------------------------------------------------------
@@ -15,17 +16,9 @@ interface NavigationMenuProps {
 }
 
 // --------------------------------------------------------------------------
-// Liens de navigation
+// Liens externes (non-ancre)
 // --------------------------------------------------------------------------
-const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/#a-propos", label: "À propos" },
-  { href: "/#competences", label: "Compétences" },
-  { href: "/#projets", label: "Projets" },
-  { href: "/#parcours", label: "Parcours" },
-  { href: "/blog", label: "Blog" },
-  { href: "/#contact", label: "Contact" },
-];
+const externalLinks = [{ href: "/blog", label: "Blog" }];
 
 // --------------------------------------------------------------------------
 // Variantes framer-motion
@@ -33,11 +26,19 @@ const navLinks = [
 const menuVariants = {
   closed: {
     x: "100%",
-    transition: { type: "tween" as const, duration: 0.3, ease: "easeIn" as const },
+    transition: {
+      type: "tween" as const,
+      duration: 0.3,
+      ease: "easeIn" as const,
+    },
   },
   open: {
     x: 0,
-    transition: { type: "tween" as const, duration: 0.35, ease: "easeOut" as const },
+    transition: {
+      type: "tween" as const,
+      duration: 0.35,
+      ease: "easeOut" as const,
+    },
   },
 };
 
@@ -60,6 +61,7 @@ const linkVariants = {
 // --------------------------------------------------------------------------
 const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
   const menuRef = useRef<HTMLElement>(null);
+  const { sections, currentSection, goToSectionById } = useSnapScrollContext();
 
   // Focus trap : piège le focus dans le menu quand ouvert
   const handleKeyDown = useCallback(
@@ -97,11 +99,13 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
 
     document.addEventListener("keydown", handleKeyDown);
 
-    // Focus le premier lien au montage
+    // Focus le premier élément focusable au montage
     const timer = setTimeout(() => {
       if (menuRef.current) {
-        const firstLink = menuRef.current.querySelector<HTMLElement>("a[href]");
-        firstLink?.focus();
+        const firstFocusable = menuRef.current.querySelector<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        firstFocusable?.focus();
       }
     }, 100);
 
@@ -138,14 +142,43 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
             aria-label="Menu principal"
           >
             <ul className={styles.list}>
-              {navLinks.map((link, i) => (
+              {/* Sections de la home (ancres) */}
+              {sections.map((section, i) => {
+                const isActive = currentSection === i;
+                return (
+                  <motion.li
+                    key={section.id}
+                    className={styles.item}
+                    variants={linkVariants}
+                    initial="closed"
+                    animate="open"
+                    custom={i}
+                  >
+                    <button
+                      type="button"
+                      className={`${styles.link} ${
+                        isActive ? styles["link--active"] : ""
+                      }`}
+                      onClick={() => {
+                        goToSectionById(section.id);
+                        onClose();
+                      }}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {section.label}
+                    </button>
+                  </motion.li>
+                );
+              })}
+              {/* Liens externes */}
+              {externalLinks.map((link, i) => (
                 <motion.li
                   key={link.href}
                   className={styles.item}
                   variants={linkVariants}
                   initial="closed"
                   animate="open"
-                  custom={i}
+                  custom={sections.length + i}
                 >
                   <Link
                     href={link.href}
