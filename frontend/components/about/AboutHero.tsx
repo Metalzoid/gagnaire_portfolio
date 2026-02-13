@@ -12,10 +12,11 @@ export function AboutHero() {
         <Image
           src={profile.photo}
           alt={fullName}
-          width={280}
-          height={280}
+          width={180}
+          height={180}
           className={styles.photo}
           priority
+          sizes="(max-width: 480px) 120px, (max-width: 1024px) 140px, 180px"
         />
       </div>
       <div className={styles.content}>

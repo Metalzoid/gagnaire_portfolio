@@ -2,6 +2,14 @@
 
 .wrapper {
   margin-top: var(--spacing-3xl);
+
+  @include respond-to("tablet") {
+    margin-top: var(--spacing-2xl);
+  }
+
+  @include respond-to("mobile") {
+    margin-top: var(--spacing-xl);
+  }
 }
 
 .sectionTitle {
@@ -9,20 +17,33 @@
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-xl);
   text-align: center;
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-lg);
+  }
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-xl);
-
-  @include respond-to("tablet") {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
 
   @include respond-to("desktop") {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-lg);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
+
+  @include respond-to("mobile") {
+    display: none;
+  }
+}
+
+.mobileCarousel {
+  display: none;
+
+  @include respond-to("mobile") {
+    display: block;
   }
 }
 
@@ -35,7 +56,7 @@
   gap: var(--spacing-sm) var(--spacing-md);
   @include theme-transition;
 
-  // Mobile : icône + titre en haut, contenu en dessous
+  // Desktop : icône à gauche, titre + contenu à droite
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
   align-items: start;
@@ -51,7 +72,8 @@
   color: var(--color-bg-primary);
   border-radius: var(--border-radius-md);
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 1 / -1;
+  align-self: start;
 }
 
 .icon {
@@ -72,31 +94,19 @@
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
-  grid-column: 1 / -1;
+  grid-column: 2;
   grid-row: 2;
 }
 
-// Desktop : icône à gauche (en haut), titre + contenu à droite
+// Tablet / mobile : icône + titre en haut, contenu en dessous
 @include respond-to("tablet") {
-  .block {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-  }
-
   .iconWrapper {
     grid-column: 1;
-    grid-row: 1 / -1;
-    align-self: start;
-  }
-
-  .blockTitle {
-    grid-column: 2;
     grid-row: 1;
-    align-self: auto;
   }
 
   .blockText {
-    grid-column: 2;
+    grid-column: 1 / -1;
     grid-row: 2;
   }
 }

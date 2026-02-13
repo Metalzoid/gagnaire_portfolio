@@ -91,3 +91,20 @@ export interface Testimonial {
   quote: string;
   photo: string;
 }
+
+// --------------------------------------------------------------------------
+// About - Pitch & Values
+// --------------------------------------------------------------------------
+export type PitchKey = keyof Profile["pitch"];
+
+export interface PitchBlock {
+  key: PitchKey;
+  icon: string;
+  title: string;
+}
+
+export interface AboutValue {
+  icon: string;
+  title: string;
+  description: string;
+}

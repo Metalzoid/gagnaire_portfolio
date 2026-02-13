@@ -1,49 +1,58 @@
 "use client";
 
-import { FaCode, FaUniversalAccess, FaBolt, FaLightbulb } from "react-icons/fa";
-import { getProfile } from "@/services/data";
+import { getProfile, getValues } from "@/services/data";
 import { useContactModal } from "@/contexts/ContactModalContext";
 import { Button } from "@/components/ui/button";
+import { Carousel } from "@/components/ui/carousel";
+import { VALUES_ICONS } from "./about-icons";
+import type { AboutValue } from "@/types";
 import styles from "./AboutValues.module.scss";
-
-const values = [
-  {
-    icon: FaCode,
-    title: "Clean code",
-    description: "Code lisible, maintenable et bien structuré.",
-  },
-  {
-    icon: FaUniversalAccess,
-    title: "Accessibilité",
-    description: "Des interfaces utilisables par tous.",
-  },
-  {
-    icon: FaBolt,
-    title: "Performance",
-    description: "Applications rapides et optimisées.",
-  },
-  {
-    icon: FaLightbulb,
-    title: "Curiosité",
-    description: "Veille continue et apprentissage permanent.",
-  },
-];
 
 export function AboutValues() {
   const { openContactModal } = useContactModal();
+  const values = getValues();
 
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.sectionTitle}>Mes valeurs</h2>
+
+      {/* Grille desktop / tablette */}
       <div className={styles.grid}>
-        {values.map(({ icon: Icon, title, description }) => (
-          <div key={title} className={styles.block}>
-            <Icon className={styles.icon} aria-hidden="true" />
-            <h3 className={styles.blockTitle}>{title}</h3>
-            <p className={styles.blockText}>{description}</p>
-          </div>
-        ))}
+        {values.map((value) => {
+          const Icon = VALUES_ICONS[value.icon];
+          if (!Icon) return null;
+          return (
+            <div key={value.title} className={styles.block}>
+              <Icon className={styles.icon} aria-hidden="true" />
+              <h3 className={styles.blockTitle}>{value.title}</h3>
+              <p className={styles.blockText}>{value.description}</p>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Carousel mobile */}
+      <div className={styles.mobileCarousel}>
+        <Carousel<AboutValue>
+          items={values}
+          renderItem={(value) => {
+            const Icon = VALUES_ICONS[value.icon];
+            if (!Icon) return null;
+            return (
+              <div className={styles.block}>
+                <Icon className={styles.icon} aria-hidden="true" />
+                <h3 className={styles.blockTitle}>{value.title}</h3>
+                <p className={styles.blockText}>{value.description}</p>
+              </div>
+            );
+          }}
+          showDots={true}
+          showArrows={true}
+          loop={true}
+          ariaLabel="Mes valeurs"
+        />
+      </div>
+
       <div className={styles.ctas}>
         <Button
           href={getProfile().cv}

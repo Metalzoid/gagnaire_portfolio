@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTypewriter } from "@/hooks/useTypewriter";
@@ -9,7 +10,7 @@ import styles from "./not-found.module.scss";
 export default function NotFound() {
   const pathname = usePathname();
   const { openContactModal } = useContactModal();
-  const displayLines = [
+  const lines = [
     `> cd ${pathname || "/page-inconnue"}`,
     "bash: cd: " +
       (pathname || "/page-inconnue") +
@@ -24,13 +25,21 @@ export default function NotFound() {
     "> _",
   ];
 
-  const displayedText = useTypewriter(displayLines, {
+  const displayedText = useTypewriter(lines, {
     speed: 30,
     delayBetweenLines: 200,
     initialDelay: 300,
   });
 
   const linesDisplay = displayedText.split("\n");
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [displayedText]);
 
   return (
     <div className={`page page--404 ${styles.page}`}>
@@ -57,16 +66,25 @@ export default function NotFound() {
             <span className={styles.terminalTitle}>terminal</span>
           </div>
 
-          <div className={styles.content}>
+          <div ref={contentRef} className={styles.content}>
             <pre className={styles.output} aria-live="polite">
-              {linesDisplay.map((line, i) => (
-                <span key={i} className={styles.line}>
-                  {line}
-                  {i === linesDisplay.length - 1 && linesDisplay.length > 0 && (
-                    <span className={styles.cursor} aria-hidden="true" />
-                  )}
-                </span>
-              ))}
+              {linesDisplay.map((line, i) => {
+                const isCommand = lines[i]?.startsWith("> ") ?? false;
+                return (
+                  <span
+                    key={i}
+                    className={`${styles.line} ${
+                      isCommand ? styles.lineCommand : styles.lineResult
+                    }`}
+                  >
+                    {line}
+                    {i === linesDisplay.length - 1 &&
+                      linesDisplay.length > 0 && (
+                        <span className={styles.cursor} aria-hidden="true" />
+                      )}
+                  </span>
+                );
+              })}
             </pre>
           </div>
         </div>
