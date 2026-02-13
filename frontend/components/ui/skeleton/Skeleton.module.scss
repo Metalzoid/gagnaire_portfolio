@@ -1,0 +1,60 @@
+// ==========================================================================
+// Skeleton - Placeholder de chargement animé
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+
+// --------------------------------------------------------------------------
+// Base (animation pulse)
+// --------------------------------------------------------------------------
+.skeleton {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-sm);
+
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variante Text : rectangle fin (ligne de texte)
+// --------------------------------------------------------------------------
+.skeleton--text {
+  height: 1em;
+  min-width: 100px;
+
+  &::after {
+    content: "";
+    display: block;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variante Circle : cercle (avatar)
+// --------------------------------------------------------------------------
+.skeleton--circle {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-full);
+  flex-shrink: 0;
+}
+
+// --------------------------------------------------------------------------
+// Variante Rect : rectangle (image/carte)
+// --------------------------------------------------------------------------
+.skeleton--rect {
+  width: 100%;
+  min-height: 120px;
+}

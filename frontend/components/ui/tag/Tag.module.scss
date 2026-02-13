@@ -1,0 +1,105 @@
+// ==========================================================================
+// Tag - Label cliquable pour filtrage
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+@use "../../../styles/abstracts/mixins" as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  border-radius: var(--border-radius-full);
+  white-space: nowrap;
+  font-family: inherit;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  cursor: default;
+  @include theme-transition;
+
+  // Quand c'est un bouton (onClick fourni)
+  button#{&} {
+    cursor: pointer;
+    @include focus-visible;
+
+    &:hover {
+      border-color: var(--color-accent-primary);
+      color: var(--color-accent-primary);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// État actif (couleur accent par défaut)
+// --------------------------------------------------------------------------
+.tag--active {
+  background-color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+
+  button#{&}:hover {
+    filter: brightness(1.1);
+    border-color: var(--color-accent-primary);
+    color: var(--color-bg-primary);
+  }
+}
+
+// --------------------------------------------------------------------------
+// État désactivé
+// --------------------------------------------------------------------------
+.tag--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  user-select: none;
+}
+
+// --------------------------------------------------------------------------
+// Variantes de couleur
+// --------------------------------------------------------------------------
+
+// Mixin interne pour générer les variantes
+@mixin tag-variant($color) {
+  border-color: $color;
+  color: $color;
+
+  &.tag--active {
+    background-color: $color;
+    border-color: $color;
+    color: var(--color-bg-primary);
+
+    button#{&}:hover {
+      filter: brightness(1.1);
+      border-color: $color;
+      color: var(--color-bg-primary);
+    }
+  }
+
+  button#{&}:hover {
+    border-color: $color;
+    color: $color;
+  }
+}
+
+.tag--accent {
+  @include tag-variant(var(--color-accent-primary));
+}
+
+.tag--success {
+  @include tag-variant(var(--color-success));
+}
+
+.tag--warning {
+  @include tag-variant(var(--color-warning));
+}
+
+.tag--error {
+  @include tag-variant(var(--color-error));
+}
+
+.tag--info {
+  @include tag-variant(var(--color-info));
+}

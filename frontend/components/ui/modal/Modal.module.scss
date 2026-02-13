@@ -1,0 +1,118 @@
+// ==========================================================================
+// Modal - Fenêtre modale overlay
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+@use "../../../styles/abstracts/mixins" as *;
+
+// --------------------------------------------------------------------------
+// Overlay (fond sombre + backdrop blur)
+// --------------------------------------------------------------------------
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-overlay;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+
+  @media (prefers-reduced-motion: reduce) {
+    backdrop-filter: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Wrapper centré (transform séparé de l'animation framer-motion)
+// --------------------------------------------------------------------------
+.dialogWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: $z-modal;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 560px;
+  max-height: 90vh;
+  display: flex;
+  pointer-events: none;
+
+  @include respond-to("mobile") {
+    width: calc(100% - var(--spacing-lg));
+    max-height: 85vh;
+  }
+}
+
+.dialogWrapper > * {
+  pointer-events: auto;
+}
+
+// --------------------------------------------------------------------------
+// Dialog (contenu modal)
+// --------------------------------------------------------------------------
+.dialog {
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+
+  @include respond-to("mobile") {
+    max-height: 85vh;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Header (titre + bouton fermer)
+// --------------------------------------------------------------------------
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-left: auto;
+  color: var(--color-text-primary);
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-accent-primary);
+  }
+
+  @include focus-visible;
+}
+
+// --------------------------------------------------------------------------
+// Contenu (scrollable)
+// --------------------------------------------------------------------------
+.content {
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  flex: 1;
+}
