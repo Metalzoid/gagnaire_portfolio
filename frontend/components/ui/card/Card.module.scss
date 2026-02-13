@@ -1,0 +1,102 @@
+// ==========================================================================
+// Card - Carte de contenu avec image, tags et hover
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+@use "../../../styles/abstracts/mixins" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  @include theme-transition;
+}
+
+// --------------------------------------------------------------------------
+// Variante hoverable (effet de survol)
+// --------------------------------------------------------------------------
+.card--hoverable {
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent-primary);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variante clickable (lien)
+// --------------------------------------------------------------------------
+.card--clickable {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  @include focus-visible;
+}
+
+// --------------------------------------------------------------------------
+// Image
+// --------------------------------------------------------------------------
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+// --------------------------------------------------------------------------
+// Body (contenu texte)
+// --------------------------------------------------------------------------
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-sm);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Titre
+// --------------------------------------------------------------------------
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
+// Description
+// --------------------------------------------------------------------------
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: $line-height-normal;
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
+// Tags
+// --------------------------------------------------------------------------
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
