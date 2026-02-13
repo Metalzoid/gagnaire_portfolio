@@ -21,8 +21,10 @@
   @include theme-transition;
   @include focus-visible;
 
-  &:hover {
-    color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover {
+      color: var(--color-accent-primary);
+    }
   }
 
   svg {

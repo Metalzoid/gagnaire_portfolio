@@ -69,7 +69,7 @@ export function HomeTestimonials() {
           showDots={true}
           showArrows={true}
           autoPlay={true}
-          autoPlayInterval={5000}
+          autoPlayInterval={10000}
           loop={true}
           ariaLabel="Témoignages"
         />

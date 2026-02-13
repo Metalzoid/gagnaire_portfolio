@@ -72,9 +72,11 @@
   transition: color var(--transition-fast),
     background-color var(--transition-fast);
 
-  &:hover {
-    color: var(--color-accent-primary);
-    background-color: var(--color-bg-secondary);
+  @include on-hover {
+    &:hover {
+      color: var(--color-accent-primary);
+      background-color: var(--color-bg-secondary);
+    }
   }
 
   &:focus-visible {

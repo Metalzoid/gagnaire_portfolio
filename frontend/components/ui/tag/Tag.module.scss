@@ -25,9 +25,11 @@
     cursor: pointer;
     @include focus-visible;
 
-    &:hover {
-      border-color: var(--color-accent-primary);
-      color: var(--color-accent-primary);
+    @include on-hover {
+      &:hover {
+        border-color: var(--color-accent-primary);
+        color: var(--color-accent-primary);
+      }
     }
   }
 }
@@ -40,10 +42,12 @@
   border-color: var(--color-accent-primary);
   color: var(--color-bg-primary);
 
-  button#{&}:hover {
-    filter: brightness(1.1);
-    border-color: var(--color-accent-primary);
-    color: var(--color-bg-primary);
+  @include on-hover {
+    button#{&}:hover {
+      filter: brightness(1.1);
+      border-color: var(--color-accent-primary);
+      color: var(--color-bg-primary);
+    }
   }
 }
 
@@ -71,16 +75,20 @@
     border-color: $color;
     color: var(--color-bg-primary);
 
-    button#{&}:hover {
-      filter: brightness(1.1);
-      border-color: $color;
-      color: var(--color-bg-primary);
+    @include on-hover {
+      button#{&}:hover {
+        filter: brightness(1.1);
+        border-color: $color;
+        color: var(--color-bg-primary);
+      }
     }
   }
 
-  button#{&}:hover {
-    border-color: $color;
-    color: $color;
+  @include on-hover {
+    button#{&}:hover {
+      border-color: $color;
+      color: $color;
+    }
   }
 }
 

@@ -67,8 +67,10 @@
   color: var(--color-bg-primary);
   border-color: var(--color-accent-primary);
 
-  &:hover:not(:disabled) {
-    filter: brightness(1.15);
+  @include on-hover {
+    &:hover:not(:disabled) {
+      filter: brightness(1.15);
+    }
   }
 
   &:active:not(:disabled) {
@@ -81,9 +83,11 @@
   color: var(--color-text-primary);
   border-color: var(--color-border);
 
-  &:hover:not(:disabled) {
-    background-color: var(--color-bg-tertiary);
-    border-color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-tertiary);
+      border-color: var(--color-accent-primary);
+    }
   }
 
   &:active:not(:disabled) {
@@ -96,9 +100,11 @@
   color: var(--color-accent-primary);
   border-color: var(--color-accent-primary);
 
-  &:hover:not(:disabled) {
-    background-color: var(--color-accent-primary);
-    color: var(--color-bg-primary);
+  @include on-hover {
+    &:hover:not(:disabled) {
+      background-color: var(--color-accent-primary);
+      color: var(--color-bg-primary);
+    }
   }
 
   &:active:not(:disabled) {
@@ -111,9 +117,11 @@
   color: var(--color-text-primary);
   border-color: transparent;
 
-  &:hover:not(:disabled) {
-    background-color: var(--color-bg-secondary);
-    color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-secondary);
+      color: var(--color-accent-primary);
+    }
   }
 
   &:active:not(:disabled) {

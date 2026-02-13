@@ -1,6 +1,7 @@
 // ==========================================================================
 // SocialLinks - Liens sociaux réutilisables
 // ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
 
 .list {
   display: flex;
@@ -67,10 +68,12 @@
     background-color var(--transition-fast),
     transform var(--transition-fast);
 
-  &:hover {
-    color: var(--color-accent-primary);
-    background-color: var(--color-bg-secondary);
-    transform: translateY(-2px);
+  @include on-hover {
+    &:hover {
+      color: var(--color-accent-primary);
+      background-color: var(--color-bg-secondary);
+      transform: translateY(-2px);
+    }
   }
 
   &:active {

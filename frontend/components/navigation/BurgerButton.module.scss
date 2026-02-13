@@ -1,6 +1,7 @@
 // ==========================================================================
 // BurgerButton - Bouton hamburger / croix
 // ==========================================================================
+@use "../../styles/abstracts/mixins" as *;
 
 .burger {
   display: flex;
@@ -19,12 +20,14 @@
     background-color var(--transition-fast),
     border-color var(--transition-fast);
 
-  &:hover {
-    background-color: var(--color-accent-primary);
-    border-color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover {
+      background-color: var(--color-accent-primary);
+      border-color: var(--color-accent-primary);
 
-    .bar {
-      background-color: var(--color-bg-primary);
+      .bar {
+        background-color: var(--color-bg-primary);
+      }
     }
   }
 

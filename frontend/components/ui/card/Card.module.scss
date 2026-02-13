@@ -28,10 +28,12 @@
     background-color var(--transition-normal),
     color var(--transition-normal);
 
-  &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent-primary);
-    box-shadow: var(--shadow-lg);
+  @include on-hover {
+    &:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-accent-primary);
+      box-shadow: var(--shadow-lg);
+    }
   }
 }
 
