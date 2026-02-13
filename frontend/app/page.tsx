@@ -3,8 +3,28 @@
 import useSnapScroll from "@/hooks/useSnapScroll";
 import { ProgressBar } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import {
+  TerminalHero,
+  HomeBio,
+  HomeSkills,
+  HomeFeaturedProjects,
+  HomeTestimonials,
+  HomeContact,
+} from "@/components/home";
 import { homeSections } from "@/data/sections";
 import styles from "./page.module.scss";
+
+// --------------------------------------------------------------------------
+// Mapping section id -> composant
+// --------------------------------------------------------------------------
+const sectionComponents: Record<string, React.ComponentType<object>> = {
+  hero: TerminalHero,
+  "a-propos": HomeBio,
+  competences: HomeSkills,
+  projets: HomeFeaturedProjects,
+  temoignages: HomeTestimonials,
+  contact: HomeContact,
+};
 
 export default function Home() {
   const { currentSection, totalSections, goToSection, containerRef } =
@@ -22,6 +42,7 @@ export default function Home() {
       <div ref={containerRef} className={styles.snapContainer}>
         {homeSections.map((section, index) => {
           const isLast = index === homeSections.length - 1;
+          const SectionComponent = sectionComponents[section.id];
 
           return (
             <section
@@ -35,8 +56,18 @@ export default function Home() {
               data-snap-index={index}
             >
               <div className={styles.sectionContent}>
-                <h2 className={styles.sectionTitle}>{section.title}</h2>
-                <p className={styles.sectionText}>{section.text}</p>
+                {SectionComponent ? (
+                  <SectionComponent />
+                ) : (
+                  <>
+                    {section.title && (
+                      <h2 className={styles.sectionTitle}>{section.title}</h2>
+                    )}
+                    {section.text && (
+                      <p className={styles.sectionText}>{section.text}</p>
+                    )}
+                  </>
+                )}
               </div>
               {isLast && <Footer />}
             </section>

@@ -5,6 +5,37 @@
 @use "../../styles/abstracts/mixins" as *;
 
 // --------------------------------------------------------------------------
+// Lien accueil (page non-home)
+// --------------------------------------------------------------------------
+.homeLink {
+  position: fixed;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
+  z-index: $z-burger;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-text-secondary);
+  @include theme-transition;
+  @include focus-visible;
+
+  &:hover {
+    color: var(--color-accent-primary);
+  }
+
+  svg {
+    font-size: 1.25rem;
+  }
+
+  @include respond-to("mobile") {
+    left: var(--spacing-md);
+    top: var(--spacing-md);
+  }
+}
+
+// --------------------------------------------------------------------------
 // Barre supérieure (burger + theme toggle)
 // --------------------------------------------------------------------------
 .topBar {

@@ -1,0 +1,20 @@
+{
+  "firstName": "Florian",
+  "lastName": "Gagnaire",
+  "role": "Développeur Web Fullstack",
+  "status": "En alternance chez [Entreprise]",
+  "bio": "Passionné par le développement web et les technologies modernes, je construis des applications performantes et accessibles. En alternance, je m'applique chaque jour à progresser et à livrer des solutions de qualité.",
+  "pitch": {
+    "who": "Développeur en formation à OpenClassrooms, je me spécialise dans la création d'applications web fullstack. Mon parcours m'a amené à maîtriser React, Node.js et les bases de données relationnelles.",
+    "what": "Développement d'applications web modernes : frontend React/TypeScript, API REST Node.js, bases de données PostgreSQL. Intégration, tests et déploiement avec des outils comme Docker et CI/CD.",
+    "why": "La technologie permet de résoudre des problèmes concrets et d'améliorer le quotidien. J'aime concevoir des interfaces intuitives et des architectures maintenables qui durent dans le temps.",
+    "method": "Agile et itératif : je privilégie la communication, les retours rapides et le travail en équipe. Clean code, revues de code et documentation font partie de ma routine."
+  },
+  "photo": "/images/profile/photo.svg",
+  "social": {
+    "github": "https://github.com/Metalzoid",
+    "linkedin": "https://www.linkedin.com/in/florian-gagnaire/",
+    "email": "gagnaire.flo@gmail.com"
+  },
+  "cv": "/documents/cv.pdf"
+}

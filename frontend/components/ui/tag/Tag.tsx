@@ -7,6 +7,8 @@ import styles from "./Tag.module.scss";
 // --------------------------------------------------------------------------
 type TagVariant =
   | "default"
+  | "tech"
+  | "status"
   | "accent"
   | "success"
   | "warning"

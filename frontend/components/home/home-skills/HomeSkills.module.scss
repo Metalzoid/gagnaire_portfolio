@@ -1,0 +1,92 @@
+// ==========================================================================
+// HomeSkills - Grille d'icônes technos
+// ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm);
+  text-align: center;
+}
+
+.intro {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0 0 var(--spacing-xl);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  max-width: 480px;
+  margin: 0 auto var(--spacing-xl);
+
+  @include respond-to("tablet") {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  @include respond-to("mobile") {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+}
+
+.iconItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  @include theme-transition;
+
+  &:hover {
+    border-color: var(--color-accent-primary);
+  }
+}
+
+.icon {
+  font-size: 2rem;
+  color: var(--color-accent-primary);
+}
+
+.iconLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+}

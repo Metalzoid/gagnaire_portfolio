@@ -1,0 +1,54 @@
+// ==========================================================================
+// HomeContact - CTA contact + liens sociaux
+// ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm);
+  text-align: center;
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0 0 var(--spacing-xl);
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+}
+
+.social {
+  margin-top: var(--spacing-xl);
+  display: flex;
+  justify-content: center;
+}

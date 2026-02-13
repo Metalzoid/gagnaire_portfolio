@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -14,12 +15,16 @@ export type { Theme };
 export interface ThemeContextType {
   theme: Theme;
   isDark: boolean;
+  isTransitioning: boolean;
   toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const THEME_ATTR = "data-theme";
+
+/** Durée pendant laquelle on masque les overlays sensibles (ex: PageFadeOverlay) */
+const THEME_TRANSITION_MS = 450;
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -29,8 +34,10 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const toggleTheme = useCallback(() => {
+    setIsTransitioning(true);
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     if (typeof document !== "undefined") {
@@ -39,13 +46,20 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
     setThemeCookie(next);
   }, [theme]);
 
+  useEffect(() => {
+    if (!isTransitioning) return;
+    const timer = setTimeout(() => setIsTransitioning(false), THEME_TRANSITION_MS);
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
+
   const value = useMemo<ThemeContextType>(
     () => ({
       theme,
       isDark: theme === "dark",
+      isTransitioning,
       toggleTheme,
     }),
-    [theme, toggleTheme]
+    [theme, isTransitioning, toggleTheme],
   );
 
   return (

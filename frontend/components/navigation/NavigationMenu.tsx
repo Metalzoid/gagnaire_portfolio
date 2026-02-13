@@ -6,6 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
+import { useContactModal } from "@/contexts/ContactModalContext";
+import { navigationLinks } from "@/data/navigation";
 import styles from "./NavigationMenu.module.scss";
 
 // --------------------------------------------------------------------------
@@ -16,10 +18,15 @@ interface NavigationMenuProps {
   onClose: () => void;
 }
 
-// --------------------------------------------------------------------------
-// Liens externes (non-ancre)
-// --------------------------------------------------------------------------
-const externalLinks = [{ href: "/blog", label: "Blog" }];
+// Mapping section id -> page dédiée (quand pas sur home)
+// Note: "contact" ouvre la modal, pas de page dédiée
+const sectionToPage: Record<string, string> = {
+  hero: "/",
+  "a-propos": "/about",
+  competences: "/skills",
+  projets: "/projects",
+  temoignages: "/#temoignages",
+};
 
 // --------------------------------------------------------------------------
 // Variantes framer-motion
@@ -65,6 +72,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const { sections, currentSection, goToSectionById } = useSnapScrollContext();
+  const { openContactModal } = useContactModal();
 
   // Focus trap : piège le focus dans le menu quand ouvert
   const handleKeyDown = useCallback(
@@ -73,7 +81,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
 
       if (event.key === "Tab") {
         const focusable = menuRef.current.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
         );
         if (focusable.length === 0) return;
 
@@ -93,7 +101,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
         }
       }
     },
-    [isOpen]
+    [isOpen],
   );
 
   // Attacher le focus trap et focus initial
@@ -106,7 +114,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
     const timer = setTimeout(() => {
       if (menuRef.current) {
         const firstFocusable = menuRef.current.querySelector<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
         );
         firstFocusable?.focus();
       }
@@ -145,9 +153,67 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
             aria-label="Menu principal"
           >
             <ul className={styles.list}>
-              {/* Sections de la home : boutons (home) ou liens réels (autres pages) */}
-              {sections.map((section, i) => {
-                const isActive = isHomePage && currentSection === i;
+              {/* Ordre défini dans data/navigation.ts */}
+              {navigationLinks.map((item, i) => {
+                if (item.type === "link") {
+                  return (
+                    <motion.li
+                      key={`link-${item.href}`}
+                      className={styles.item}
+                      variants={linkVariants}
+                      initial="closed"
+                      animate="open"
+                      custom={i}
+                    >
+                      <Link
+                        href={item.href}
+                        className={styles.link}
+                        onClick={onClose}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.li>
+                  );
+                }
+
+                const section = sections.find((s) => s.id === item.id);
+                if (!section) return null;
+
+                const isActive = isHomePage && currentSection === sections.indexOf(section);
+                const isContact = section.id === "contact";
+
+                // Contact : toujours ouvrir la modal (pas de redirection)
+                if (isContact) {
+                  return (
+                    <motion.li
+                      key={section.id}
+                      className={styles.item}
+                      variants={linkVariants}
+                      initial="closed"
+                      animate="open"
+                      custom={i}
+                    >
+                      <button
+                        type="button"
+                        className={`${styles.link} ${
+                          isActive ? styles["link--active"] : ""
+                        }`}
+                        onClick={() => {
+                          openContactModal();
+                          onClose();
+                        }}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {section.label}
+                      </button>
+                    </motion.li>
+                  );
+                }
+
+                const href = sectionToPage[section.id] ?? `/#${section.id}`;
+                // Sur home : scroll si autre section, sinon href (déjà sur la section)
+                const useLink = !isHomePage || isActive;
+
                 return (
                   <motion.li
                     key={section.id}
@@ -157,51 +223,32 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
                     animate="open"
                     custom={i}
                   >
-                    {isHomePage ? (
-                      <button
-                        type="button"
+                    {useLink ? (
+                      <Link
+                        href={href}
                         className={`${styles.link} ${
                           isActive ? styles["link--active"] : ""
                         }`}
+                        onClick={onClose}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {section.label}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.link}
                         onClick={() => {
                           goToSectionById(section.id);
                           onClose();
                         }}
-                        aria-current={isActive ? "page" : undefined}
                       >
                         {section.label}
                       </button>
-                    ) : (
-                      <Link
-                        href={`/#${section.id}`}
-                        className={styles.link}
-                        onClick={onClose}
-                      >
-                        {section.label}
-                      </Link>
                     )}
                   </motion.li>
                 );
               })}
-              {/* Liens externes */}
-              {externalLinks.map((link, i) => (
-                <motion.li
-                  key={link.href}
-                  className={styles.item}
-                  variants={linkVariants}
-                  initial="closed"
-                  animate="open"
-                  custom={sections.length + i}
-                >
-                  <Link
-                    href={link.href}
-                    className={styles.link}
-                    onClick={onClose}
-                  >
-                    {link.label}
-                  </Link>
-                </motion.li>
-              ))}
             </ul>
 
             <div className={styles.footer}>

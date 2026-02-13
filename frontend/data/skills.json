@@ -1,0 +1,41 @@
+{
+  "categories": [
+    {
+      "name": "Frontend",
+      "skills": [
+        { "name": "React", "level": 85, "icon": "FaReact" },
+        { "name": "TypeScript", "level": 75, "icon": "SiTypescript" },
+        { "name": "HTML/CSS", "level": 90, "icon": "FaHtml5" },
+        { "name": "Next.js", "level": 70, "icon": "SiNextdotjs" },
+        { "name": "Sass/SCSS", "level": 80, "icon": "FaSass" }
+      ]
+    },
+    {
+      "name": "Backend",
+      "skills": [
+        { "name": "Node.js", "level": 75, "icon": "FaNode" },
+        { "name": "Express", "level": 70, "icon": "SiExpress" },
+        { "name": "PostgreSQL", "level": 65, "icon": "SiPostgresql" },
+        { "name": "API REST", "level": 80, "icon": "FaServer" }
+      ]
+    },
+    {
+      "name": "DevOps / Outils",
+      "skills": [
+        { "name": "Git", "level": 85, "icon": "FaGitAlt" },
+        { "name": "Docker", "level": 60, "icon": "FaDocker" },
+        { "name": "VS Code", "level": 90, "icon": "FaCode" },
+        { "name": "Figma", "level": 65, "icon": "FaFigma" }
+      ]
+    },
+    {
+      "name": "Soft Skills",
+      "skills": [
+        { "name": "Travail en équipe", "level": 90 },
+        { "name": "Autonomie", "level": 85 },
+        { "name": "Curiosité", "level": 95 },
+        { "name": "Rigueur", "level": 88 }
+      ]
+    }
+  ]
+}

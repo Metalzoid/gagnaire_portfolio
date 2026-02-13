@@ -1,6 +1,8 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { ImageWithFallback, PLACEHOLDER_PROJECT_IMAGE } from "@/components/ui/image-with-fallback";
+import { Tag } from "@/components/ui/tag";
 import styles from "./Card.module.scss";
 
 // --------------------------------------------------------------------------
@@ -43,8 +45,9 @@ const Card = ({
     <>
       {image && (
         <div className={styles.imageWrapper}>
-          <Image
+          <ImageWithFallback
             src={image}
+            fallbackSrc={PLACEHOLDER_PROJECT_IMAGE}
             alt={title}
             fill
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
@@ -58,7 +61,7 @@ const Card = ({
         {tags && tags.length > 0 && (
           <div className={styles.tags}>
             {tags.map((tag) => (
-              <Badge key={tag} label={tag} variant="tech" />
+              <Tag key={tag} label={tag} variant="tech" />
             ))}
           </div>
         )}

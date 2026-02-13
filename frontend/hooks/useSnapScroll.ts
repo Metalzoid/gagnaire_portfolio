@@ -14,6 +14,8 @@ const MIN_GESTURE_DELTA = 15;
 const SPIKE_FACTOR = 4;
 // Si aucun event pendant ce temps → reset complet (geste terminé)
 const GAP_THRESHOLD_MS = 300;
+// Après une navigation, on ignore les wheel pendant le scroll (évite double slide)
+const NAV_COOLDOWN_MS = 450;
 
 interface UseSnapScrollOptions {
   enabled?: boolean;
@@ -45,6 +47,7 @@ const useSnapScroll = ({
   const locked = useRef(false);
   const lastDirection = useRef(0);
   const samplesSinceLock = useRef(0);
+  const lastNavigateTime = useRef(0);
 
   // Garder la ref en sync pour le wheel handler (pas de setState, juste une ref)
   useEffect(() => {
@@ -64,14 +67,14 @@ const useSnapScroll = ({
       if (!containerRef.current || index < 0 || index >= totalSections) return;
 
       const sections = containerRef.current.querySelectorAll<HTMLElement>(
-        "[data-snap-section]"
+        "[data-snap-section]",
       );
       if (!sections[index]) return;
 
       setCurrentSection(index);
       sections[index].scrollIntoView({ behavior: "smooth" });
     },
-    [totalSections, setCurrentSection]
+    [totalSections, setCurrentSection],
   );
 
   // Enregistrer le handler dans le context au mount
@@ -86,6 +89,7 @@ const useSnapScroll = ({
     const container = containerRef.current;
 
     const navigate = (direction: number) => {
+      lastNavigateTime.current = Date.now();
       goToSection(currentSectionRef.current + direction);
       samplesSinceLock.current = 0;
       wasDecreasing.current = false;
@@ -98,6 +102,13 @@ const useSnapScroll = ({
       if (deltaY === 0) return;
 
       const now = Date.now();
+
+      // Ignorer les wheel pendant le cooldown (évite double slide après scrollIntoView)
+      if (now - lastNavigateTime.current < NAV_COOLDOWN_MS) {
+        lastSampleTime.current = now;
+        return;
+      }
+
       const absDelta = Math.abs(deltaY);
       const direction = deltaY > 0 ? 1 : -1;
 
@@ -198,7 +209,7 @@ const useSnapScroll = ({
     if (!enabled || !containerRef.current) return;
 
     const sections = containerRef.current.querySelectorAll<HTMLElement>(
-      "[data-snap-section]"
+      "[data-snap-section]",
     );
     if (sections.length === 0) return;
 
@@ -207,7 +218,7 @@ const useSnapScroll = ({
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = Number(
-              (entry.target as HTMLElement).dataset.snapIndex
+              (entry.target as HTMLElement).dataset.snapIndex,
             );
             if (!isNaN(index)) {
               setCurrentSection(index);
@@ -218,7 +229,7 @@ const useSnapScroll = ({
       {
         root: containerRef.current,
         threshold: 0.6,
-      }
+      },
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -252,7 +263,7 @@ const useSnapScroll = ({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [enabled, currentSection, totalSections, goToSection]);
 
-  // Support tactile (swipe)
+  // Support tactile (swipe) - touchstart / touchend pour mobile
   useEffect(() => {
     if (!enabled || !containerRef.current) return;
 
@@ -269,11 +280,8 @@ const useSnapScroll = ({
       const threshold = 50;
 
       if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          goToSection(currentSection + 1);
-        } else {
-          goToSection(currentSection - 1);
-        }
+        const direction = diff > 0 ? 1 : -1;
+        goToSection(currentSectionRef.current + direction);
       }
     };
 
@@ -286,7 +294,7 @@ const useSnapScroll = ({
       container.removeEventListener("touchstart", handleTouchStart);
       container.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [enabled, currentSection, goToSection]);
+  }, [enabled, goToSection]);
 
   return {
     currentSection,

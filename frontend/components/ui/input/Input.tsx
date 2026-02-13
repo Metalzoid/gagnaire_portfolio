@@ -49,6 +49,7 @@ const Input = ({
   };
 
   if (type === "textarea") {
+    const textareaClasses = [inputClasses, styles["input--textarea"]].join(" ");
     return (
       <div className={styles.wrapper}>
         <label htmlFor={inputId} className={styles.label}>
@@ -60,7 +61,7 @@ const Input = ({
             </span>
           )}
         </label>
-        <textarea {...commonProps} className={inputClasses} rows={4} />
+        <textarea {...commonProps} className={textareaClasses} rows={4} />
         {error && (
           <p id={errorId} className={styles.error} role="alert">
             {error}

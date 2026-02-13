@@ -1,0 +1,125 @@
+// ==========================================================================
+// HomeBio - Section À propos court (photo + texte)
+// ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    opacity: 1;
+    transform: none;
+    transition: none;
+
+    &--visible {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xl);
+  max-width: 600px;
+  margin: 0 auto;
+
+  @include respond-to("tablet") {
+    flex-direction: row;
+    gap: var(--spacing-2xl);
+    max-width: 700px;
+  }
+}
+
+.photoWrapper {
+  flex-shrink: 0;
+}
+
+.photoFrame {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--color-accent-primary);
+  box-shadow: var(--shadow-lg);
+
+  @include respond-to("tablet") {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+.photo {
+  object-fit: cover;
+}
+
+.text {
+  text-align: center;
+
+  @include respond-to("tablet") {
+    text-align: left;
+  }
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md);
+}
+
+.bio {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin: 0 0 var(--spacing-lg);
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+}
+
+// Mobile : photo plus petite, en haut à gauche, texte qui contourne
+@include respond-to("mobile") {
+  .wrapper {
+    width: 100%;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .content {
+    display: block;
+    max-width: 100%;
+    overflow: auto; // contient le float
+  }
+
+  .photoWrapper {
+    float: left;
+    margin-right: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .photoFrame {
+    width: 100px;
+    height: 100px;
+  }
+
+  .text {
+    text-align: left;
+  }
+}

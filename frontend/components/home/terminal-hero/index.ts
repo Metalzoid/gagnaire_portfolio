@@ -1,0 +1,1 @@
+export { TerminalHero } from "./TerminalHero";

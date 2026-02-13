@@ -1,0 +1,27 @@
+@use "../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  position: relative;
+  padding: var(--spacing-xl) 0;
+}
+
+.line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--color-border);
+  transform: translateX(-50%);
+
+  @include respond-to("mobile") {
+    left: var(--spacing-md);
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}

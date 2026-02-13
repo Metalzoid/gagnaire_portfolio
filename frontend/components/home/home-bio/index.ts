@@ -1,0 +1,1 @@
+export { HomeBio } from "./HomeBio";
