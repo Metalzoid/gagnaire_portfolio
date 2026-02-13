@@ -1,0 +1,47 @@
+// ==========================================================================
+// Section - Bloc sémantique réutilisable
+// ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
+
+.section {
+  width: 100%;
+  padding: var(--spacing-3xl) 0;
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xl) 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variante snap scroll (pour la Home)
+// --------------------------------------------------------------------------
+.section--snap {
+  scroll-snap-align: start;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// --------------------------------------------------------------------------
+// Titre de section
+// --------------------------------------------------------------------------
+.title {
+  font-size: var(--font-size-4xl);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xl);
+
+  @include respond-to("tablet") {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-md);
+  }
+}
