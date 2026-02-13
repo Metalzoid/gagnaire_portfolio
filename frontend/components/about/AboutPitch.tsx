@@ -6,7 +6,13 @@ import { PITCH_ICONS } from "./about-icons";
 import type { PitchBlock } from "@/types";
 import styles from "./AboutPitch.module.scss";
 
-const renderPitchBlock = (profile: ReturnType<typeof getProfile>) => (block: PitchBlock) => {
+function PitchBlockItem({
+  block,
+  profile,
+}: {
+  block: PitchBlock;
+  profile: ReturnType<typeof getProfile>;
+}) {
   const Icon = PITCH_ICONS[block.icon];
   if (!Icon) return null;
   return (
@@ -18,7 +24,15 @@ const renderPitchBlock = (profile: ReturnType<typeof getProfile>) => (block: Pit
       <p className={styles.blockText}>{profile.pitch[block.key]}</p>
     </div>
   );
-};
+}
+
+function renderPitchBlock(profile: ReturnType<typeof getProfile>) {
+  const PitchBlockRenderer = (block: PitchBlock) => (
+    <PitchBlockItem block={block} profile={profile} />
+  );
+  PitchBlockRenderer.displayName = "PitchBlockRenderer";
+  return PitchBlockRenderer;
+}
 
 export function AboutPitch() {
   const profile = getProfile();

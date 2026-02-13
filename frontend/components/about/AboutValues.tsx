@@ -61,7 +61,11 @@ export function AboutValues() {
         >
           Télécharger mon CV
         </Button>
-        <Button variant="outline" ariaLabel="Me contacter" onClick={openContactModal}>
+        <Button
+          variant="outline"
+          ariaLabel="Me contacter"
+          onClick={openContactModal}
+        >
           Me contacter
         </Button>
       </div>
