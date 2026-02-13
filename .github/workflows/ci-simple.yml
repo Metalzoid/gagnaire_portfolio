@@ -27,6 +27,9 @@ jobs:
       - name: Lint
         run: npm run lint --workspace=frontend
 
+      - name: TypeScript check
+        run: npm run typecheck --workspace=frontend
+
       - name: Build
         run: npm run build --workspace=frontend
 
