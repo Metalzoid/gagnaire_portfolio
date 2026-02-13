@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
 
 // Debounce : on échantillonne le pic de delta toutes les 100ms
@@ -32,8 +32,8 @@ const useSnapScroll = ({
   totalSections,
 }: UseSnapScrollOptions): UseSnapScrollReturn => {
   const context = useSnapScrollContext();
-  // Toujours initialiser à 0 pour éviter le mismatch d'hydratation
-  const [currentSection, setCurrentSection] = useState(0);
+  // Unique source de vérité : le context (évite les rendus en cascade)
+  const { currentSection, setCurrentSection } = context;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const currentSectionRef = useRef(0);
 
@@ -46,11 +46,10 @@ const useSnapScroll = ({
   const lastDirection = useRef(0);
   const samplesSinceLock = useRef(0);
 
+  // Garder la ref en sync pour le wheel handler (pas de setState, juste une ref)
   useEffect(() => {
     currentSectionRef.current = currentSection;
-    // Synchroniser avec le context
-    context.setCurrentSection(currentSection);
-  }, [currentSection, context]);
+  }, [currentSection]);
 
   // Retirer l'ancre de l'URL après un scroll (évite de garder #section dans la barre d'adresse)
   useEffect(() => {
@@ -72,7 +71,7 @@ const useSnapScroll = ({
       setCurrentSection(index);
       sections[index].scrollIntoView({ behavior: "smooth" });
     },
-    [totalSections]
+    [totalSections, setCurrentSection]
   );
 
   // Enregistrer le handler dans le context au mount
@@ -224,7 +223,7 @@ const useSnapScroll = ({
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, [enabled, totalSections]);
+  }, [enabled, totalSections, setCurrentSection]);
 
   // Navigation clavier
   useEffect(() => {

@@ -1,0 +1,68 @@
+// ==========================================================================
+// Tooltip - Infobulle au hover/focus
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+@use "../../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip {
+  z-index: $z-dropdown;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-bg-primary);
+  background-color: var(--color-text-primary);
+  border-radius: var(--border-radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast),
+    transform var(--transition-fast);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    transform: none;
+  }
+}
+
+// Animations d'entrée par direction (état caché : offset de départ)
+.tooltip--top {
+  transform: translateY(4px);
+}
+
+.tooltip--bottom {
+  transform: translateY(-4px);
+}
+
+.tooltip--left {
+  transform: translateX(4px);
+}
+
+.tooltip--right {
+  transform: translateX(-4px);
+}
+
+// État visible : spécificité (0,2,0) via sélecteurs composés
+// pour garantir la priorité sur les classes directionnelles (0,1,0)
+// indépendamment de l'ordre dans le fichier
+.tooltip--visible {
+  opacity: 1;
+  visibility: visible;
+
+  &.tooltip--top,
+  &.tooltip--bottom,
+  &.tooltip--left,
+  &.tooltip--right {
+    transform: translate(0, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+}

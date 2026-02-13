@@ -1,0 +1,53 @@
+// ==========================================================================
+// Divider - Séparateur visuel entre sections
+// ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
+@use "../../../styles/abstracts/mixins" as *;
+
+// --------------------------------------------------------------------------
+// Base
+// --------------------------------------------------------------------------
+.divider {
+  border: none;
+  margin: var(--spacing-md) 0;
+}
+
+// --------------------------------------------------------------------------
+// Variante Line : trait horizontal simple
+// --------------------------------------------------------------------------
+.divider--line {
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+// --------------------------------------------------------------------------
+// Variante Dots : trois points centrés
+// --------------------------------------------------------------------------
+.divider--dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--border-radius-full);
+    background-color: var(--color-text-secondary);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Variante Gradient : dégradé couleurs accent Dracula
+// --------------------------------------------------------------------------
+.divider--gradient {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent-primary),
+    var(--color-accent-secondary),
+    var(--color-accent-primary),
+    transparent
+  );
+}

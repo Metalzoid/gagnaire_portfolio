@@ -22,6 +22,7 @@ export default function Home() {
       <div ref={containerRef} className={styles.snapContainer}>
         {homeSections.map((section, index) => {
           const isLast = index === homeSections.length - 1;
+
           return (
             <section
               key={section.id}
