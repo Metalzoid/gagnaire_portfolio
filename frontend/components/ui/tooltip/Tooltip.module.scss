@@ -20,7 +20,6 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(4px);
   transition:
     opacity var(--transition-fast),
     visibility var(--transition-fast),
@@ -32,10 +31,36 @@
   }
 }
 
+// Animations d'entrée par direction (état caché : offset de départ)
+.tooltip--top {
+  transform: translateY(4px);
+}
+
+.tooltip--bottom {
+  transform: translateY(-4px);
+}
+
+.tooltip--left {
+  transform: translateX(4px);
+}
+
+.tooltip--right {
+  transform: translateX(-4px);
+}
+
+// État visible : spécificité (0,2,0) via sélecteurs composés
+// pour garantir la priorité sur les classes directionnelles (0,1,0)
+// indépendamment de l'ordre dans le fichier
 .tooltip--visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+
+  &.tooltip--top,
+  &.tooltip--bottom,
+  &.tooltip--left,
+  &.tooltip--right {
+    transform: translate(0, 0);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     transform: none;
