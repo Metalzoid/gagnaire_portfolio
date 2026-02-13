@@ -44,11 +44,13 @@
   border-radius: var(--border-radius-full);
   transition: transform var(--transition-fast);
 
-  &:hover {
-    transform: scale(1.3);
+  @include on-hover {
+    &:hover {
+      transform: scale(1.3);
 
-    .indicator {
-      background-color: var(--color-accent-primary);
+      .indicator {
+        background-color: var(--color-accent-primary);
+      }
     }
   }
 

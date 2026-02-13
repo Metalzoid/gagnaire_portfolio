@@ -26,7 +26,9 @@
   margin-bottom: var(--spacing-lg);
   word-break: break-all;
 
-  &:hover {
-    text-decoration: underline;
+  @include on-hover {
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

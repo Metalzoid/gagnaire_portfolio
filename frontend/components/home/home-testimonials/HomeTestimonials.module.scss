@@ -69,8 +69,10 @@
   margin: 0;
   @include theme-transition;
 
-  &:hover {
-    border-color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover {
+      border-color: var(--color-accent-primary);
+    }
   }
 }
 

@@ -29,6 +29,8 @@
   min-width: 0;
   overflow: hidden;
   border-radius: var(--border-radius-lg);
+  // Support swipe horizontal mobile : le navigateur conserve le scroll vertical
+  touch-action: pan-y;
 }
 
 // --------------------------------------------------------------------------
@@ -101,8 +103,10 @@
     display: block;
   }
 
-  &:hover:not(:disabled) {
-    color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover:not(:disabled) {
+      color: var(--color-accent-primary);
+    }
   }
 
   &:active {
@@ -164,9 +168,11 @@
     background-color var(--transition-fast),
     transform var(--transition-fast);
 
-  &:hover {
-    background-color: var(--color-text-secondary);
-    transform: scale(1.2);
+  @include on-hover {
+    &:hover {
+      background-color: var(--color-text-secondary);
+      transform: scale(1.2);
+    }
   }
 
   &:focus-visible {

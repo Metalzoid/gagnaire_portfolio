@@ -58,7 +58,7 @@ export function HomeFeaturedProjects() {
           showArrows={true}
           showCounter={false}
           autoPlay={true}
-          autoPlayInterval={5000}
+          autoPlayInterval={10000}
           loop={true}
           ariaLabel="Projets à la une"
         />

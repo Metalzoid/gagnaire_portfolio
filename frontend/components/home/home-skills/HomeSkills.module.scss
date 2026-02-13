@@ -70,8 +70,10 @@
   border-radius: var(--border-radius-md);
   @include theme-transition;
 
-  &:hover {
-    border-color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover {
+      border-color: var(--color-accent-primary);
+    }
   }
 }
 

@@ -37,7 +37,12 @@
   padding: 0;
   transition: border-color var(--transition-fast);
 
-  &:hover,
+  @include on-hover {
+    &:hover {
+      border-color: var(--color-accent-primary);
+    }
+  }
+
   &--active {
     border-color: var(--color-accent-primary);
   }

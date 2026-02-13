@@ -94,8 +94,10 @@ a {
   color: var(--color-link);
   transition: color var(--transition-fast);
 
-  &:hover {
-    color: var(--color-accent-primary);
+  @include on-hover {
+    &:hover {
+      color: var(--color-accent-primary);
+    }
   }
 
   &:focus-visible {

@@ -18,13 +18,15 @@
     box-shadow var(--transition-fast);
   @include theme-transition;
 
-  &:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent-primary);
-    box-shadow: var(--shadow-lg);
+  @include on-hover {
+    &:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-accent-primary);
+      box-shadow: var(--shadow-lg);
 
-    .overlay {
-      opacity: 1;
+      .overlay {
+        opacity: 1;
+      }
     }
   }
 

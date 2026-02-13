@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import styles from "./Carousel.module.scss";
@@ -65,13 +66,44 @@ function Carousel<T>({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Refs pour le swipe tactile
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  // Refs pour le swipe tactile (mobile)
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const touchStartY = useRef(0);
+  const isDraggingRef = useRef(false);
+
+  const prefersReducedMotion = useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onStoreChange);
+      return () => mq.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false
+  );
 
   // Index logique pour dots/compteur (0 à total-1)
   const logicalIndex = currentIndex >= total ? 0 : currentIndex;
+
+  // --------------------------------------------------------------------------
+  // Visibilité : timer démarre en vue, reset quand hors vue
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // --------------------------------------------------------------------------
   // Reset instantané après passage sur le clone (sans animation)
@@ -130,14 +162,14 @@ function Carousel<T>({
   }, [currentIndex, loop, goTo]);
 
   // --------------------------------------------------------------------------
-  // Auto-play
+  // Auto-play : démarre quand en vue, pause/reset hors vue ou drag
   // --------------------------------------------------------------------------
   useEffect(() => {
-    if (!autoPlay || isPaused || total <= 1) return;
+    if (!autoPlay || !isInView || isPaused || isDragging || total <= 1) return;
 
     const timer = setInterval(goNext, autoPlayInterval);
     return () => clearInterval(timer);
-  }, [autoPlay, autoPlayInterval, isPaused, goNext, total]);
+  }, [autoPlay, autoPlayInterval, isInView, isPaused, isDragging, goNext, total]);
 
   // --------------------------------------------------------------------------
   // Clavier
@@ -159,28 +191,71 @@ function Carousel<T>({
   );
 
   // --------------------------------------------------------------------------
-  // Swipe tactile
+  // Swipe tactile : suivi du doigt en temps réel (mobile)
   // --------------------------------------------------------------------------
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
-    touchEndX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    viewportRef.current?.style.setProperty("--carousel-drag", "0px");
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  }, []);
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      const currentX = e.touches[0].clientX;
+      let delta = touchStartX.current - currentX;
 
-  const handleTouchEnd = useCallback(() => {
-    const diff = touchStartX.current - touchEndX.current;
-
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
-      if (diff > 0) {
-        goNext();
-      } else {
-        goPrev();
+      // Résistance aux bords (mode non-loop)
+      if (!loop && total > 1) {
+        if (currentIndex === 0 && delta < 0) {
+          delta *= 0.3;
+        } else if (currentIndex >= total - 1 && delta > 0) {
+          delta *= 0.3;
+        }
       }
-    }
-  }, [goNext, goPrev]);
+      viewportRef.current?.style.setProperty("--carousel-drag", `${delta}px`);
+    },
+    [currentIndex, loop, total],
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const endX = e.changedTouches?.[0]?.clientX;
+      const diff = endX != null ? touchStartX.current - endX : 0;
+
+      if (!isTransitioning && Math.abs(diff) > SWIPE_THRESHOLD) {
+        if (diff > 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
+      }
+
+      viewportRef.current?.style.removeProperty("--carousel-drag");
+      isDraggingRef.current = false;
+      setIsDragging(false);
+    },
+    [goNext, goPrev, isTransitioning],
+  );
+
+  // Désactiver le scroll vertical pendant un drag horizontal (passive: false requis)
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDraggingRef.current || !e.touches[0]) return;
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
+      const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
+      if (deltaX > deltaY && deltaX > 5) {
+        e.preventDefault();
+      }
+    };
+
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", handleTouchMove);
+  }, []);
 
   // --------------------------------------------------------------------------
   // Rendu
@@ -194,13 +269,18 @@ function Carousel<T>({
     .filter(Boolean)
     .join(" ");
 
+  const baseTranslate = -currentIndex * 100;
+  const transitionValue = prefersReducedMotion
+    ? "none"
+    : "transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
   const trackStyle = {
-    transform: `translateX(-${currentIndex * 100}%)`,
-    transition: disableTransition ? "none" : undefined,
+    transform: `translateX(calc(${baseTranslate}% - var(--carousel-drag, 0px)))`,
+    transition: disableTransition || isDragging ? "none" : transitionValue,
   };
 
   return (
     <div
+      ref={wrapperRef}
       className={wrapperClasses}
       role="region"
       aria-label={ariaLabel}
@@ -208,9 +288,6 @@ function Carousel<T>({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onKeyDown={handleKeyDown}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       {/* Conteneur flex : flèche gauche | viewport | flèche droite */}
       <div className={styles.carouselInner}>
@@ -237,14 +314,22 @@ function Carousel<T>({
           </button>
         )}
 
-        {/* Piste de slides */}
-        <div className={styles.viewport}>
+        {/* Piste de slides (swipe tactile sur le viewport uniquement) */}
+        <div
+          ref={viewportRef}
+          className={styles.viewport}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className={styles.track} style={trackStyle}>
             {displayItems.map((item, index) => (
               <div
                 key={index}
                 className={`${styles.slide} ${
-                  index !== currentIndex ? styles["slide--hidden"] : ""
+                  !isDragging && !isTransitioning && index !== currentIndex
+                    ? styles["slide--hidden"]
+                    : ""
                 }`}
                 role="group"
                 aria-roledescription="slide"
