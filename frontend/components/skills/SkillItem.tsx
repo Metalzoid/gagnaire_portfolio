@@ -1,9 +1,6 @@
 import type { Skill } from "@/types";
 import styles from "./SkillItem.module.scss";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {};
-// Les icônes sont chargées dynamiquement dans SkillCategory
-
 interface SkillItemProps {
   skill: Skill;
   icon?: React.ReactNode;

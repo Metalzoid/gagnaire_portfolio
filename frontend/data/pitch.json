@@ -1,0 +1,6 @@
+[
+  { "key": "who", "icon": "FaUser", "title": "Qui suis-je" },
+  { "key": "what", "icon": "FaCode", "title": "Ce que je fais" },
+  { "key": "why", "icon": "FaHeart", "title": "Pourquoi" },
+  { "key": "method", "icon": "FaCogs", "title": "Ma méthode" }
+]

@@ -30,13 +30,7 @@ const COLORS = {
   stroke: "var(--color-accent-primary)",
 };
 
-export function SkillRadar({
-  category,
-  index,
-}: {
-  category: SkillCategory;
-  index: number;
-}) {
+export function SkillRadar({ category }: { category: SkillCategory }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
   const data = getRadarData(category);
 

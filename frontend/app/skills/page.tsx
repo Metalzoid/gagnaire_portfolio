@@ -38,8 +38,8 @@ export default function SkillsPage() {
 
         {viewMode === "radar" && (
           <div className={styles.radars}>
-            {skills.map((category, index) => (
-              <SkillRadar key={category.name} category={category} index={index} />
+            {skills.map((category) => (
+              <SkillRadar key={category.name} category={category} />
             ))}
           </div>
         )}

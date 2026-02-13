@@ -1,0 +1,22 @@
+[
+  {
+    "icon": "FaCode",
+    "title": "Clean code",
+    "description": "Code lisible, maintenable et bien structuré."
+  },
+  {
+    "icon": "FaUniversalAccess",
+    "title": "Accessibilité",
+    "description": "Des interfaces utilisables par tous."
+  },
+  {
+    "icon": "FaBolt",
+    "title": "Performance",
+    "description": "Applications rapides et optimisées."
+  },
+  {
+    "icon": "FaLightbulb",
+    "title": "Curiosité",
+    "description": "Veille continue et apprentissage permanent."
+  }
+]

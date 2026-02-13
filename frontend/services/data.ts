@@ -8,6 +8,8 @@ import type {
   Experience,
   Profile,
   Testimonial,
+  PitchBlock,
+  AboutValue,
 } from "@/types";
 import profileData from "@/data/profile.json";
 import projectsData from "@/data/projects.json";
@@ -15,6 +17,8 @@ import topProjectsSlugs from "@/data/top-projects.json";
 import skillsData from "@/data/skills.json";
 import experienceData from "@/data/experience.json";
 import testimonialsData from "@/data/testimonials.json";
+import pitchData from "@/data/pitch.json";
+import valuesData from "@/data/values.json";
 
 const allProjects = projectsData as unknown as Project[];
 
@@ -67,4 +71,15 @@ export function getProfile(): Profile {
 // --------------------------------------------------------------------------
 export function getTestimonials(): Testimonial[] {
   return testimonialsData as Testimonial[];
+}
+
+// --------------------------------------------------------------------------
+// About - Pitch & Values
+// --------------------------------------------------------------------------
+export function getPitchBlocks(): PitchBlock[] {
+  return pitchData as PitchBlock[];
+}
+
+export function getValues(): AboutValue[] {
+  return valuesData as AboutValue[];
 }
