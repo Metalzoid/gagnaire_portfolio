@@ -1,0 +1,130 @@
+// ==========================================================================
+// TerminalHero - Fenêtre terminal avec effet typewriter
+// ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+// --------------------------------------------------------------------------
+// Fenêtre terminal
+// --------------------------------------------------------------------------
+.terminal {
+  width: 100%;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  @include theme-transition;
+}
+
+// --------------------------------------------------------------------------
+// Barre de titre (style macOS)
+// --------------------------------------------------------------------------
+.titleBar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dots {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+
+  &[data-color="red"] {
+    background-color: #ff5f56;
+  }
+  &[data-color="yellow"] {
+    background-color: #ffbd2e;
+  }
+  &[data-color="green"] {
+    background-color: #27ca40;
+  }
+}
+
+.terminalTitle {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-left: var(--spacing-md);
+}
+
+// --------------------------------------------------------------------------
+// Contenu
+// --------------------------------------------------------------------------
+.content {
+  padding: var(--spacing-lg);
+  min-height: 180px;
+}
+
+.output {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  color: var(--color-text-primary);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.line {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// Curseur clignotant
+// --------------------------------------------------------------------------
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.2em;
+  background-color: var(--color-accent-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Boutons CTA
+// --------------------------------------------------------------------------
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+
+  @include respond-to("mobile") {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+  }
+}

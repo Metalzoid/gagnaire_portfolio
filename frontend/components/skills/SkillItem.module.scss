@@ -1,0 +1,37 @@
+@use "../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  margin-bottom: var(--spacing-md);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.icon {
+  font-size: 1rem;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.progressWrapper {
+  height: 8px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--color-accent-primary);
+  border-radius: var(--border-radius-full);
+  transition: width 0.5s ease-out;
+}

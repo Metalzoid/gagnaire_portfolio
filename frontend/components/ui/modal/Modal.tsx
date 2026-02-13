@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import useLockBodyScroll from "@/hooks/useLockBodyScroll";
@@ -38,6 +44,13 @@ const contentVariants = {
 const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+
+  // Détection client sans mismatch d'hydratation (serveur → false, client → true)
+  const isBrowser = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useLockBodyScroll(isOpen);
   useKeyPress("Escape", onClose, isOpen);
@@ -155,7 +168,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     </AnimatePresence>
   );
 
-  if (typeof document === "undefined") return null;
+  if (!isBrowser) return null;
 
   return createPortal(modalContent, document.body);
 };

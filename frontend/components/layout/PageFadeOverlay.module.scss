@@ -1,0 +1,52 @@
+// ==========================================================================
+// PageFadeOverlay - Fondu top/bottom (hors NavigationWrapper pour fixed correct)
+// ==========================================================================
+@use "../../styles/abstracts/variables" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: $z-sticky;
+  /* Transition uniquement à la réapparition pour éviter un effet choquant */
+  transition: opacity 0.2s ease;
+}
+
+.overlay--hidden {
+  opacity: 0;
+  /* Masquage instantané au changement de thème */
+  transition: none;
+}
+
+// Pseudo-éléments pour le fondu (position: fixed hérite du parent)
+.overlay::before,
+.overlay::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 6rem;
+  pointer-events: none;
+}
+
+// Fondu en haut
+.overlay::before {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-primary) 20%,
+    transparent 100%
+  );
+}
+
+// Fondu en bas
+.overlay::after {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-primary) 20%,
+    transparent 100%
+  );
+}

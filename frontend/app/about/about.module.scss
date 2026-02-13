@@ -1,0 +1,13 @@
+@use "../../styles/abstracts/mixins" as *;
+
+.page {
+  padding: var(--spacing-3xl) 0;
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xl) 0;
+  }
+}

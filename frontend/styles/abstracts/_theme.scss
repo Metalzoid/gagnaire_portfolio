@@ -22,6 +22,7 @@
   --color-info: #{$dracula-cyan};
   --color-highlight: #{$dracula-yellow};
   --color-border: #{$dracula-current};
+  --color-chart-grid-inactive: #3d3f4d;
 
   // Espacement
   --spacing-xs: #{$spacing-xs};
@@ -31,6 +32,7 @@
   --spacing-xl: #{$spacing-xl};
   --spacing-2xl: #{$spacing-2xl};
   --spacing-3xl: #{$spacing-3xl};
+  --spacing-4xl: #{$spacing-4xl};
 
   // Transitions
   --transition-fast: #{$transition-fast};
@@ -81,6 +83,7 @@
   --color-info: #{$light-cyan};
   --color-highlight: #{$light-yellow};
   --color-border: darken($light-current, 10%);
+  --color-chart-grid-inactive: #d4d4cc;
 
   // Ombres plus douces en light mode
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);

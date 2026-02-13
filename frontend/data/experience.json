@@ -1,0 +1,31 @@
+[
+  {
+    "type": "work",
+    "title": "Développeur Fullstack - Alternance",
+    "company": "Nom Entreprise",
+    "location": "Lyon",
+    "startDate": "2025-09",
+    "endDate": null,
+    "current": true,
+    "description": "Développement d'applications web pour des clients internes. Participation à toutes les phases du cycle de développement : conception, développement, tests et déploiement.",
+    "technologies": ["React", "Node.js", "PostgreSQL", "Docker"]
+  },
+  {
+    "type": "education",
+    "title": "Titre RNCP Niveau 6 - Développeur Web",
+    "company": "OpenClassrooms",
+    "startDate": "2025-09",
+    "endDate": null,
+    "current": true,
+    "description": "Formation en alternance sur 24 mois. Projets pratiques : intégration web, API REST, React, architecture fullstack. Méthodologies agiles et bonnes pratiques de développement."
+  },
+  {
+    "type": "education",
+    "title": "Formation Développeur Web",
+    "company": "OpenClassrooms",
+    "startDate": "2024-06",
+    "endDate": "2025-06",
+    "current": false,
+    "description": "Parcours initial de formation aux fondamentaux du développement web : HTML, CSS, JavaScript, bases de données et API."
+  }
+]

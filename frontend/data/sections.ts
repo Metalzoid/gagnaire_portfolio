@@ -10,12 +10,7 @@ export interface SectionData {
 }
 
 export const homeSections: SectionData[] = [
-  {
-    id: "hero",
-    label: "Accueil",
-    title: "Portfolio Gagnaire",
-    text: "Développeur Full Stack passionné.",
-  },
+  { id: "hero", label: "Accueil", title: "", text: "" },
   {
     id: "a-propos",
     label: "À propos",
@@ -33,6 +28,12 @@ export const homeSections: SectionData[] = [
     label: "Projets",
     title: "Projets",
     text: "Une sélection de mes réalisations.",
+  },
+  {
+    id: "temoignages",
+    label: "Témoignages",
+    title: "Témoignages",
+    text: "Ce qu'ils disent de moi.",
   },
   {
     id: "contact",

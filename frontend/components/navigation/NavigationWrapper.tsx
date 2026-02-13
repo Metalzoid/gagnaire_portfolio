@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { usePathname } from "next/navigation";
 import useLockBodyScroll from "@/hooks/useLockBodyScroll";
 import useKeyPress from "@/hooks/useKeyPress";
 import BurgerButton from "./BurgerButton";
 import NavigationMenu from "./NavigationMenu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import Link from "next/link";
+import { FaHome } from "react-icons/fa";
 import styles from "./NavigationWrapper.module.scss";
 
 interface NavigationWrapperProps {
@@ -14,6 +17,8 @@ interface NavigationWrapperProps {
 
 const NavigationWrapper = ({ children }: NavigationWrapperProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const toggleMenu = useCallback(() => {
     setMenuOpen((prev) => !prev);
@@ -31,6 +36,15 @@ const NavigationWrapper = ({ children }: NavigationWrapperProps) => {
 
   return (
     <>
+      {!isHome && (
+        <Link
+          href="/"
+          className={styles.homeLink}
+          aria-label="Retour à l'accueil"
+        >
+          <FaHome aria-hidden="true" />
+        </Link>
+      )}
       <div className={styles.topBar}>
         <div className={styles.themeToggleDesktop}>
           <ThemeToggle />

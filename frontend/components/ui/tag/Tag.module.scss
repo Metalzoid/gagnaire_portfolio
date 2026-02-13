@@ -84,6 +84,24 @@
   }
 }
 
+// --------------------------------------------------------------------------
+// Variante Tech (technologies / compétences)
+// --------------------------------------------------------------------------
+.tag--tech {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-accent-secondary);
+  border-color: var(--color-border);
+}
+
+// --------------------------------------------------------------------------
+// Variante Status (en cours, terminé, etc.)
+// --------------------------------------------------------------------------
+.tag--status {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+}
+
 .tag--accent {
   @include tag-variant(var(--color-accent-primary));
 }

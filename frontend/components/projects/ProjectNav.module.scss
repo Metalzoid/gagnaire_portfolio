@@ -1,0 +1,26 @@
+@use "../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.group {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.prev {
+  justify-self: start;
+}
+
+.center {
+  justify-self: center;
+}
+
+.next {
+  justify-self: end;
+}

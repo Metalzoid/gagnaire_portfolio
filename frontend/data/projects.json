@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "portfolio-gagnaire",
+    "title": "Portfolio Gagnaire",
+    "description": "Mon portfolio professionnel construit avec Next.js, React et SCSS. Design moderne avec thème Dracula et navigation fluide.",
+    "longDescription": "Ce portfolio présente mes compétences, mes projets et mon parcours. Développé avec Next.js 16 et React 19, il met en œuvre un design responsive avec thème clair/sombre inspiré de Dracula. La navigation utilise le snap scroll pour une expérience immersive. Le projet démontre une maîtrise des composants réutilisables, du CSS moderne (variables, mixins) et de l'accessibilité.",
+    "technologies": ["Next.js", "React", "TypeScript", "SCSS"],
+    "category": "frontend",
+    "images": {
+      "main": "/images/projects/portfolio-gagnaire/main.webp",
+      "thumbnails": [
+        "/images/projects/portfolio-gagnaire/thumb-1.webp",
+        "/images/projects/portfolio-gagnaire/thumb-2.webp"
+      ]
+    },
+    "github": "https://github.com/Metalzoid/gagnaire_portfolio",
+    "demo": null,
+    "featured": true,
+    "date": "2025-02"
+  },
+  {
+    "slug": "booki-oc",
+    "title": "Booki - Réservation d'hébergements",
+    "description": "Maquette responsive d'un site de réservation d'hébergements. Intégration HTML/CSS à partir de maquettes Figma.",
+    "longDescription": "Projet de formation OpenClassrooms consistant à intégrer une maquette Figma en HTML et CSS. Le site doit être responsive (desktop, tablette, mobile) avec une attention particulière à l'accessibilité et aux bonnes pratiques sémantiques. Recherche d'hébergements, filtres et présentation des hébergements populaires.",
+    "technologies": ["HTML", "CSS", "Figma"],
+    "category": "frontend",
+    "images": {
+      "main": "/images/projects/booki-oc/main.webp",
+      "thumbnails": ["/images/projects/booki-oc/thumb-1.webp"]
+    },
+    "github": "https://github.com/Metalzoid/Booki",
+    "demo": null,
+    "featured": true,
+    "date": "2025-01"
+  },
+  {
+    "slug": "sophie-bluel",
+    "title": "Portfolio Sophie Bluel",
+    "description": "Portfolio d'architecte avec galerie dynamique et formulaire de connexion. API REST et manipulation du DOM.",
+    "longDescription": "Projet de formation pour un portfolio d'architecte. Mise en place d'un système de connexion, d'une API REST pour gérer les projets, et d'une galerie dynamique avec filtres par catégorie. Utilisation de fetch, async/await et manipulation du DOM en JavaScript vanilla.",
+    "technologies": ["HTML", "CSS", "JavaScript", "API REST"],
+    "category": "fullstack",
+    "images": {
+      "main": "/images/projects/sophie-bluel/main.webp",
+      "thumbnails": []
+    },
+    "github": null,
+    "demo": null,
+    "featured": false,
+    "date": "2025-01"
+  },
+  {
+    "slug": "kasa-location",
+    "title": "Kasa - Location immobilière",
+    "description": "Application de location immobilière développée avec React. Routing, composants réutilisables et gestion d'état.",
+    "longDescription": "Refonte complète du frontend d'une application de location. Développement d'une SPA React avec React Router, décomposition en composants réutilisables (carousel, dropdown, tags), et mise en place d'un système de routing pour les pages détail des logements. Données chargées depuis un fichier JSON.",
+    "technologies": ["React", "JavaScript", "SCSS"],
+    "category": "frontend",
+    "images": {
+      "main": "/images/projects/kasa-location/main.webp",
+      "thumbnails": [
+        "/images/projects/kasa-location/thumb-1.webp",
+        "/images/projects/kasa-location/thumb-2.webp"
+      ]
+    },
+    "github": null,
+    "demo": null,
+    "featured": false,
+    "date": "2024-12"
+  }
+]
