@@ -7,6 +7,9 @@ ARG NODE_ENV=production
 
 FROM node:20-alpine AS base
 
+# Mise à jour npm vers la v11
+RUN npm install -g npm@11
+
 WORKDIR /app
 
 COPY package*.json ./
