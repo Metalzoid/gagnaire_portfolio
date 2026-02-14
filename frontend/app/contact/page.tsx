@@ -1,16 +1,23 @@
 import { ContactForm, ContactInfo } from "@/components/contact";
+import { BreadcrumbSchema } from "@/components/seo";
 import { Container } from "@/components/ui/container";
 import styles from "./contact.module.scss";
 
 export const metadata = {
-  title: "Contact - Gagnaire Florian",
+  title: "Contact",
   description:
-    "Contactez Florian Gagnaire pour vos projets de développement web.",
+    "Formulaire de contact pour vos projets de développement web.",
 };
 
 export default function ContactPage() {
   return (
     <div className={`page page--contact ${styles.page}`}>
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", href: "/" },
+          { name: "Contact", href: "/contact" },
+        ]}
+      />
       <Container>
         <header className={styles.header}>
           <h1 className={styles.title}>Contact</h1>

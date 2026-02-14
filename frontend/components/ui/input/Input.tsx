@@ -44,6 +44,7 @@ const Input = ({
     value,
     onChange,
     required,
+    "aria-required": required || undefined,
     "aria-invalid": hasError || undefined,
     "aria-describedby": hasError ? errorId : undefined,
   };

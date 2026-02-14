@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProjects, getProjectBySlug } from "@/services/data";
 import { ProjectDetail } from "@/components/projects";
+import { BreadcrumbSchema, ProjectSchema } from "@/components/seo";
 import { Container } from "@/components/ui/container";
+import { SITE_URL } from "@/lib/site-config";
 import styles from "../projects.module.scss";
 
 // --------------------------------------------------------------------------
@@ -26,12 +28,10 @@ export async function generateMetadata({
   if (!project) return { title: "Projet non trouvé" };
 
   return {
-    title: `${project.title} - Gagnaire Florian`,
+    title: project.title,
     description: project.description,
-    openGraph: {
-      title: project.title,
-      description: project.description,
-      images: project.images?.main ? [project.images.main] : undefined,
+    alternates: {
+      canonical: `${SITE_URL}/projects/${project.slug}`,
     },
   };
 }
@@ -57,6 +57,14 @@ export default async function ProjectDetailPage({
 
   return (
     <div className={`page page--project-detail ${styles.page}`}>
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", href: "/" },
+          { name: "Projets", href: "/projects" },
+          { name: project.title },
+        ]}
+      />
+      <ProjectSchema project={project} />
       <Container>
         <ProjectDetail
           project={project}

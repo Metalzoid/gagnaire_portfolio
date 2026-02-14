@@ -8,10 +8,11 @@
 @use "abstracts/theme";
 @use "abstracts/mixins";
 
-// 2. Base (reset, typographie, animations)
+// 2. Base (reset, typographie, animations, accessibilité)
 @use "base/reset";
 @use "base/typography";
 @use "base/animations";
+@use "base/accessibility";
 
 // 3. Layout (containers, grilles, footer)
 @use "layout/container";
