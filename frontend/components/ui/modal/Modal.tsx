@@ -52,8 +52,17 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     () => false,
   );
 
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const handleClose = useCallback(() => {
+    onClose();
+    requestAnimationFrame(() => {
+      previousFocusRef.current?.focus();
+    });
+  }, [onClose]);
+
   useLockBodyScroll(isOpen);
-  useKeyPress("Escape", onClose, isOpen);
+  useKeyPress("Escape", handleClose, isOpen);
 
   // Focus trap : piège le focus dans le dialog quand ouvert
   const handleKeyDown = useCallback(
@@ -88,6 +97,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
 
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
     document.addEventListener("keydown", handleKeyDown);
 
     const timer = setTimeout(() => {
@@ -116,7 +126,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             animate="open"
             exit="exit"
             transition={{ duration: 0.2 }}
-            onClick={onClose}
+            onClick={handleClose}
             aria-hidden="true"
           />
           <div className={styles.dialogWrapper}>
@@ -142,7 +152,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 <button
                   type="button"
                   className={styles.closeButton}
-                  onClick={onClose}
+                  onClick={handleClose}
                   aria-label="Fermer la fenêtre"
                 >
                   <svg

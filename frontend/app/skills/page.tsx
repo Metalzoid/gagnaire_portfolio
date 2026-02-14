@@ -1,11 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { getSkills } from "@/services/data";
-import { SkillRadar, SkillCategory } from "@/components/skills";
+import { SkillCategory, SkillRadarSkeleton } from "@/components/skills";
 import { Container } from "@/components/ui/container";
 import { Tag } from "@/components/ui/tag";
 import styles from "./skills.module.scss";
+
+// Lazy load du radar (recharts est lourd)
+const SkillRadar = dynamic(
+  () => import("@/components/skills/SkillRadar").then((mod) => mod.SkillRadar),
+  {
+    loading: () => <SkillRadarSkeleton />,
+    ssr: false,
+  }
+);
 
 type ViewMode = "radar" | "lines";
 

@@ -88,7 +88,7 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className={styles.success}>
+      <div className={styles.success} role="status" aria-live="polite">
         <p>
           Votre message a été préparé. Votre client de messagerie va
           s&apos;ouvrir.

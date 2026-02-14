@@ -156,6 +156,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
               {/* Ordre défini dans data/navigation.ts */}
               {navigationLinks.map((item, i) => {
                 if (item.type === "link") {
+                  const isCurrentPage = pathname === item.href;
                   return (
                     <motion.li
                       key={`link-${item.href}`}
@@ -167,8 +168,11 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
                     >
                       <Link
                         href={item.href}
-                        className={styles.link}
+                        className={`${styles.link} ${
+                          isCurrentPage ? styles["link--active"] : ""
+                        }`}
                         onClick={onClose}
+                        aria-current={isCurrentPage ? "page" : undefined}
                       >
                         {item.label}
                       </Link>
@@ -211,6 +215,7 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
                 }
 
                 const href = sectionToPage[section.id] ?? `/#${section.id}`;
+                const isCurrentPage = !isHomePage && pathname === href;
                 // Sur home : scroll si autre section, sinon href (déjà sur la section)
                 const useLink = !isHomePage || isActive;
 
@@ -227,10 +232,14 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
                       <Link
                         href={href}
                         className={`${styles.link} ${
-                          isActive ? styles["link--active"] : ""
+                          isActive || isCurrentPage
+                            ? styles["link--active"]
+                            : ""
                         }`}
                         onClick={onClose}
-                        aria-current={isActive ? "page" : undefined}
+                        aria-current={
+                          isActive || isCurrentPage ? "page" : undefined
+                        }
                       >
                         {section.label}
                       </Link>
