@@ -1,0 +1,12 @@
+# Fichiers exclus du contexte Docker (frontend avec contexte monorepo)
+node_modules
+**/node_modules
+.git
+**/.next
+**/dist
+.env*.local
+*.log
+.cursor
+.cursorignore
+**/coverage
+**/.turbo

@@ -1,5 +1,6 @@
 # =============================================================================
 # Frontend Dockerfile - Next.js - Gestion multi-environnement
+# Contexte requis : racine du monorepo (pour accès au package shared)
 # Usage: NODE_ENV=development ou NODE_ENV=production
 # =============================================================================
 
@@ -12,7 +13,10 @@ RUN npm install -g npm@11
 
 WORKDIR /app
 
+# Copie des fichiers du monorepo (contexte = racine)
 COPY package*.json ./
+COPY shared ./shared
+COPY frontend ./frontend
 
 # =============================================================================
 # Stage DEVELOPMENT
@@ -21,9 +25,13 @@ FROM base AS development
 
 RUN apk add --no-cache curl
 
+# Installation des workspaces (shared + frontend)
 RUN npm install
 
-COPY . .
+# Build du package shared (requis pour le frontend)
+RUN npm run build --workspace=shared
+
+WORKDIR /app/frontend
 
 EXPOSE 3000
 
@@ -38,10 +46,14 @@ FROM base AS builder
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
+# Installation avec dépendances de dev (contexte monorepo)
 RUN npm install --include=dev
 
-COPY . .
+# Build du package shared en premier (types et dist requis par le frontend)
+RUN npm run build --workspace=shared
 
+# Build du frontend Next.js
+WORKDIR /app/frontend
 RUN npm run build
 
 # =============================================================================
@@ -55,9 +67,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/frontend/.next/standalone ./
+COPY --from=builder /app/frontend/.next/static ./.next/static
+COPY --from=builder /app/frontend/public ./public
 
 EXPOSE 3000
 

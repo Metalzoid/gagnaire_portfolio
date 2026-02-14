@@ -24,17 +24,17 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
         - NODE_ENV=development
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/app:/app/app:delegated
-      - ./frontend/public:/app/public:delegated
-      - ./frontend/next.config.ts:/app/next.config.ts:delegated
-      - ./frontend/tsconfig.json:/app/tsconfig.json:delegated
+      - ./frontend/app:/app/frontend/app:delegated
+      - ./frontend/public:/app/frontend/public:delegated
+      - ./frontend/next.config.ts:/app/frontend/next.config.ts:delegated
+      - ./frontend/tsconfig.json:/app/frontend/tsconfig.json:delegated
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:3001/api
