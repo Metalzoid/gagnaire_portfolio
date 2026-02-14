@@ -41,6 +41,10 @@ RUN npm install
 
 COPY . .
 
+# DATABASE_URL requis par prisma.config.ts au build (prisma generate ne s'y connecte pas)
+ARG DATABASE_URL=postgresql://build:build@localhost:5432/build
+ENV DATABASE_URL=$DATABASE_URL
+
 # Génère le client Prisma et compile TypeScript
 RUN npm run build
 
