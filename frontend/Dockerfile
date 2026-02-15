@@ -67,12 +67,15 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Monorepo : standalone met server.js dans frontend/ (pas à la racine)
 COPY --from=builder /app/frontend/.next/standalone ./
-COPY --from=builder /app/frontend/.next/static ./.next/static
-COPY --from=builder /app/frontend/public ./public
+COPY --from=builder /app/frontend/.next/static ./frontend/.next/static
+COPY --from=builder /app/frontend/public ./frontend/public
 
 EXPOSE 3000
 
+# server.js est à frontend/server.js en monorepo
+WORKDIR /app/frontend
 CMD ["node", "server.js"]
 
 # =============================================================================

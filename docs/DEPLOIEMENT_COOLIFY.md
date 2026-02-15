@@ -1,24 +1,45 @@
 # Déploiement Coolify
 
+## Réseau : rendre l'addon PostgreSQL accessible au docker-compose
+
+Par défaut, Coolify déploie chaque stack sur un **réseau Docker isolé**. Votre monorepo (frontend + backend) et l'addon PostgreSQL sont donc sur des réseaux différents → le backend ne peut pas joindre la base (`P1001: Can't reach database server`).
+
+### Solution : Connect to Predefined Network
+
+1. **Même destination** : Vérifiez que l'application (Service Stack) et l'addon PostgreSQL utilisent la **même destination** dans Coolify (même serveur + même réseau Docker).
+
+2. **Activer le partage de réseau** :
+   - Allez dans **Votre projet** → **Service Stack** (l'application docker-compose)
+   - Dans les **paramètres** de la stack, activez **"Connect to Predefined Network"**
+   - Sélectionnez la **destination** où PostgreSQL est déployé (ou la même que votre app)
+
+3. **Redéployez** l'application après avoir activé l'option.
+
+Les conteneurs backend et PostgreSQL seront alors sur le même réseau et le hostname de `DATABASE_URL` sera joignable.
+
+> **Important** : N'ajoutez pas de configuration `networks` dans votre `docker-compose.yml` — Coolify gère le réseau via cette option. Une config manuelle peut provoquer des erreurs (Gateway Timeout, etc.).
+
+---
+
 ## Variables d'environnement requises
 
 ### Backend (obligatoires)
 
-| Variable | Description | Exemple |
-|----------|-------------|---------|
-| `DATABASE_URL` | URL complète de connexion PostgreSQL | `postgresql://user:password@host:5432/dbname` |
-| `JWT_SECRET` | Clé secrète pour les tokens JWT (authentification admin) | Chaîne aléatoire longue (ex: 64 caractères) |
+| Variable       | Description                                              | Exemple                                       |
+| -------------- | -------------------------------------------------------- | --------------------------------------------- |
+| `DATABASE_URL` | URL complète de connexion PostgreSQL                     | `postgresql://user:password@host:5432/dbname` |
+| `JWT_SECRET`   | Clé secrète pour les tokens JWT (authentification admin) | Chaîne aléatoire longue (ex: 64 caractères)   |
 
 ### Backend (optionnelles)
 
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `PORT` | Port interne du serveur | `3001` (défini dans docker-compose) |
+| Variable | Description             | Défaut                              |
+| -------- | ----------------------- | ----------------------------------- |
+| `PORT`   | Port interne du serveur | `3001` (défini dans docker-compose) |
 
 ### Frontend (optionnelles)
 
-| Variable | Description | Défaut |
-|----------|-------------|--------|
+| Variable              | Description                         | Défaut                       |
+| --------------------- | ----------------------------------- | ---------------------------- |
 | `NEXT_PUBLIC_API_URL` | URL de l'API (injecté au **build**) | `/api` pour le proxy Traefik |
 
 ### ⚠️ Variables non nécessaires
