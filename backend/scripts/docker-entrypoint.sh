@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Génère le client Prisma (nécessaire pour @prisma/client + console)
+echo "🔧 Génération du client Prisma..."
+npx prisma generate
+
 # Vérification de DATABASE_URL (requise pour prisma migrate deploy)
 if [ -z "$DATABASE_URL" ]; then
   echo "❌ ERREUR: DATABASE_URL n'est pas défini. Configurez-la dans Coolify."
