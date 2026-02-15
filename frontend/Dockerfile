@@ -25,8 +25,8 @@ FROM base AS development
 
 RUN apk add --no-cache curl
 
-# Installation des workspaces (shared + frontend)
-RUN npm install
+# Installation des workspaces (shared + frontend) - lock file pour build reproductible
+RUN npm ci || npm install
 
 # Build du package shared (requis pour le frontend)
 RUN npm run build --workspace=shared
@@ -46,8 +46,8 @@ FROM base AS builder
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-# Installation avec dépendances de dev (contexte monorepo)
-RUN npm install --include=dev
+# Installation avec dépendances de dev (contexte monorepo) - lock file pour build reproductible
+RUN npm ci --include=dev || npm install --include=dev
 
 # Build du package shared en premier (types et dist requis par le frontend)
 RUN npm run build --workspace=shared

@@ -22,7 +22,7 @@ COPY package*.json ./
 FROM base AS development
 
 # Installation de toutes les dépendances (tsx, nodemon inclus)
-RUN npm install
+RUN npm ci || npm install
 
 # Copie du code source (sera écrasé par les volumes en dev)
 COPY . .
@@ -37,7 +37,7 @@ CMD ["npm", "run", "dev"]
 # =============================================================================
 FROM base AS builder
 
-RUN npm install
+RUN npm ci || npm install
 
 COPY . .
 
@@ -53,9 +53,9 @@ RUN npm run build
 # =============================================================================
 FROM base AS production
 
-# Copie package.json pour les dépendances runtime (inclut prisma pour migrate deploy)
+# Copie package.json + lock pour build reproductible (aligné avec audit local)
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm ci --omit=dev || npm install --omit=dev
 
 # Copie du code compilé et fichiers Prisma (migrations + config)
 COPY --from=builder /app/dist ./dist
