@@ -23,14 +23,14 @@ services:
       NODE_ENV: production
       PORT: 3001
 
-    # Healthcheck serré pour que Traefik route vite après un déploiement (Coolify)
+    # Healthcheck : start_period 30s pour laisser prisma migrate deploy s'exécuter (Coolify)
     healthcheck:
       test:
         ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health || exit 1"]
       interval: 5s
       timeout: 3s
-      retries: 3
-      start_period: 10s
+      retries: 5
+      start_period: 30s
 
     restart: unless-stopped
 

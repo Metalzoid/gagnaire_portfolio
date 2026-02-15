@@ -157,6 +157,8 @@ npm run docker:prod:down
 
 ### Déploiement Coolify / Traefik
 
+> **Configuration détaillée** : voir [docs/DEPLOIEMENT_COOLIFY.md](docs/DEPLOIEMENT_COOLIFY.md) pour les variables d'environnement requises.
+
 Après un déploiement, Traefik ne route le trafic **que vers les conteneurs que Docker considère "healthy"**. Les healthchecks du `docker-compose.yml` sont donc volontairement **serrés** (intervalle 5s, `start_period` 15s frontend / 10s backend) pour que le site soit accessible en ligne rapidement (souvent sous 30–45s) au lieu de plusieurs minutes.
 
 - **404 Not Found** : Traefik n’a pas encore de backend "healthy" pour cette route (ancien conteneur arrêté, nouveau pas encore healthy).
