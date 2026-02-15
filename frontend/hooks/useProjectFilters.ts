@@ -15,7 +15,7 @@ export function useProjectFilters(projects: Project[]) {
       return new Set(
         tech
           .split(",")
-          .map((t) => t.trim())
+          .map((t: string) => t.trim())
           .filter(Boolean),
       );
     }
@@ -25,7 +25,7 @@ export function useProjectFilters(projects: Project[]) {
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     projects.forEach((p) => {
-      p.technologies?.forEach((t) => tags.add(t));
+      p.technologies?.forEach((t: string) => tags.add(t));
     });
     return Array.from(tags).sort();
   }, [projects]);
@@ -33,7 +33,7 @@ export function useProjectFilters(projects: Project[]) {
   const filteredProjects = useMemo(() => {
     if (selectedTags.size === 0) return projects;
     return projects.filter((p) =>
-      p.technologies?.some((t) => selectedTags.has(t)),
+      p.technologies?.some((t: string) => selectedTags.has(t)),
     );
   }, [projects, selectedTags]);
 

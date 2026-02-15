@@ -17,7 +17,7 @@ import {
   SiNextdotjs,
   SiExpress,
 } from "react-icons/si";
-import type { SkillCategory as SkillCategoryType } from "@/types";
+import type { SkillCategory as SkillCategoryType, Skill } from "@/types";
 import { SkillItem } from "./SkillItem";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import styles from "./SkillCategory.module.scss";
@@ -52,7 +52,7 @@ export function SkillCategory({ category }: SkillCategoryProps) {
     >
       <h3 className={styles.title}>{category.name}</h3>
       <div className={styles.list}>
-        {category.skills.map((skill) => {
+        {category.skills.map((skill: Skill) => {
           const IconComponent = skill.icon ? iconMap[skill.icon] : null;
           return (
             <SkillItem

@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build shared
+        run: npm run build --workspace=shared
+
       - name: Lint
         run: npm run lint --workspace=frontend
 
@@ -37,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: frontend/dist
+          path: frontend/.next
           retention-days: 1
 
   backend:
@@ -57,8 +60,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify backend syntax
-        run: node --check backend/src/index.js
+      - name: Build shared
+        run: npm run build --workspace=shared
 
-      - name: Check dependencies
-        run: npm list --workspace=backend --depth=0
+      - name: Generate Prisma client
+        env:
+          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
+        run: npx prisma generate --schema=backend/prisma/schema.prisma
+
+      - name: TypeScript check
+        run: npm run typecheck --workspace=backend
+
+      - name: Build backend
+        env:
+          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
+        run: npm run build --workspace=backend
+
+      - name: Validate Prisma schema
+        run: npx prisma validate --schema=backend/prisma/schema.prisma

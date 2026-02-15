@@ -5,7 +5,8 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "shared"
   ],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
@@ -15,6 +16,9 @@
     "build:frontend": "npm run build --workspace=frontend",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "typecheck:frontend": "npm run typecheck --workspace=frontend",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:frontend": "npm run lint --workspace=frontend",
+    "lint:backend": "npm run lint --workspace=backend",
     "install:all": "npm install",
     "docker:dev": "docker compose -f docker-compose.dev.yml up --build",
     "docker:dev:detach": "docker compose -f docker-compose.dev.yml up --build -d",
@@ -22,9 +26,19 @@
     "docker:prod": "docker compose up --build",
     "docker:prod:detach": "docker compose up --build -d",
     "docker:prod:down": "docker compose down",
-    "docker:clean": "docker compose down -v --rmi local && docker compose -f docker-compose.dev.yml down -v --rmi local"
+    "docker:clean": "docker compose down -v --rmi local && docker compose -f docker-compose.dev.yml down -v --rmi local",
+    "studio": "npm run studio --workspace=backend",
+    "console": "npm run console --workspace=backend"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=20",
+    "npm": ">=11.10.0"
+  },
+  "overrides": {
+    "lodash": "^4.17.23",
+    "hono": "^4.11.7"
+  }
 }

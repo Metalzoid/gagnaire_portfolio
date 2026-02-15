@@ -77,7 +77,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
         <p className={styles.description}>{item.description}</p>
         {item.technologies && item.technologies.length > 0 && (
           <div className={styles.techs}>
-            {item.technologies.map((tech) => (
+            {item.technologies.map((tech: string) => (
               <Tag key={tech} label={tech} variant="tech" />
             ))}
           </div>

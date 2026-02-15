@@ -38,7 +38,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </p>
         {project.technologies && project.technologies.length > 0 && (
           <div className={styles.tags}>
-            {project.technologies.slice(0, 4).map((tech) => (
+            {project.technologies.slice(0, 4).map((tech: string) => (
               <Tag key={tech} label={tech} variant="tech" />
             ))}
           </div>

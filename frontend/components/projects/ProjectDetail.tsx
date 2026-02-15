@@ -54,7 +54,7 @@ export function ProjectDetail({
       </header>
 
       <div className={styles.description}>
-        {project.longDescription.split("\n\n").map((para, i) => (
+        {project.longDescription.split("\n\n").map((para: string, i: number) => (
           <p key={i}>{para}</p>
         ))}
       </div>

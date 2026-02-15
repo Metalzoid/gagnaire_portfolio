@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import type { SkillCategory } from "@/types";
+import type { SkillCategory, Skill } from "@/types";
 import styles from "./SkillRadar.module.scss";
 
 // --------------------------------------------------------------------------
@@ -17,9 +17,9 @@ import styles from "./SkillRadar.module.scss";
 // --------------------------------------------------------------------------
 function getRadarData(category: SkillCategory) {
   return category.skills
-    .filter((s) => s.level !== undefined)
+    .filter((s: Skill) => s.level !== undefined)
     .slice(0, 6)
-    .map((s) => ({ name: s.name, value: s.level, fullMark: 100 }));
+    .map((s: Skill) => ({ name: s.name, value: s.level, fullMark: 100 }));
 }
 
 // --------------------------------------------------------------------------

@@ -4,19 +4,37 @@
 # =============================================================================
 
 services:
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-CHANGE_ME}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portfolio} -d ${POSTGRES_DB:-portfolio_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
         - NODE_ENV=development
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/app:/app/app:delegated
-      - ./frontend/public:/app/public:delegated
-      - ./frontend/next.config.ts:/app/next.config.ts:delegated
-      - ./frontend/tsconfig.json:/app/tsconfig.json:delegated
+      - ./frontend/app:/app/frontend/app:delegated
+      - ./frontend/public:/app/frontend/public:delegated
+      - ./frontend/next.config.ts:/app/frontend/next.config.ts:delegated
+      - ./frontend/tsconfig.json:/app/frontend/tsconfig.json:delegated
     environment:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:3001/api
@@ -49,6 +67,10 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3001
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-portfolio}:${POSTGRES_PASSWORD:-CHANGE_ME}@postgres:5432/${POSTGRES_DB:-portfolio_db}
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3001/api/health || exit 1"]
       interval: 30s
@@ -61,3 +83,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres_data: {}
