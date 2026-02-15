@@ -28,7 +28,8 @@
     "docker:prod:down": "docker compose down",
     "docker:clean": "docker compose down -v --rmi local && docker compose -f docker-compose.dev.yml down -v --rmi local",
     "studio": "npm run studio --workspace=backend",
-    "console": "npm run console --workspace=backend"
+    "console": "npm run console --workspace=backend",
+    "lock:backend": "./backend/scripts/generate-lock.sh"
   },
   "keywords": [],
   "author": "",

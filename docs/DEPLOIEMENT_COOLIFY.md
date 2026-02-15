@@ -21,6 +21,18 @@ Les conteneurs backend et PostgreSQL seront alors sur le même réseau et le hos
 
 ---
 
+## Build reproductible (package-lock)
+
+- **Backend** : utilise `backend/package-lock.json` (isolé du monorepo). Après modification de `backend/package.json` :
+  ```bash
+  npm run lock:backend
+  ```
+  Puis committer `backend/package-lock.json`.
+
+- **Frontend** : utilise le `package-lock.json` à la racine (contexte monorepo). Un simple `npm install` à la racine met à jour le lock pour frontend + shared. Puis committer `package-lock.json`.
+
+---
+
 ## Variables d'environnement requises
 
 ### Backend (obligatoires)
@@ -77,3 +89,13 @@ Les conteneurs backend et PostgreSQL seront alors sur le même réseau et le hos
 3. **Premier déploiement**
    - Les migrations Prisma peuvent prendre 15–30 secondes
    - Le `start_period` du healthcheck est à 30 s pour laisser le temps au backend de démarrer
+
+---
+
+## Console REPL (Prisma) en production
+
+Pour ouvrir une console REPL avec accès aux modèles Prisma dans le conteneur backend :
+
+```bash
+docker compose exec backend npm run console
+```
