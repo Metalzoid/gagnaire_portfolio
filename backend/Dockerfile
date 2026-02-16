@@ -54,7 +54,7 @@ RUN npm run build
 # =============================================================================
 FROM node:20-alpine AS production
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl && npm install -g tsx
 
 WORKDIR /app
 
