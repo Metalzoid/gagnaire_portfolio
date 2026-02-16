@@ -56,9 +56,11 @@ Les conteneurs backend et PostgreSQL seront alors sur le même réseau et le hos
 
 ### Frontend (optionnelles)
 
-| Variable              | Description                         | Défaut                       |
-| --------------------- | ----------------------------------- | ---------------------------- |
-| `NEXT_PUBLIC_API_URL` | URL de l'API (injecté au **build**) | `/api` pour le proxy Traefik |
+| Variable              | Description                                             | Défaut                       |
+| --------------------- | ------------------------------------------------------- | ---------------------------- |
+| `NEXT_PUBLIC_API_URL` | URL de l'API côté navigateur (proxy Traefik)            | `/api` (défini dans compose) |
+| `DOCKER_ENV`          | Active le mode Docker pour les fetch SSR                | `true` (compose)             |
+| `API_URL_INTERNAL`    | URL backend pour SSR (réseau interne : `http://backend:3001`) | `http://backend:3001` (compose) |
 
 ### ⚠️ Variables non nécessaires
 
