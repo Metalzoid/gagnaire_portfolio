@@ -41,7 +41,11 @@ CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]
 FROM base AS builder
 
 ARG NEXT_PUBLIC_API_URL
+ARG SKIP_API_DURING_BUILD=true
+
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# Pas d'API disponible pendant le build Docker (Coolify, CI) → fallback immédiat
+ENV SKIP_API_DURING_BUILD=${SKIP_API_DURING_BUILD}
 
 WORKDIR /app/frontend
 RUN npm ci --include=dev

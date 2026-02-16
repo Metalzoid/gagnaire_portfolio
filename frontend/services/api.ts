@@ -16,6 +16,9 @@ const API_BASE =
     ? process.env.API_URL_INTERNAL
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+/** Timeout en ms pour les appels API (évite les blocages au build Coolify/Docker) */
+const API_TIMEOUT_MS = 5000;
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -30,13 +33,23 @@ async function fetchAPI<T>(
   endpoint: string,
   options?: { revalidate?: number; cache?: RequestCache }
 ): Promise<T> {
-  const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
-    next: { revalidate: options?.revalidate ?? 60 },
-    cache: options?.cache,
-  });
-  if (!res.ok) throw new ApiError(res.status, endpoint);
-  const json = (await res.json()) as { success: boolean; data: T };
-  return json.data;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+      signal: controller.signal,
+      next: { revalidate: options?.revalidate ?? 60 },
+      cache: options?.cache,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new ApiError(res.status, endpoint);
+    const json = (await res.json()) as { success: boolean; data: T };
+    return json.data;
+  } catch (e) {
+    clearTimeout(timeoutId);
+    throw e;
+  }
 }
 
 /** Fallback si l'API est injoignable (build, panne, etc.) */
@@ -45,6 +58,11 @@ export async function fetchWithFallback<T>(
   fallback: T,
   options?: { revalidate?: number }
 ): Promise<T> {
+  // Au build Docker (Coolify, CI) : pas d'API disponible, retour immédiat du fallback
+  if (process.env.SKIP_API_DURING_BUILD === "true") {
+    return fallback;
+  }
+
   try {
     return await fetchAPI<T>(endpoint, options);
   } catch {
