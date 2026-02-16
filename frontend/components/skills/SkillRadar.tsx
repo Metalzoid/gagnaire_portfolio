@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import type { SkillCategory, Skill } from "@/types";
+import type { SkillCategory, Skill } from "shared";
 import styles from "./SkillRadar.module.scss";
 
 // --------------------------------------------------------------------------

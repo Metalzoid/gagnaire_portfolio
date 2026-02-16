@@ -1,16 +1,20 @@
 "use client";
 
-import { getProfile, getValues } from "@/services/data";
 import { useContactModal } from "@/contexts/ContactModalContext";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/carousel";
 import { VALUES_ICONS } from "./about-icons";
-import type { AboutValue } from "@/types";
+import type { AboutValue, Profile } from "shared";
 import styles from "./AboutValues.module.scss";
 
-export function AboutValues() {
+export function AboutValues({
+  profile,
+  values,
+}: {
+  profile: Profile;
+  values: AboutValue[];
+}) {
   const { openContactModal } = useContactModal();
-  const values = getValues();
 
   return (
     <div className={styles.wrapper}>
@@ -55,7 +59,7 @@ export function AboutValues() {
 
       <div className={styles.ctas}>
         <Button
-          href={getProfile().cv}
+          href={profile.cv}
           variant="primary"
           ariaLabel="Télécharger mon CV"
         >

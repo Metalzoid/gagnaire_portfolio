@@ -1,6 +1,7 @@
 import { Timeline } from "@/components/experience";
 import { BreadcrumbSchema } from "@/components/seo";
 import { Container } from "@/components/ui/container";
+import { getExperience } from "@/services/api";
 import styles from "./experience.module.scss";
 
 export const metadata = {
@@ -9,7 +10,9 @@ export const metadata = {
     "Formation et expériences professionnelles en développement web.",
 };
 
-export default function ExperiencePage() {
+export default async function ExperiencePage() {
+  const experience = await getExperience();
+
   return (
     <div className={`page page--experience ${styles.page}`}>
       <BreadcrumbSchema
@@ -25,7 +28,7 @@ export default function ExperiencePage() {
             Formation et expériences professionnelles.
           </p>
         </header>
-        <Timeline />
+        <Timeline items={experience} />
       </Container>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import type { SkillCategory } from "shared";
 import {
   FaReact,
   FaNode,
@@ -18,7 +19,6 @@ import {
   SiNextdotjs,
   SiExpress,
 } from "react-icons/si";
-import { getSkills } from "@/services/data";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/carousel";
@@ -63,9 +63,8 @@ const renderSkillItem = (skill: SkillItem) => {
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function HomeSkills() {
+export function HomeSkills({ skills: skillsData }: { skills: SkillCategory[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
-  const skillsData = getSkills();
 
   const mainSkills = useMemo(() => {
     const skills: SkillItem[] = [];

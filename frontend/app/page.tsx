@@ -1,79 +1,25 @@
-"use client";
-
-import useSnapScroll from "@/hooks/useSnapScroll";
-import { ProgressBar } from "@/components/navigation";
-import { Footer } from "@/components/footer";
+import { HomeContent } from "@/components/home";
 import {
-  TerminalHero,
-  HomeBio,
-  HomeSkills,
-  HomeFeaturedProjects,
-  HomeTestimonials,
-  HomeContact,
-} from "@/components/home";
-import { homeSections } from "@/data/sections";
-import styles from "./page.module.scss";
+  getProfile,
+  getSkills,
+  getTopProjects,
+  getTestimonials,
+} from "@/services/api";
 
-// --------------------------------------------------------------------------
-// Mapping section id -> composant
-// --------------------------------------------------------------------------
-const sectionComponents: Record<string, React.ComponentType<object>> = {
-  hero: TerminalHero,
-  "a-propos": HomeBio,
-  competences: HomeSkills,
-  projets: HomeFeaturedProjects,
-  temoignages: HomeTestimonials,
-  contact: HomeContact,
-};
-
-export default function Home() {
-  const { currentSection, totalSections, goToSection, containerRef } =
-    useSnapScroll({ totalSections: homeSections.length });
+export default async function HomePage() {
+  const [profile, skills, topProjects, testimonials] = await Promise.all([
+    getProfile(),
+    getSkills(),
+    getTopProjects(),
+    getTestimonials(),
+  ]);
 
   return (
-    <div className={`page page--home ${styles.homeWrapper}`}>
-      <ProgressBar
-        currentSection={currentSection}
-        totalSections={totalSections}
-        sectionLabels={homeSections.map((s) => s.label)}
-        goToSection={goToSection}
-      />
-
-      <div ref={containerRef} className={styles.snapContainer}>
-        {homeSections.map((section, index) => {
-          const isLast = index === homeSections.length - 1;
-          const SectionComponent = sectionComponents[section.id];
-
-          return (
-            <section
-              key={section.id}
-              id={section.id}
-              className={`${styles.snapSection} ${
-                isLast ? styles["snapSection--withFooter"] : ""
-              }`}
-              aria-label={section.label}
-              data-snap-section
-              data-snap-index={index}
-            >
-              <div className={styles.sectionContent}>
-                {SectionComponent ? (
-                  <SectionComponent />
-                ) : (
-                  <>
-                    {section.title && (
-                      <h2 className={styles.sectionTitle}>{section.title}</h2>
-                    )}
-                    {section.text && (
-                      <p className={styles.sectionText}>{section.text}</p>
-                    )}
-                  </>
-                )}
-              </div>
-              {isLast && <Footer />}
-            </section>
-          );
-        })}
-      </div>
-    </div>
+    <HomeContent
+      profile={profile}
+      skills={skills}
+      topProjects={topProjects}
+      testimonials={testimonials}
+    />
   );
 }

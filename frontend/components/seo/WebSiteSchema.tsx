@@ -1,9 +1,8 @@
 import { JsonLd } from "./JsonLd";
-import { getProfile } from "@/services/data";
+import type { Profile } from "shared";
 import { SITE_URL } from "@/lib/site-config";
 
-export function WebSiteSchema() {
-  const profile = getProfile();
+export function WebSiteSchema({ profile }: { profile: Profile }) {
   const fullName = `${profile.firstName} ${profile.lastName}`;
 
   const schema = {

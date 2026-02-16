@@ -3,7 +3,7 @@
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
 import { Tag } from "@/components/ui/tag";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import type { Experience } from "@/types";
+import type { Experience } from "shared";
 import styles from "./TimelineItem.module.scss";
 
 interface TimelineItemProps {

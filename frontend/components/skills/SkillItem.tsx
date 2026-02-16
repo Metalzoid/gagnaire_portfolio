@@ -1,4 +1,4 @@
-import type { Skill } from "@/types";
+import type { Skill } from "shared";
 import styles from "./SkillItem.module.scss";
 
 interface SkillItemProps {

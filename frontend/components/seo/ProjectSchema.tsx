@@ -1,14 +1,13 @@
 import { JsonLd } from "./JsonLd";
-import { getProfile } from "@/services/data";
-import type { Project } from "@/types";
+import type { Project, Profile } from "shared";
 import { SITE_URL } from "@/lib/site-config";
 
 interface ProjectSchemaProps {
   project: Project;
+  profile: Profile;
 }
 
-export function ProjectSchema({ project }: ProjectSchemaProps) {
-  const profile = getProfile();
+export function ProjectSchema({ project, profile }: ProjectSchemaProps) {
   const fullName = `${profile.firstName} ${profile.lastName}`;
 
   const schema = {

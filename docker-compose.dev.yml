@@ -37,7 +37,10 @@ services:
       - ./frontend/tsconfig.json:/app/frontend/tsconfig.json:delegated
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:3001/api
+      # En Docker uniquement : le serveur SSR joint le backend via le nom de service
+      - DOCKER_ENV=true
+      - API_URL_INTERNAL=http://backend:3001
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
       # Détection des changements de fichiers avec volumes Docker (Mac/Windows)
       - CHOKIDAR_USEPOLLING=true
     healthcheck:
@@ -62,6 +65,8 @@ services:
       - "3001:3001"
     volumes:
       - ./backend/src:/app/backend/src:delegated
+      - ./backend/prisma:/app/backend/prisma:delegated
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && npm run dev"
     env_file:
       - .env
     environment:

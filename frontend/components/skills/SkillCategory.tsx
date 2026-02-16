@@ -17,7 +17,7 @@ import {
   SiNextdotjs,
   SiExpress,
 } from "react-icons/si";
-import type { SkillCategory as SkillCategoryType, Skill } from "@/types";
+import type { SkillCategory as SkillCategoryType, Skill } from "shared";
 import { SkillItem } from "./SkillItem";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import styles from "./SkillCategory.module.scss";

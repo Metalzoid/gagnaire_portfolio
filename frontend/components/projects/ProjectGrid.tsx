@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ProjectCard } from "./ProjectCard";
-import type { Project } from "@/types";
+import type { Project } from "shared";
 import styles from "./ProjectGrid.module.scss";
 
 interface ProjectGridProps {

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { Project } from "@/types";
+import type { Project } from "shared";
 
 // --------------------------------------------------------------------------
 // Hook - Logique de filtrage projets + sync URL params

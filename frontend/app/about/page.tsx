@@ -1,6 +1,8 @@
 import { AboutHero, AboutPitch, AboutValues } from "@/components/about";
 import { BreadcrumbSchema, ProfilePageSchema } from "@/components/seo";
 import { Container } from "@/components/ui/container";
+import { getProfile } from "@/services/api";
+import { pitchBlocks, aboutValues } from "@/data/about.config";
 import styles from "./about.module.scss";
 
 export const metadata = {
@@ -9,7 +11,9 @@ export const metadata = {
     "Qui je suis, mon parcours et mes valeurs en tant que développeur fullstack.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const profile = await getProfile();
+
   return (
     <div className={`page page--about ${styles.page}`}>
       <BreadcrumbSchema
@@ -18,11 +22,11 @@ export default function AboutPage() {
           { name: "À propos", href: "/about" },
         ]}
       />
-      <ProfilePageSchema />
+      <ProfilePageSchema profile={profile} />
       <Container>
-        <AboutHero />
-        <AboutPitch />
-        <AboutValues />
+        <AboutHero profile={profile} />
+        <AboutPitch profile={profile} pitchBlocks={pitchBlocks} />
+        <AboutValues profile={profile} values={aboutValues} />
       </Container>
     </div>
   );

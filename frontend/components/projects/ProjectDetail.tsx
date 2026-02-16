@@ -3,7 +3,7 @@ import { ProjectGallery } from "./ProjectGallery";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ProjectNav } from "./ProjectNav";
 import { Button } from "@/components/ui/button";
-import type { Project } from "@/types";
+import type { Project } from "shared";
 import styles from "./ProjectDetail.module.scss";
 
 interface ProjectDetailProps {

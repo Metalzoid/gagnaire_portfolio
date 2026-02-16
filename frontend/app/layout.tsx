@@ -10,6 +10,7 @@ import { PageFadeOverlay } from "@/components/layout/PageFadeOverlay";
 import { ContactModal } from "@/components/contact";
 import { PersonSchema, WebSiteSchema } from "@/components/seo";
 import { getThemeCookie } from "@/app/actions/theme";
+import { getProfile } from "@/services/api";
 import { homeSections } from "@/data/sections";
 import { SITE_URL } from "@/lib/site-config";
 import "./globals.scss";
@@ -59,7 +60,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const theme = (await getThemeCookie()) ?? "dark";
+  const [theme, profile] = await Promise.all([
+    getThemeCookie().then((t) => t ?? "dark"),
+    getProfile(),
+  ]);
 
   return (
     <html lang="fr" data-theme={theme}>
@@ -67,8 +71,12 @@ export default async function RootLayout({
         <a href="#main-content" className="skip-link">
           Aller au contenu principal
         </a>
-        <PersonSchema />
-        <WebSiteSchema />
+        {profile.firstName && (
+          <>
+            <PersonSchema profile={profile} />
+            <WebSiteSchema profile={profile} />
+          </>
+        )}
         <ThemeProvider initialTheme={theme}>
           <ContactModalProvider>
             <SnapScrollProvider sections={homeSections}>

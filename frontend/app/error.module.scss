@@ -1,0 +1,46 @@
+@use "../styles/abstracts/mixins" as *;
+
+.page {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-3xl) 0;
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xl) 0;
+  }
+}
+
+.content {
+  text-align: center;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary);
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-xl);
+  }
+}
+
+.message {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}

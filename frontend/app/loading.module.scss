@@ -1,0 +1,44 @@
+@use "../styles/abstracts/mixins" as *;
+
+.page {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl) 0;
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xl) 0;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}

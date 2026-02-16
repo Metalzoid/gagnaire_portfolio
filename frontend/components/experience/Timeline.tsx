@@ -1,12 +1,10 @@
 "use client";
 
-import { getExperience } from "@/services/data";
 import { TimelineItem } from "./TimelineItem";
-import { useMemo } from "react";
+import type { Experience } from "shared";
 import styles from "./Timeline.module.scss";
 
-export function Timeline() {
-  const items = useMemo(() => getExperience(), []);
+export function Timeline({ items }: { items: Experience[] }) {
 
   return (
     <div className={styles.wrapper}>

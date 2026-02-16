@@ -1,16 +1,20 @@
 import type { MetadataRoute } from "next";
-import { getProjects } from "@/services/data";
+import { getProjects } from "@/services/api";
 import { SITE_URL } from "@/lib/site-config";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const projects = getProjects();
-
-  const projectUrls = projects.map((project) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let projectUrls: { url: string; lastModified: Date; changeFrequency: "monthly"; priority: number }[] = [];
+  try {
+    const projects = await getProjects();
+    projectUrls = projects.map((project) => ({
     url: `${SITE_URL}/projects/${project.slug}`,
     lastModified: new Date(project.date),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
+  } catch {
+    // API injoignable au build, on continue sans les URLs projets
+  }
 
   return [
     {

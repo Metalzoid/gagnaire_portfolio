@@ -1,16 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { getProfile } from "@/services/data";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import type { Profile } from "shared";
 import { Button } from "@/components/ui/button";
 import styles from "./HomeBio.module.scss";
 
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function HomeBio() {
-  const profile = getProfile();
+export function HomeBio({ profile }: { profile: Profile }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
   return (

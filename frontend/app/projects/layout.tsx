@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProjects } from "@/services/data";
+import { getProjects } from "@/services/api";
 import { BreadcrumbSchema, ItemListSchema } from "@/components/seo";
 
 export const metadata: Metadata = {
@@ -7,12 +7,17 @@ export const metadata: Metadata = {
   description: "Portfolio de projets web : applications React, Node.js, intégrations.",
 };
 
-export default function ProjectsLayout({
+export default async function ProjectsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const projects = getProjects();
+  let projects: Awaited<ReturnType<typeof getProjects>> = [];
+  try {
+    projects = await getProjects();
+  } catch {
+    // API injoignable, layout sans ItemListSchema projets
+  }
 
   return (
     <>

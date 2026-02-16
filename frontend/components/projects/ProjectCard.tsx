@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ImageWithFallback, PLACEHOLDER_PROJECT_IMAGE } from "@/components/ui/image-with-fallback";
 import { Tag } from "@/components/ui/tag";
-import type { Project } from "@/types";
+import type { Project } from "shared";
 import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {

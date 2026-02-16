@@ -1,6 +1,7 @@
 import { ContactForm, ContactInfo } from "@/components/contact";
 import { BreadcrumbSchema } from "@/components/seo";
 import { Container } from "@/components/ui/container";
+import { getProfile } from "@/services/api";
 import styles from "./contact.module.scss";
 
 export const metadata = {
@@ -9,7 +10,9 @@ export const metadata = {
     "Formulaire de contact pour vos projets de développement web.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const profile = await getProfile();
+
   return (
     <div className={`page page--contact ${styles.page}`}>
       <BreadcrumbSchema
@@ -31,7 +34,7 @@ export default function ContactPage() {
             <ContactForm />
           </div>
           <div className={styles.infoSection}>
-            <ContactInfo />
+            <ContactInfo profile={profile} />
           </div>
         </div>
       </Container>
