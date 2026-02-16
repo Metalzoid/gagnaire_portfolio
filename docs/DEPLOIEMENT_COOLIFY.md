@@ -29,7 +29,13 @@ Les conteneurs backend et PostgreSQL seront alors sur le même réseau et le hos
   ```
   Puis committer `backend/package-lock.json`.
 
-- **Frontend** : utilise le `package-lock.json` à la racine (contexte monorepo). Un simple `npm install` à la racine met à jour le lock pour frontend + shared. Puis committer `package-lock.json`.
+- **Frontend** : utilise `frontend/package-lock.json` (isolé du monorepo). Après modification de `frontend/package.json` :
+  ```bash
+  npm run lock:frontend
+  ```
+  Puis committer `frontend/package-lock.json`.
+
+- **postinstall** : génère automatiquement les deux locks après chaque `npm install` à la racine.
 
 ---
 

@@ -21,5 +21,10 @@ export const createProjectSchema = z.object({
 
 export const updateProjectSchema = createProjectSchema.partial();
 
+export const updateProjectOrderSchema = z.object({
+  order: z.number().int().min(0),
+});
+
 export type CreateProjectSchemaType = z.infer<typeof createProjectSchema>;
 export type UpdateProjectSchemaType = z.infer<typeof updateProjectSchema>;
+export type UpdateProjectOrderSchemaType = z.infer<typeof updateProjectOrderSchema>;

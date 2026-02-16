@@ -1,35 +1,35 @@
 # =============================================================================
-# Backend Dockerfile - Gestion multi-environnement
+# Backend Dockerfile - Build isolé avec backend/package-lock.json
+# Contexte : racine (pour accès à shared via file:../shared)
 # Usage: NODE_ENV=development ou NODE_ENV=production
 # =============================================================================
 
-# ARG global pour sélectionner le stage final
 ARG NODE_ENV=production
 
 FROM node:20-alpine AS base
 
-# Installation de curl pour les healthchecks + mise à jour npm
 RUN apk add --no-cache curl && npm install -g npm@11
 
 WORKDIR /app
 
-# Copie des fichiers de dépendances
-COPY package*.json ./
+# Copie backend + shared (file:../shared résout vers /app/shared)
+COPY backend ./backend
+COPY shared ./shared
 
 # =============================================================================
 # Stage DEVELOPMENT
 # =============================================================================
 FROM base AS development
 
-# Installation de toutes les dépendances (tsx, nodemon inclus)
-RUN npm ci || npm install
+WORKDIR /app/backend
+RUN npm ci && npx prisma generate
 
-# Copie du code source (sera écrasé par les volumes en dev)
-COPY . .
+# Build shared (requis par le backend)
+WORKDIR /app/shared
+RUN npm install && npm run build
 
+WORKDIR /app/backend
 EXPOSE 3001
-
-# tsx watch pour hot reload
 CMD ["npm", "run", "dev"]
 
 # =============================================================================
@@ -37,41 +37,43 @@ CMD ["npm", "run", "dev"]
 # =============================================================================
 FROM base AS builder
 
-RUN npm ci || npm install
-
-COPY . .
-
-# DATABASE_URL requis par prisma.config.ts au build (prisma generate ne s'y connecte pas)
 ARG DATABASE_URL=postgresql://build:build@localhost:5432/build
 ENV DATABASE_URL=$DATABASE_URL
 
-# Génère le client Prisma et compile TypeScript
+WORKDIR /app/backend
+RUN npm ci
+
+WORKDIR /app/shared
+RUN npm install && npm run build
+
+WORKDIR /app/backend
 RUN npm run build
 
 # =============================================================================
 # Stage PRODUCTION
 # =============================================================================
-FROM base AS production
+FROM node:20-alpine AS production
 
-# Copie package.json + lock pour build reproductible (aligné avec audit local)
-COPY package*.json ./
-RUN npm ci --omit=dev || npm install --omit=dev
+RUN apk add --no-cache curl
 
-# Copie du code compilé et fichiers Prisma (migrations + config)
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./
+WORKDIR /app
 
-# Script d'entrée : migrations puis démarrage
-COPY scripts/docker-entrypoint.sh /app/
-RUN chmod +x /app/docker-entrypoint.sh
+COPY --from=builder /app/backend/package.json /app/backend/package-lock.json ./backend/
+COPY --from=builder /app/backend/node_modules ./backend/node_modules
+COPY --from=builder /app/backend/dist ./backend/dist
+COPY --from=builder /app/backend/prisma ./backend/prisma
+COPY --from=builder /app/backend/prisma.config.ts ./backend/
+COPY --from=builder /app/shared ./shared
+COPY --from=builder /app/backend/scripts/docker-entrypoint.sh ./backend/
+RUN chmod +x ./backend/docker-entrypoint.sh
+
+WORKDIR /app/backend
+RUN npm prune --omit=dev
 
 EXPOSE 3001
-
-# Migrations au démarrage, puis serveur
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
+ENTRYPOINT ["/app/backend/docker-entrypoint.sh"]
 
 # =============================================================================
-# Stage final - sélection basée sur NODE_ENV
+# Stage final
 # =============================================================================
 FROM ${NODE_ENV} AS final

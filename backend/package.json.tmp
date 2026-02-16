@@ -25,13 +25,13 @@
     "chalk": "^4.1.2",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
-    "encodeurl": "^2.0.0",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.18.0",
     "prisma": "^7.4.0",
-    "shared": "file:../shared",
-    "zod": "^3.23.8"
+    "shared": "^1.0.0",
+    "zod": "^3.23.8",
+    "encodeurl": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

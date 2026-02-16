@@ -1,0 +1,16 @@
+/**
+ * Codes d'erreur métier standardisés pour l'API.
+ */
+export const ErrorCode = {
+  INTERNAL_ERROR: "INTERNAL_ERROR",
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  FORBIDDEN: "FORBIDDEN",
+  NOT_FOUND: "NOT_FOUND",
+  CONFLICT: "CONFLICT",
+  BAD_CREDENTIALS: "BAD_CREDENTIALS",
+  REFRESH_TOKEN_EXPIRED: "REFRESH_TOKEN_EXPIRED",
+  REFRESH_TOKEN_INVALID: "REFRESH_TOKEN_INVALID",
+} as const;
+
+export type ErrorCodeType = (typeof ErrorCode)[keyof typeof ErrorCode];

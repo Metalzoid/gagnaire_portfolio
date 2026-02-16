@@ -9,9 +9,14 @@ export type { ProfileSchemaType, UpdateProfileSchemaType } from "./profile.schem
 export {
   createProjectSchema,
   updateProjectSchema,
+  updateProjectOrderSchema,
   projectImagesSchema,
 } from "./project.schema";
-export type { CreateProjectSchemaType, UpdateProjectSchemaType } from "./project.schema";
+export type {
+  CreateProjectSchemaType,
+  UpdateProjectSchemaType,
+  UpdateProjectOrderSchemaType,
+} from "./project.schema";
 
 export {
   createSkillSchema,
@@ -43,3 +48,12 @@ export type {
   CreateTestimonialSchemaType,
   UpdateTestimonialSchemaType,
 } from "./testimonial.schema";
+
+export {
+  loginSchema,
+  refreshTokenSchema,
+} from "./auth.schema";
+export type {
+  LoginSchemaType,
+  RefreshTokenSchemaType,
+} from "./auth.schema";
