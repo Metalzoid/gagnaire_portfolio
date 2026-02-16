@@ -54,14 +54,14 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
       args:
         - NODE_ENV=development
     ports:
       - "3001:3001"
     volumes:
-      - ./backend/src:/app/src:delegated
+      - ./backend/src:/app/backend/src:delegated
     env_file:
       - .env
     environment:

@@ -9,6 +9,7 @@
     "shared"
   ],
   "scripts": {
+    "postinstall": "(test -f backend/scripts/generate-lock.sh && npm run lock:backend) || true; (test -f frontend/scripts/generate-lock.sh && npm run lock:frontend) || true",
     "dev": "npm run dev --workspaces --if-present",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",
@@ -29,7 +30,8 @@
     "docker:clean": "docker compose down -v --rmi local && docker compose -f docker-compose.dev.yml down -v --rmi local",
     "studio": "npm run studio --workspace=backend",
     "console": "npm run console --workspace=backend",
-    "lock:backend": "./backend/scripts/generate-lock.sh"
+    "lock:backend": "./backend/scripts/generate-lock.sh",
+    "lock:frontend": "./frontend/scripts/generate-lock.sh"
   },
   "keywords": [],
   "author": "",
