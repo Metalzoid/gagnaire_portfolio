@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { getProfile } from "@/services/data";
 import { useTypewriter, formatTerminalLines } from "@/hooks/useTypewriter";
+import type { Profile } from "shared";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
 import { useContactModal } from "@/contexts/ContactModalContext";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,7 @@ import styles from "./TerminalHero.module.scss";
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function TerminalHero() {
-  const profile = getProfile();
+export function TerminalHero({ profile }: { profile: Profile }) {
   const { goToSectionById } = useSnapScrollContext();
   const { openContactModal } = useContactModal();
   const lines = formatTerminalLines(profile);

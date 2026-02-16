@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { getTestimonials } from "@/services/data";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import type { Testimonial } from "shared";
 import { Carousel } from "@/components/ui/carousel";
-import type { Testimonial } from "@/types";
 import styles from "./HomeTestimonials.module.scss";
 
 // --------------------------------------------------------------------------
@@ -44,8 +43,11 @@ const renderTestimonialCard = (t: Testimonial) => (
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function HomeTestimonials() {
-  const testimonials = getTestimonials();
+export function HomeTestimonials({
+  testimonials,
+}: {
+  testimonials: Testimonial[];
+}) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
   return (

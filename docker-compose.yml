@@ -47,6 +47,9 @@ services:
       PORT: 3000
       HOSTNAME: 0.0.0.0
       NEXT_PUBLIC_API_URL: /api
+      # SSR : le frontend doit joindre le backend via le réseau Docker (pas /api relatif)
+      DOCKER_ENV: "true"
+      API_URL_INTERNAL: http://backend:3001
 
     depends_on:
       backend:

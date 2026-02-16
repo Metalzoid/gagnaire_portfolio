@@ -1,9 +1,8 @@
 import Image from "next/image";
-import { getProfile } from "@/services/data";
+import type { Profile } from "shared";
 import styles from "./AboutHero.module.scss";
 
-export function AboutHero() {
-  const profile = getProfile();
+export function AboutHero({ profile }: { profile: Profile }) {
   const fullName = `${profile.firstName} ${profile.lastName}`;
 
   return (

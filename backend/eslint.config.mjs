@@ -16,6 +16,6 @@ export default tseslint.config(
         { argsIgnorePattern: "^_" },
       ],
     },
-    ignores: ["dist/**", "node_modules/**"],
+    ignores: ["dist/**", "node_modules/**", "prisma/**"],
   }
 );

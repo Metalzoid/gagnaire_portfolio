@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ImageWithFallback, PLACEHOLDER_PROJECT_IMAGE } from "@/components/ui/image-with-fallback";
-import type { ProjectImages } from "@/types";
+import type { ProjectImages } from "shared";
 import styles from "./ProjectGallery.module.scss";
 
 interface ProjectGalleryProps {

@@ -1,12 +1,10 @@
-import { getProfile } from "@/services/data";
 import { SocialLinks } from "@/components/shared/social-links";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import type { Profile } from "shared";
 import styles from "./ContactInfo.module.scss";
 
-export function ContactInfo() {
-  const profile = getProfile();
-
+export function ContactInfo({ profile }: { profile: Profile }) {
   const links = [
     { url: profile.social.github, icon: <FaGithub />, label: "GitHub" },
     { url: profile.social.linkedin, icon: <FaLinkedin />, label: "LinkedIn" },

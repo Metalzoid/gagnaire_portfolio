@@ -1,12 +1,11 @@
 "use client";
 
-import { getTopProjects } from "@/services/data";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import type { Project } from "shared";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/carousel";
 import { PLACEHOLDER_PROJECT_IMAGE } from "@/components/ui/image-with-fallback";
-import type { Project } from "@/types";
 import styles from "./HomeFeaturedProjects.module.scss";
 
 // --------------------------------------------------------------------------
@@ -26,8 +25,7 @@ const renderProjectCard = (project: Project) => (
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function HomeFeaturedProjects() {
-  const projects = getTopProjects();
+export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
   return (

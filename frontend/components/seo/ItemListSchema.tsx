@@ -1,5 +1,5 @@
 import { JsonLd } from "./JsonLd";
-import type { Project } from "@/types";
+import type { Project } from "shared";
 import { SITE_URL } from "@/lib/site-config";
 
 interface ItemListSchemaProps {

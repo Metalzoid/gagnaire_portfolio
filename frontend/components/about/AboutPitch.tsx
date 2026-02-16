@@ -1,9 +1,8 @@
 "use client";
 
-import { getProfile, getPitchBlocks } from "@/services/data";
 import { Carousel } from "@/components/ui/carousel";
 import { PITCH_ICONS } from "./about-icons";
-import type { PitchBlock } from "@/types";
+import type { PitchBlock, Profile } from "shared";
 import styles from "./AboutPitch.module.scss";
 
 function PitchBlockItem({
@@ -11,7 +10,7 @@ function PitchBlockItem({
   profile,
 }: {
   block: PitchBlock;
-  profile: ReturnType<typeof getProfile>;
+  profile: Profile;
 }) {
   const Icon = PITCH_ICONS[block.icon];
   if (!Icon) return null;
@@ -26,7 +25,7 @@ function PitchBlockItem({
   );
 }
 
-function renderPitchBlock(profile: ReturnType<typeof getProfile>) {
+function renderPitchBlock(profile: Profile) {
   const PitchBlockRenderer = (block: PitchBlock) => (
     <PitchBlockItem block={block} profile={profile} />
   );
@@ -34,9 +33,13 @@ function renderPitchBlock(profile: ReturnType<typeof getProfile>) {
   return PitchBlockRenderer;
 }
 
-export function AboutPitch() {
-  const profile = getProfile();
-  const pitchBlocks = getPitchBlocks();
+export function AboutPitch({
+  profile,
+  pitchBlocks,
+}: {
+  profile: Profile;
+  pitchBlocks: PitchBlock[];
+}) {
   const renderBlock = renderPitchBlock(profile);
 
   return (

@@ -1,9 +1,8 @@
 import { JsonLd } from "./JsonLd";
-import { getProfile } from "@/services/data";
+import type { Profile } from "shared";
 import { SITE_URL } from "@/lib/site-config";
 
-export function ProfilePageSchema() {
-  const profile = getProfile();
+export function ProfilePageSchema({ profile }: { profile: Profile }) {
   const fullName = `${profile.firstName} ${profile.lastName}`;
   const imageUrl = profile.photo.startsWith("/")
     ? `${SITE_URL}${profile.photo}`
