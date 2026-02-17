@@ -199,13 +199,15 @@ async function deleteAdmin(endpoint: string): Promise<void> {
 // Admin API
 // --------------------------------------------------------------------------
 /**
- * Construit l'URL d'un fichier pour affichage : /uploads/* → backend, /images/* → assets frontend.
+ * Construit l'URL d'un fichier pour affichage : /uploads/* → backend (proxy direct), /images/* → assets frontend.
+ * Ne pas préfixer /api pour /uploads car le backend sert à /uploads, pas /api/uploads.
  */
 export function getUploadUrl(filePath: string): string {
   if (!filePath) return "";
   if (filePath.startsWith("http") || filePath.startsWith("data:"))
     return filePath;
   if (filePath.startsWith("/images/")) return filePath;
+  if (filePath.startsWith("/uploads/")) return filePath;
   return `${API_BASE}${filePath}`;
 }
 
