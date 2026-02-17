@@ -4,9 +4,24 @@
 @use "../../../styles/abstracts/variables" as *;
 @use "../../../styles/abstracts/mixins" as *;
 
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img,
+  svg {
+    width: 1em;
+    height: 1em;
+    object-fit: contain;
+  }
+}
+
 .tag {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: var(--font-size-xs);
   font-weight: $font-weight-medium;

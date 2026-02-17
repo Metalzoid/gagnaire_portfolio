@@ -21,6 +21,7 @@ const VALID_CATEGORIES = [
   "cv",
   "testimonial-photo",
   "project-image",
+  "technology-icon",
 ] as const;
 type UploadCategory = (typeof VALID_CATEGORIES)[number];
 

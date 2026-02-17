@@ -2,75 +2,39 @@
 
 import { useMemo } from "react";
 import type { SkillCategory } from "shared";
-import {
-  FaReact,
-  FaNode,
-  FaGitAlt,
-  FaHtml5,
-  FaSass,
-  FaDocker,
-  FaCode,
-  FaFigma,
-  FaServer,
-} from "react-icons/fa";
-import {
-  SiTypescript,
-  SiPostgresql,
-  SiNextdotjs,
-  SiExpress,
-} from "react-icons/si";
+import { TechIcon, canRenderTechIcon } from "@/utils/technologyIcon";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/carousel";
 import styles from "./HomeSkills.module.scss";
-
-// --------------------------------------------------------------------------
-// Mapping icônes React Icons
-// --------------------------------------------------------------------------
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  FaReact,
-  SiTypescript,
-  FaHtml5,
-  SiNextdotjs,
-  FaSass,
-  FaNode,
-  SiExpress,
-  SiPostgresql,
-  FaServer,
-  FaGitAlt,
-  FaDocker,
-  FaCode,
-  FaFigma,
-};
 
 type SkillItem = { name: string; icon: string };
 
 // --------------------------------------------------------------------------
 // Rendu d'un item compétence
 // --------------------------------------------------------------------------
-const renderSkillItem = (skill: SkillItem) => {
-  const IconComponent = iconMap[skill.icon];
-  return (
-    <div key={skill.name} className={styles.iconItem} title={skill.name}>
-      {IconComponent && (
-        <IconComponent className={styles.icon} aria-hidden="true" />
-      )}
-      <span className={styles.iconLabel}>{skill.name}</span>
-    </div>
-  );
-};
+const renderSkillItem = (skill: SkillItem) => (
+  <div key={skill.name} className={styles.iconItem} title={skill.name}>
+    <TechIcon icon={skill.icon} name={skill.name} className={styles.icon} />
+    <span className={styles.iconLabel}>{skill.name}</span>
+  </div>
+);
 
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-export function HomeSkills({ skills: skillsData }: { skills: SkillCategory[] }) {
+export function HomeSkills({
+  skills: skillsData,
+}: {
+  skills: SkillCategory[];
+}) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
   const mainSkills = useMemo(() => {
     const skills: SkillItem[] = [];
     for (const cat of skillsData) {
       for (const s of cat.skills) {
-        if (s.icon && iconMap[s.icon]) {
+        if (s.icon && canRenderTechIcon(s.icon)) {
           skills.push({ name: s.name, icon: s.icon });
           if (skills.length >= 12) break;
         }

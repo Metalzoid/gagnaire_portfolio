@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs/promises";
 import { prisma } from "../config/database.js";
 import { AppError } from "../utils/AppError.js";
 import { ErrorCode } from "../utils/errorCodes.js";
@@ -5,6 +7,19 @@ import type {
   CreateTechnologySchemaType,
   UpdateTechnologySchemaType,
 } from "shared";
+
+const UPLOAD_DIR = path.join(process.cwd(), "uploads");
+
+function isUploadedIcon(icon: string | null): boolean {
+  return icon?.startsWith("/uploads/technology-icon/") ?? false;
+}
+
+async function deleteIconFileIfUploaded(icon: string | null): Promise<void> {
+  if (!isUploadedIcon(icon)) return;
+  const relPath = icon!.replace(/^\//, "");
+  const filePath = path.join(UPLOAD_DIR, relPath);
+  await fs.unlink(filePath).catch(() => {});
+}
 
 export async function getAllTechnologies() {
   return prisma.technology.findMany({
@@ -83,6 +98,9 @@ export async function updateTechnology(
       );
     }
   }
+  if (data.icon !== undefined && data.icon !== tech.icon) {
+    await deleteIconFileIfUploaded(tech.icon);
+  }
   return prisma.technology.update({
     where: { id },
     data: {
@@ -99,5 +117,6 @@ export async function deleteTechnology(id: string) {
   if (!tech) {
     throw new AppError(404, "Technologie non trouvée", ErrorCode.NOT_FOUND);
   }
+  await deleteIconFileIfUploaded(tech.icon);
   await prisma.technology.delete({ where: { id } });
 }

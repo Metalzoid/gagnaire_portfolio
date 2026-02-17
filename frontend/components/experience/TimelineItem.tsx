@@ -2,6 +2,7 @@
 
 import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
 import { Tag } from "@/components/ui/tag";
+import { TechIcon } from "@/utils/technologyIcon";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import type { Experience } from "shared";
 import styles from "./TimelineItem.module.scss";
@@ -78,7 +79,16 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
         {item.technologies && item.technologies.length > 0 && (
           <div className={styles.techs}>
             {item.technologies.map((tech) => (
-              <Tag key={tech.id} label={tech.name} variant="tech" />
+              <Tag
+                key={tech.id}
+                label={tech.name}
+                variant="tech"
+                icon={
+                  tech.icon ? (
+                    <TechIcon icon={tech.icon} name={tech.name} size={16} />
+                  ) : undefined
+                }
+              />
             ))}
           </div>
         )}

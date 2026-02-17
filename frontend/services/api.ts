@@ -10,20 +10,11 @@ import type {
   Testimonial,
   Technology,
 } from "shared";
+import { API_BASE_SERVER, API_BASE_CLIENT, API_PREFIX } from "./api-config";
 
-// En Docker : API_URL_INTERNAL (backend:3001). En local : NEXT_PUBLIC_API_URL ou localhost.
-const API_BASE =
-  process.env.DOCKER_ENV === "true" && process.env.API_URL_INTERNAL
-    ? process.env.API_URL_INTERNAL
-    : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-/** Préfixe API : /api/v1 si base = host (http://...), /v1 si base = /api (proxy) */
-const API_PATH_PREFIX =
-  API_BASE.startsWith("http") ? "/api/v1" : "/v1";
-
-/** URL de base du backend pour le navigateur (NEXT_PUBLIC) */
-const BROWSER_API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_BASE = API_BASE_SERVER;
+const API_PATH_PREFIX = API_PREFIX;
+const BROWSER_API_BASE = API_BASE_CLIENT;
 
 /**
  * URL d'une image : /uploads/* → backend (rewrite directe), /images/* → assets statiques frontend.

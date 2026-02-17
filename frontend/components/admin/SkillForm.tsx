@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { FormField } from "./FormField";
 import { Button } from "@/components/ui/button";
+import { IconPicker } from "./icon-picker";
 import type { CreateSkillSchemaType, UpdateSkillSchemaType } from "shared";
 
 interface SkillFormProps {
   categoryId: string;
   categoryOptions?: { value: string; label: string }[];
   defaultValues?: Partial<CreateSkillSchemaType> & { id?: string };
-  onSubmit: (data: CreateSkillSchemaType | UpdateSkillSchemaType) => Promise<void>;
+  onSubmit: (
+    data: CreateSkillSchemaType | UpdateSkillSchemaType,
+  ) => Promise<void>;
   onCancel?: () => void;
   submitLabel?: string;
   /** Si true, masque le select catégorie (édition inline dans une catégorie) */
@@ -25,7 +28,9 @@ export function SkillForm({
   submitLabel = "Enregistrer",
   hideCategory = true,
 }: SkillFormProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId || (categoryOptions[0]?.value ?? ""));
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    categoryId || (categoryOptions[0]?.value ?? ""),
+  );
   const [name, setName] = useState(defaultValues?.name ?? "");
   const [level, setLevel] = useState(defaultValues?.level ?? 50);
   const [icon, setIcon] = useState(defaultValues?.icon ?? "");
@@ -56,7 +61,9 @@ export function SkillForm({
       }
       await onSubmit(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'enregistrement");
+      setError(
+        err instanceof Error ? err.message : "Erreur lors de l'enregistrement",
+      );
     } finally {
       setLoading(false);
     }
@@ -97,16 +104,17 @@ export function SkillForm({
             />
           </label>
         </div>
-        <FormField
-          type="text"
+        <IconPicker
           label="Icône (optionnel)"
-          name="icon"
-          value={icon}
-          onChange={(e) => setIcon(e.target.value)}
-          placeholder="Ex: react.svg"
+          value={icon || null}
+          onChange={(v) => setIcon(v ?? "")}
         />
       </div>
-      {error && <p className="admin-form-error" role="alert">{error}</p>}
+      {error && (
+        <p className="admin-form-error" role="alert">
+          {error}
+        </p>
+      )}
       <div className="admin-skill-form__actions">
         <Button type="submit" loading={loading} disabled={loading}>
           {loading ? "Enregistrement…" : submitLabel}

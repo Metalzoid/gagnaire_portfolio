@@ -1,42 +1,10 @@
 "use client";
 
-import {
-  FaReact,
-  FaNode,
-  FaGitAlt,
-  FaHtml5,
-  FaSass,
-  FaDocker,
-  FaCode,
-  FaFigma,
-  FaServer,
-} from "react-icons/fa";
-import {
-  SiTypescript,
-  SiPostgresql,
-  SiNextdotjs,
-  SiExpress,
-} from "react-icons/si";
 import type { SkillCategory as SkillCategoryType, Skill } from "shared";
 import { SkillItem } from "./SkillItem";
+import { TechIcon, canRenderTechIcon } from "@/utils/technologyIcon";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import styles from "./SkillCategory.module.scss";
-
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  FaReact,
-  SiTypescript,
-  FaHtml5,
-  SiNextdotjs,
-  FaSass,
-  FaNode,
-  SiExpress,
-  SiPostgresql,
-  FaServer,
-  FaGitAlt,
-  FaDocker,
-  FaCode,
-  FaFigma,
-};
 
 interface SkillCategoryProps {
   category: SkillCategoryType;
@@ -52,20 +20,21 @@ export function SkillCategory({ category }: SkillCategoryProps) {
     >
       <h3 className={styles.title}>{category.name}</h3>
       <div className={styles.list}>
-        {category.skills.map((skill: Skill) => {
-          const IconComponent = skill.icon ? iconMap[skill.icon] : null;
-          return (
-            <SkillItem
-              key={skill.name}
-              skill={skill}
-              icon={
-                IconComponent ? (
-                  <IconComponent className={styles.skillIcon} />
-                ) : undefined
-              }
-            />
-          );
-        })}
+        {category.skills.map((skill: Skill) => (
+          <SkillItem
+            key={skill.name}
+            skill={skill}
+            icon={
+              canRenderTechIcon(skill.icon) ? (
+                <TechIcon
+                  icon={skill.icon!}
+                  name={skill.name}
+                  className={styles.skillIcon}
+                />
+              ) : undefined
+            }
+          />
+        ))}
       </div>
     </div>
   );
