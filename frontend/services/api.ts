@@ -17,18 +17,24 @@ const API_BASE =
     ? process.env.API_URL_INTERNAL
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+/** Préfixe API : /api/v1 si base = host (http://...), /v1 si base = /api (proxy) */
+const API_PATH_PREFIX =
+  API_BASE.startsWith("http") ? "/api/v1" : "/v1";
+
 /** URL de base du backend pour le navigateur (NEXT_PUBLIC) */
 const BROWSER_API_BASE =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 /**
- * URL d'une image : /uploads/* → backend, /images/* → assets statiques frontend.
+ * URL d'une image : /uploads/* → backend (rewrite directe), /images/* → assets statiques frontend.
+ * Ne pas préfixer /api pour /uploads car le backend sert à /uploads, pas /api/uploads.
  */
 export function getBackendImageUrl(path: string): string {
   if (!path) return "";
   if (path.startsWith("http") || path.startsWith("data:")) return path;
   if (path.startsWith("/images/")) return path; // Assets statiques frontend
-  return `${BROWSER_API_BASE}${path}`; // /uploads/* → backend
+  if (path.startsWith("/uploads/")) return path; // Proxy /uploads → backend
+  return `${BROWSER_API_BASE}${path}`;
 }
 
 /** Timeout en ms pour les appels API (évite les blocages au build Coolify/Docker) */
@@ -52,7 +58,7 @@ async function fetchAPI<T>(
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+    const res = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
       signal: controller.signal,
       next: { revalidate: options?.revalidate ?? 60 },
       cache: options?.cache,

@@ -4,7 +4,10 @@ import { success, successList } from "../utils/apiResponse.js";
 
 export async function getAll(req: Request, res: Response) {
   const categories = await skillsService.getSkillsWithCategories();
-  const total = categories.reduce((sum, c) => sum + c.skills.length, 0);
+  const total = categories.reduce(
+    (sum: number, c: { skills: unknown[] }) => sum + c.skills.length,
+    0,
+  );
   return successList(res, categories, { total });
 }
 

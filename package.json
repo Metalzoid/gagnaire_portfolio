@@ -32,7 +32,9 @@
     "studio": "npm run studio --workspace=backend",
     "console": "npm run console --workspace=backend",
     "lock:backend": "./backend/scripts/generate-lock.sh",
-    "lock:frontend": "./frontend/scripts/generate-lock.sh"
+    "lock:frontend": "./frontend/scripts/generate-lock.sh",
+    "audit": "npm audit",
+    "audit:prod": "npm audit --omit=dev"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +45,7 @@
   },
   "overrides": {
     "lodash": "^4.17.23",
-    "hono": "^4.11.7"
+    "hono": "^4.11.7",
+    "tmp": "^0.2.4"
   }
 }

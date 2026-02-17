@@ -16,9 +16,13 @@ const nextConfig: NextConfig = {
     // Évite les erreurs "No link element found for chunk" avec les CSS modules (not-found, etc.)
     cssChunking: "strict",
   },
-  // Proxy /uploads vers le backend pour servir les fichiers uploadés
+  // Proxy /api et /uploads vers le backend (nécessaire quand seul le frontend est exposé, ex. Coolify)
   async rewrites() {
     return [
+      {
+        source: "/api/:path*",
+        destination: `${BACKEND_INTERNAL}/api/:path*`,
+      },
       {
         source: "/uploads/:path*",
         destination: `${BACKEND_INTERNAL}/uploads/:path*`,

@@ -7,6 +7,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useMemo,
   type ReactNode,
 } from "react";
 import { adminApi, configureAdminApi } from "@/services/admin-api";
@@ -66,6 +67,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthenticated = !!accessToken;
 
+  // Ref synchronisée avec le token pour éviter les closures obsolètes
+  // Mise à jour pendant le render (avant les effets) → toujours à jour
+  const accessTokenRef = useRef<string | null>(accessToken);
+  accessTokenRef.current = accessToken;
+
   // Refs pour le rafraîchissement proactif
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tryRefreshRef = useRef<(() => Promise<void>) | null>(null);
@@ -94,19 +100,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccessToken(null);
   }, []);
 
+  // Configuration une seule fois (ou si callbacks changent).
+  // Le getter lit la ref → toujours la valeur courante, même si l'effet
+  // parent n'a pas encore tourné après un changement de token.
+  const stableGetToken = useMemo(() => () => accessTokenRef.current, []);
+
   useEffect(() => {
     configureAdminApi({
-      getToken: () => accessToken,
+      getToken: stableGetToken,
       onTokensRefreshed: handleTokensRefreshed,
       onLogout: clearTokens,
     });
-  }, [accessToken, handleTokensRefreshed, clearTokens]);
+  }, [stableGetToken, handleTokensRefreshed, clearTokens]);
 
   const tryRefresh = useCallback(async () => {
     setRefreshError(false);
     const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     try {
-      const res = await fetch(`${apiBase}/api/v1/auth/refresh`, {
+      const res = await fetch(`${apiBase}/v1/auth/refresh`, {
         method: "POST",
         credentials: "include",
       });

@@ -69,6 +69,8 @@ jobs:
         run: npx prisma generate --schema=backend/prisma/schema.prisma
 
       - name: TypeScript check
+        env:
+          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
         run: npm run typecheck --workspace=backend
 
       - name: Build backend

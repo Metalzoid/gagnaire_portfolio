@@ -56,7 +56,7 @@ export function configureAdminApi(config: {
 }
 
 async function refreshTokens(): Promise<{ accessToken: string } | null> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
     method: "POST",
     credentials: "include",
   });
@@ -88,7 +88,7 @@ async function fetchWithAuth<T>(
   };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
     ...options,
     credentials: "include",
     headers,
@@ -129,7 +129,7 @@ async function uploadWithAuth<T = { path: string }>(
     Authorization: `Bearer ${token}`,
   };
 
-  const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -140,7 +140,7 @@ async function uploadWithAuth<T = { path: string }>(
     const newTokens = await refreshTokens();
     if (newTokens) {
       headers.Authorization = `Bearer ${newTokens.accessToken}`;
-      const retry = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+      const retry = await fetch(`${API_BASE}/v1${endpoint}`, {
         method: "POST",
         credentials: "include",
         headers,
@@ -199,13 +199,15 @@ async function deleteAdmin(endpoint: string): Promise<void> {
 // Admin API
 // --------------------------------------------------------------------------
 /**
- * Construit l'URL d'un fichier pour affichage : /uploads/* → backend, /images/* → assets frontend.
+ * Construit l'URL d'un fichier pour affichage : /uploads/* → backend (proxy direct), /images/* → assets frontend.
+ * Ne pas préfixer /api pour /uploads car le backend sert à /uploads, pas /api/uploads.
  */
 export function getUploadUrl(filePath: string): string {
   if (!filePath) return "";
   if (filePath.startsWith("http") || filePath.startsWith("data:"))
     return filePath;
   if (filePath.startsWith("/images/")) return filePath;
+  if (filePath.startsWith("/uploads/")) return filePath;
   return `${API_BASE}${filePath}`;
 }
 
@@ -218,7 +220,7 @@ export const adminApi = {
   },
   auth: {
     login: async (email: string, password: string) => {
-      const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
+      const res = await fetch(`${API_BASE}/v1/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -237,7 +239,7 @@ export const adminApi = {
       return json.data;
     },
     logout: async () => {
-      await fetch(`${API_BASE}/api/v1/auth/logout`, {
+      await fetch(`${API_BASE}/v1/auth/logout`, {
         method: "POST",
         credentials: "include",
       }).catch(() => {});
