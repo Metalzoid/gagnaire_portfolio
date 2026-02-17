@@ -8,6 +8,7 @@ import type {
   Experience,
   Profile,
   Testimonial,
+  Technology,
 } from "shared";
 
 // En Docker : API_URL_INTERNAL (backend:3001). En local : NEXT_PUBLIC_API_URL ou localhost.
@@ -16,13 +17,27 @@ const API_BASE =
     ? process.env.API_URL_INTERNAL
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+/** URL de base du backend pour le navigateur (NEXT_PUBLIC) */
+const BROWSER_API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+/**
+ * URL d'une image : /uploads/* → backend, /images/* → assets statiques frontend.
+ */
+export function getBackendImageUrl(path: string): string {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  if (path.startsWith("/images/")) return path; // Assets statiques frontend
+  return `${BROWSER_API_BASE}${path}`; // /uploads/* → backend
+}
+
 /** Timeout en ms pour les appels API (évite les blocages au build Coolify/Docker) */
 const API_TIMEOUT_MS = 5000;
 
 export class ApiError extends Error {
   constructor(
     public status: number,
-    public endpoint: string
+    public endpoint: string,
   ) {
     super(`API error ${status} for ${endpoint}`);
     this.name = "ApiError";
@@ -31,7 +46,7 @@ export class ApiError extends Error {
 
 async function fetchAPI<T>(
   endpoint: string,
-  options?: { revalidate?: number; cache?: RequestCache }
+  options?: { revalidate?: number; cache?: RequestCache },
 ): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
@@ -56,7 +71,7 @@ async function fetchAPI<T>(
 export async function fetchWithFallback<T>(
   endpoint: string,
   fallback: T,
-  options?: { revalidate?: number }
+  options?: { revalidate?: number },
 ): Promise<T> {
   // Au build Docker (Coolify, CI) : pas d'API disponible, retour immédiat du fallback
   if (process.env.SKIP_API_DURING_BUILD === "true") {
@@ -124,6 +139,27 @@ export async function getExperience(): Promise<Experience[]> {
 // --------------------------------------------------------------------------
 export async function getProfile(): Promise<Profile> {
   return fetchWithFallback<Profile>("/profile", FALLBACK_PROFILE);
+}
+
+// --------------------------------------------------------------------------
+// Technologies (public - pour autocomplete, filtres, etc.)
+// --------------------------------------------------------------------------
+export async function getTechnologies(): Promise<Technology[]> {
+  try {
+    return await fetchAPI<Technology[]>("/technologies");
+  } catch {
+    return [];
+  }
+}
+
+export async function searchTechnologies(query: string): Promise<Technology[]> {
+  const q = encodeURIComponent(query.trim());
+  if (!q) return getTechnologies();
+  try {
+    return await fetchAPI<Technology[]>(`/technologies/search?q=${q}`);
+  } catch {
+    return [];
+  }
 }
 
 // --------------------------------------------------------------------------

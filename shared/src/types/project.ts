@@ -1,9 +1,10 @@
 // --------------------------------------------------------------------------
 // Project
 // --------------------------------------------------------------------------
-export interface ProjectImages {
-  main: string;
-  thumbnails: string[];
+export interface ProjectImage {
+  id: string;
+  path: string;
+  order: number;
 }
 
 export interface Project {
@@ -11,9 +12,14 @@ export interface Project {
   title: string;
   description: string;
   longDescription: string;
-  technologies: string[];
+  technologies: {
+    id: string;
+    name: string;
+    icon?: string | null;
+    category?: string | null;
+  }[];
   category: string;
-  images: ProjectImages;
+  images: ProjectImage[];
   github?: string | null;
   demo?: string | null;
   featured: boolean;

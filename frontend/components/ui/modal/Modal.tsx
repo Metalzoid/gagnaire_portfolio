@@ -16,10 +16,13 @@ import styles from "./Modal.module.scss";
 // --------------------------------------------------------------------------
 // Types
 // --------------------------------------------------------------------------
+export type ModalSize = "sm" | "md" | "lg";
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  size?: ModalSize;
   children: React.ReactNode;
 }
 
@@ -41,7 +44,13 @@ const contentVariants = {
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  size = "sm",
+  children,
+}: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
 
@@ -129,7 +138,9 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             onClick={handleClose}
             aria-hidden="true"
           />
-          <div className={styles.dialogWrapper}>
+          <div
+            className={`${styles.dialogWrapper} ${styles[`dialogWrapper--${size}`]}`}
+          >
             <motion.div
               ref={dialogRef}
               className={styles.dialog}

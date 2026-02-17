@@ -1,0 +1,137 @@
+.wrapper {
+  margin-bottom: var(--spacing-md);
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text-primary);
+}
+
+.hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.card {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
+
+  &:hover {
+    border-color: var(--color-border);
+  }
+
+  &.cardDragging {
+    opacity: 0.5;
+  }
+
+  &.cardDragOver {
+    border-color: var(--color-accent-primary);
+  }
+}
+
+.preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background-color: var(--color-bg-secondary);
+
+  img,
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  background-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+  text-align: center;
+}
+
+.deleteBtn {
+  position: absolute;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: var(--color-error);
+  }
+}
+
+.uploadZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+
+  &:hover:not(.uploadZoneLoading) {
+    border-color: var(--color-accent-primary);
+    background-color: var(--color-bg-secondary);
+  }
+
+  input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  span {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  &.uploadZoneLoading {
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
+
+.error {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}

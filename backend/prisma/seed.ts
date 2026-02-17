@@ -3,7 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcrypt";
 
-const url = process.env.DATABASE_URL || "postgresql://portfolio:portfolio_dev@localhost:5432/portfolio_db";
+const url =
+  process.env.DATABASE_URL ||
+  "postgresql://portfolio:portfolio_dev@localhost:5432/portfolio_db";
 const adapter = new PrismaPg({ connectionString: url });
 const prisma = new PrismaClient({ adapter });
 
@@ -82,33 +84,58 @@ async function main() {
     console.log("✅ Skills seedés");
   }
 
+  // --- Technologies ---
+  const techNames = [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Express",
+    "Prisma",
+    "PostgreSQL",
+    "Node.js",
+  ];
+  const techMap: Record<string, { id: string }> = {};
+  for (const name of techNames) {
+    const tech = await prisma.technology.upsert({
+      where: { name },
+      update: {},
+      create: { name, category: "Frontend", order: techNames.indexOf(name) },
+    });
+    techMap[name] = { id: tech.id };
+  }
+  console.log("✅ Technologies seedées");
+
   // --- Project ---
   const projectCount = await prisma.project.count();
   if (projectCount === 0) {
-    await prisma.project.create({
+    const projectTechIds = [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+    ].map((n) => techMap[n].id);
+    const project = await prisma.project.create({
       data: {
         slug: "portfolio-gagnaire",
         title: "Portfolio Gagnaire",
         description: "Portfolio personnel moderne avec Next.js et API Express.",
         longDescription:
           "Application fullstack mettant en avant mes compétences en développement web. Frontend Next.js, backend Express, base PostgreSQL avec Prisma.",
-        technologies: [
-          "Next.js",
-          "React",
-          "TypeScript",
-          "Express",
-          "Prisma",
-          "PostgreSQL",
-        ],
+        technologies: { connect: projectTechIds.map((id) => ({ id })) },
         category: "Application web",
-        images: {
-          main: "/images/projects/portfolio-1.jpg",
-          thumbnails: [],
-        },
         github: "https://github.com/Metalzoid/gagnaire_portfolio",
         demo: "https://florian-gagnaire.dev",
         featured: true,
         date: "2025-02",
+        order: 0,
+      },
+    });
+    await prisma.projectImage.create({
+      data: {
+        projectId: project.id,
+        path: "/images/projects/portfolio-1.jpg",
         order: 0,
       },
     });
@@ -118,6 +145,9 @@ async function main() {
   // --- Experience ---
   const expCount = await prisma.experience.count();
   if (expCount === 0) {
+    const expTechIds = ["React", "Node.js", "TypeScript"].map(
+      (n) => techMap[n].id,
+    );
     await prisma.experience.create({
       data: {
         type: "Alternance",
@@ -127,7 +157,7 @@ async function main() {
         startDate: "2024-09",
         current: true,
         description: "Développement d'applications web modernes.",
-        technologies: ["React", "Node.js", "TypeScript"],
+        technologies: { connect: expTechIds.map((id) => ({ id })) },
         order: 0,
       },
     });

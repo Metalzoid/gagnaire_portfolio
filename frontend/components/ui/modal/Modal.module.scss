@@ -29,7 +29,6 @@
   z-index: $z-modal;
   transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 560px;
   max-height: 90vh;
   display: flex;
   pointer-events: none;
@@ -37,6 +36,18 @@
   @include respond-to("mobile") {
     width: calc(100% - var(--spacing-lg));
     max-height: 85vh;
+  }
+
+  &--sm {
+    max-width: 560px;
+  }
+
+  &--md {
+    max-width: 680px;
+  }
+
+  &--lg {
+    max-width: 800px;
   }
 }
 
