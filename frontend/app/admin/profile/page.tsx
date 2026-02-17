@@ -17,7 +17,7 @@ export default function AdminProfilePage() {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    setLoading(true);
+    queueMicrotask(() => setLoading(true));
     adminApi.profile
       .get()
       .then(setProfile)

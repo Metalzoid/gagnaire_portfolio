@@ -59,7 +59,7 @@ export async function reorderImages(projectId: string, orderedIds: string[]) {
   const images = await prisma.projectImage.findMany({
     where: { projectId },
   });
-  const idSet = new Set(images.map((i) => i.id));
+  const idSet = new Set(images.map((img: { id: string }) => img.id));
   const validIds = orderedIds.filter((id) => idSet.has(id));
   if (validIds.length !== orderedIds.length) {
     throw new AppError(
