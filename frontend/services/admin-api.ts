@@ -56,7 +56,7 @@ export function configureAdminApi(config: {
 }
 
 async function refreshTokens(): Promise<{ accessToken: string } | null> {
-  const res = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
     method: "POST",
     credentials: "include",
   });
@@ -88,7 +88,7 @@ async function fetchWithAuth<T>(
   };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
     ...options,
     credentials: "include",
     headers,
@@ -129,7 +129,7 @@ async function uploadWithAuth<T = { path: string }>(
     Authorization: `Bearer ${token}`,
   };
 
-  const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -140,7 +140,7 @@ async function uploadWithAuth<T = { path: string }>(
     const newTokens = await refreshTokens();
     if (newTokens) {
       headers.Authorization = `Bearer ${newTokens.accessToken}`;
-      const retry = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+      const retry = await fetch(`${API_BASE}/v1${endpoint}`, {
         method: "POST",
         credentials: "include",
         headers,
@@ -218,7 +218,7 @@ export const adminApi = {
   },
   auth: {
     login: async (email: string, password: string) => {
-      const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
+      const res = await fetch(`${API_BASE}/v1/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -237,7 +237,7 @@ export const adminApi = {
       return json.data;
     },
     logout: async () => {
-      await fetch(`${API_BASE}/api/v1/auth/logout`, {
+      await fetch(`${API_BASE}/v1/auth/logout`, {
         method: "POST",
         credentials: "include",
       }).catch(() => {});

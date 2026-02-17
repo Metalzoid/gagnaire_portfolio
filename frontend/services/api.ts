@@ -52,7 +52,7 @@ async function fetchAPI<T>(
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${API_BASE}/api/v1${endpoint}`, {
+    const res = await fetch(`${API_BASE}/v1${endpoint}`, {
       signal: controller.signal,
       next: { revalidate: options?.revalidate ?? 60 },
       cache: options?.cache,

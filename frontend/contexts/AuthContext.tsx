@@ -106,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRefreshError(false);
     const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     try {
-      const res = await fetch(`${apiBase}/api/v1/auth/refresh`, {
+      const res = await fetch(`${apiBase}/v1/auth/refresh`, {
         method: "POST",
         credentials: "include",
       });
