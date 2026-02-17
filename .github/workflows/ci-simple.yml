@@ -31,7 +31,9 @@ jobs:
         run: npm run lint --workspace=frontend
 
       - name: TypeScript check
-        run: npm run typecheck --workspace=frontend
+        env:
+          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
+        run: npm run typecheck --workspace=backend
 
       - name: Build
         run: npm run build --workspace=frontend
