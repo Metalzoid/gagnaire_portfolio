@@ -10,5 +10,10 @@ export interface Experience {
   endDate: string | null;
   current: boolean;
   description: string;
-  technologies?: string[];
+  technologies?: {
+    id: string;
+    name: string;
+    icon?: string | null;
+    category?: string | null;
+  }[];
 }

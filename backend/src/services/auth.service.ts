@@ -7,8 +7,6 @@ import { ErrorCode } from "../utils/errorCodes.js";
 import type { LoginSchemaType } from "shared";
 import type { Admin } from "@prisma/client";
 
-const SALT_ROUNDS = 10;
-
 export type AuthTokens = {
   accessToken: string;
   refreshToken: string;
@@ -32,18 +30,18 @@ export async function login(credentials: LoginSchemaType): Promise<AuthTokens> {
   return await createTokens(admin);
 }
 
-export async function refreshAccessToken(refreshToken: string): Promise<AuthTokens> {
+export async function refreshAccessToken(refreshTokenJwt: string): Promise<AuthTokens> {
   const secret = process.env.JWT_SECRET ?? "dev-secret-change-in-production";
 
-  let decoded: { sub: string; jti: string };
+  let payload: { sub: string; jti: string; exp?: number };
   try {
-    decoded = jwt.verify(refreshToken, secret) as { sub: string; jti: string };
+    payload = jwt.verify(refreshTokenJwt, secret) as { sub: string; jti: string; exp?: number };
   } catch {
     throw new AppError(401, "Refresh token invalide ou expiré", ErrorCode.REFRESH_TOKEN_INVALID);
   }
 
   const storedToken = await prisma.refreshToken.findUnique({
-    where: { token: refreshToken },
+    where: { token: payload.jti },
     include: { admin: true },
   });
 
@@ -54,13 +52,22 @@ export async function refreshAccessToken(refreshToken: string): Promise<AuthToke
     throw new AppError(401, "Refresh token invalide ou expiré", ErrorCode.REFRESH_TOKEN_EXPIRED);
   }
 
+  // Rotation : invalider l’ancien token avant d’émettre les nouveaux
+  await prisma.refreshToken.delete({ where: { id: storedToken.id } });
   return await createTokens(storedToken.admin);
 }
 
-export async function logout(refreshToken: string): Promise<void> {
-  await prisma.refreshToken.deleteMany({
-    where: { token: refreshToken },
-  });
+export async function logout(refreshTokenJwt: string): Promise<void> {
+  try {
+    const payload = jwt.decode(refreshTokenJwt) as { jti?: string } | null;
+    if (payload?.jti) {
+      await prisma.refreshToken.deleteMany({
+        where: { token: payload.jti },
+      });
+    }
+  } catch {
+    // Token invalide ou expiré — rien à révoquer
+  }
 }
 
 export async function getAdminById(id: string): Promise<Admin | null> {
@@ -71,7 +78,7 @@ export async function getAdminById(id: string): Promise<Admin | null> {
 
 async function createTokens(admin: Admin): Promise<AuthTokens> {
   const secret = process.env.JWT_SECRET ?? "dev-secret-change-in-production";
-  const refreshToken = crypto.randomUUID();
+  const jti = crypto.randomUUID();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
 
@@ -81,9 +88,15 @@ async function createTokens(admin: Admin): Promise<AuthTokens> {
     { expiresIn: authConfig.accessTokenExpiresIn }
   );
 
+  const refreshToken = jwt.sign(
+    { sub: admin.id, jti },
+    secret,
+    { expiresIn: authConfig.refreshTokenExpiresIn }
+  );
+
   await prisma.refreshToken.create({
     data: {
-      token: refreshToken,
+      token: jti,
       adminId: admin.id,
       expiresAt,
     },

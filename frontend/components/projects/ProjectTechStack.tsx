@@ -1,7 +1,9 @@
 import { Tag } from "@/components/ui/tag";
 
+type TechItem = string | { id: string; name: string };
+
 interface ProjectTechStackProps {
-  technologies: string[];
+  technologies: TechItem[];
 }
 
 export function ProjectTechStack({ technologies }: ProjectTechStackProps) {
@@ -9,9 +11,11 @@ export function ProjectTechStack({ technologies }: ProjectTechStackProps) {
 
   return (
     <div className="tech-stack" role="list">
-      {technologies.map((tech) => (
-        <Tag key={tech} label={tech} variant="tech" />
-      ))}
+      {technologies.map((tech) => {
+        const label = typeof tech === "string" ? tech : tech.name;
+        const key = typeof tech === "string" ? tech : tech.id;
+        return <Tag key={key} label={label} variant="tech" />;
+      })}
     </div>
   );
 }

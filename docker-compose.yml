@@ -1,5 +1,3 @@
-version: "3.9"
-
 # =============================================================================
 # Docker Compose - PRODUCTION (Coolify)
 # - Next.js standalone (frontend)
@@ -23,6 +21,9 @@ services:
       NODE_ENV: production
       PORT: 3001
 
+    volumes:
+      - uploads_data:/app/backend/uploads
+
     # Healthcheck : start_period 30s pour laisser prisma migrate deploy s'exécuter (Coolify)
     healthcheck:
       test:
@@ -41,6 +42,7 @@ services:
       args:
         NODE_ENV: production
         NEXT_PUBLIC_API_URL: /api
+        API_URL_INTERNAL: http://backend:3001
 
     environment:
       NODE_ENV: production
@@ -65,3 +67,6 @@ services:
       start_period: 15s
 
     restart: unless-stopped
+
+volumes:
+  uploads_data:

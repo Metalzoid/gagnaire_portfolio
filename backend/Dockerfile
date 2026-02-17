@@ -12,9 +12,25 @@ RUN apk add --no-cache curl && npm install -g npm@11
 
 WORKDIR /app
 
-# Copie backend + shared (file:../shared résout vers /app/shared)
+# 1. Copie des fichiers de dépendances uniquement (cache layer Docker)
+COPY backend/package.json backend/package-lock.json ./backend/
+COPY shared/package.json ./shared/
+
+# 2. Installation des dépendances (layer caché tant que package*.json ne change pas)
+WORKDIR /app/backend
+RUN npm ci
+
+WORKDIR /app/shared
+RUN npm install
+
+# 3. Copie du code source complet
+WORKDIR /app
 COPY backend ./backend
 COPY shared ./shared
+
+# Build shared (requis par le backend)
+WORKDIR /app/shared
+RUN npm run build
 
 # =============================================================================
 # Stage DEVELOPMENT
@@ -22,13 +38,8 @@ COPY shared ./shared
 FROM base AS development
 
 WORKDIR /app/backend
-RUN npm ci && npx prisma generate
+RUN npx prisma generate
 
-# Build shared (requis par le backend)
-WORKDIR /app/shared
-RUN npm install && npm run build
-
-WORKDIR /app/backend
 EXPOSE 3001
 CMD ["npm", "run", "dev"]
 
@@ -39,12 +50,6 @@ FROM base AS builder
 
 ARG DATABASE_URL=postgresql://build:build@localhost:5432/build
 ENV DATABASE_URL=$DATABASE_URL
-
-WORKDIR /app/backend
-RUN npm ci
-
-WORKDIR /app/shared
-RUN npm install && npm run build
 
 WORKDIR /app/backend
 RUN npm run build
@@ -69,6 +74,9 @@ RUN chmod +x ./backend/docker-entrypoint.sh
 
 WORKDIR /app/backend
 RUN npm prune --omit=dev
+
+# Créer le dossier uploads (sera monté en volume persistant)
+RUN mkdir -p /app/backend/uploads
 
 EXPOSE 3001
 ENTRYPOINT ["/app/backend/docker-entrypoint.sh"]

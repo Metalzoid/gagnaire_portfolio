@@ -8,22 +8,32 @@ import {
 import { success } from "../utils/apiResponse.js";
 import { AppError } from "../utils/AppError.js";
 import { ErrorCode } from "../utils/errorCodes.js";
+import { setRefreshCookie, clearRefreshCookie, REFRESH_COOKIE } from "../utils/cookies.js";
 
 export async function login(req: Request, res: Response) {
   const credentials = req.body as Parameters<typeof loginService>[0];
   const tokens = await loginService(credentials);
-  return success(res, tokens, 200);
+  setRefreshCookie(res, tokens.refreshToken);
+  return success(res, { accessToken: tokens.accessToken, expiresIn: tokens.expiresIn }, 200);
 }
 
 export async function refresh(req: Request, res: Response) {
-  const { refreshToken } = req.body as { refreshToken: string };
+  const refreshToken = req.cookies?.[REFRESH_COOKIE];
+  if (!refreshToken) {
+    clearRefreshCookie(res);
+    throw new AppError(401, "Refresh token manquant", ErrorCode.REFRESH_TOKEN_INVALID);
+  }
   const tokens = await refreshAccessToken(refreshToken);
-  return success(res, tokens, 200);
+  setRefreshCookie(res, tokens.refreshToken);
+  return success(res, { accessToken: tokens.accessToken, expiresIn: tokens.expiresIn }, 200);
 }
 
 export async function logout(req: Request, res: Response) {
-  const { refreshToken } = req.body as { refreshToken: string };
-  await logoutService(refreshToken);
+  const refreshToken = req.cookies?.[REFRESH_COOKIE];
+  if (refreshToken) {
+    await logoutService(refreshToken);
+  }
+  clearRefreshCookie(res);
   return success(res, { message: "Déconnexion réussie" }, 200);
 }
 
@@ -38,6 +48,7 @@ export async function me(req: Request, res: Response) {
     throw new AppError(404, "Admin non trouvé", ErrorCode.NOT_FOUND);
   }
 
-  const { password: _password, ...adminWithoutPassword } = admin;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- exclure password de la réponse
+  const { password, ...adminWithoutPassword } = admin;
   return success(res, adminWithoutPassword, 200);
 }

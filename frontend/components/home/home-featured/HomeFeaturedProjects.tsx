@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Carousel } from "@/components/ui/carousel";
 import { PLACEHOLDER_PROJECT_IMAGE } from "@/components/ui/image-with-fallback";
+import { getBackendImageUrl } from "@/services/api";
 import styles from "./HomeFeaturedProjects.module.scss";
 
 // --------------------------------------------------------------------------
@@ -13,10 +14,14 @@ import styles from "./HomeFeaturedProjects.module.scss";
 // --------------------------------------------------------------------------
 const renderProjectCard = (project: Project) => (
   <Card
-    image={project.images?.main ?? PLACEHOLDER_PROJECT_IMAGE}
+    image={
+      (project.images?.[0]?.path &&
+        getBackendImageUrl(project.images[0].path)) ??
+      PLACEHOLDER_PROJECT_IMAGE
+    }
     title={project.title}
     description={project.description}
-    tags={project.technologies?.slice(0, 3)}
+    tags={project.technologies?.slice(0, 3).map((t) => t.name)}
     href={`/projects/${project.slug}`}
     hoverable
   />

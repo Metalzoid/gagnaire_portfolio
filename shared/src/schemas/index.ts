@@ -4,19 +4,23 @@ export {
   pitchSchema,
   socialSchema,
 } from "./profile.schema";
-export type { ProfileSchemaType, UpdateProfileSchemaType } from "./profile.schema";
+export type {
+  ProfileSchemaType,
+  UpdateProfileSchemaType,
+} from "./profile.schema";
 
 export {
   createProjectSchema,
   updateProjectSchema,
   updateProjectOrderSchema,
-  projectImagesSchema,
 } from "./project.schema";
 export type {
   CreateProjectSchemaType,
   UpdateProjectSchemaType,
   UpdateProjectOrderSchemaType,
 } from "./project.schema";
+export { reorderProjectImagesSchema } from "./project-image.schema";
+export type { ReorderProjectImagesSchemaType } from "./project-image.schema";
 
 export {
   createSkillSchema,
@@ -41,6 +45,15 @@ export type {
 } from "./experience.schema";
 
 export {
+  createTechnologySchema,
+  updateTechnologySchema,
+} from "./technology.schema";
+export type {
+  CreateTechnologySchemaType,
+  UpdateTechnologySchemaType,
+} from "./technology.schema";
+
+export {
   createTestimonialSchema,
   updateTestimonialSchema,
 } from "./testimonial.schema";
@@ -49,11 +62,5 @@ export type {
   UpdateTestimonialSchemaType,
 } from "./testimonial.schema";
 
-export {
-  loginSchema,
-  refreshTokenSchema,
-} from "./auth.schema";
-export type {
-  LoginSchemaType,
-  RefreshTokenSchemaType,
-} from "./auth.schema";
+export { loginSchema, refreshTokenSchema } from "./auth.schema";
+export type { LoginSchemaType, RefreshTokenSchemaType } from "./auth.schema";

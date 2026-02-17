@@ -9,7 +9,7 @@ export const createExperienceSchema = z.object({
   endDate: z.string().nullable().optional(),
   current: z.boolean().default(false),
   description: z.string().min(1),
-  technologies: z.array(z.string()).optional(),
+  technologyIds: z.array(z.string()).optional(),
   order: z.number().int().min(0).optional(),
 });
 

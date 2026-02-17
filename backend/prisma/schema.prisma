@@ -43,21 +43,42 @@ model Profile {
 }
 
 model Project {
-  id              String   @id @default(cuid())
-  slug            String   @unique
+  id              String         @id @default(cuid())
+  slug            String         @unique
   title           String
-  description     String   @db.Text
-  longDescription String   @db.Text
-  technologies    String[]
+  description     String         @db.Text
+  longDescription String         @db.Text
   category        String
-  images          Json
   github          String?
   demo            String?
-  featured        Boolean  @default(false)
+  featured        Boolean        @default(false)
   date            String
-  order           Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  order           Int            @default(0)
+  technologies    Technology[]
+  images          ProjectImage[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model ProjectImage {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  path      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Technology {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  icon        String?
+  category    String?
+  order       Int        @default(0)
+  projects    Project[]
+  experiences Experience[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model SkillCategory {
@@ -78,19 +99,19 @@ model Skill {
 }
 
 model Experience {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   type         String
   title        String
   company      String?
   location     String?
   startDate    String
   endDate      String?
-  current      Boolean  @default(false)
-  description  String   @db.Text
-  technologies String[]
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  current      Boolean      @default(false)
+  description  String       @db.Text
+  order        Int          @default(0)
+  technologies Technology[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model Testimonial {

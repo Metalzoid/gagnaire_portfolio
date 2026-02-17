@@ -1,0 +1,33 @@
+.badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--border-radius);
+}
+
+.badge--featured {
+  background-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+}
+
+.badge--current {
+  background-color: var(--color-success, #50fa7b);
+  color: var(--color-bg-primary);
+}
+
+.badge--work {
+  background-color: var(--color-accent-secondary);
+  color: var(--color-bg-primary);
+}
+
+.badge--education {
+  background-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+}
+
+.badge--default {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}

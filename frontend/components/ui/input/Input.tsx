@@ -7,7 +7,7 @@ import styles from "./Input.module.scss";
 // Types
 // --------------------------------------------------------------------------
 interface InputProps {
-  type?: "text" | "email" | "textarea";
+  type?: "text" | "email" | "password" | "textarea";
   label: string;
   error?: string;
   required?: boolean;

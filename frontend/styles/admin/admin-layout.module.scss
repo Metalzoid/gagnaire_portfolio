@@ -1,0 +1,38 @@
+// ==========================================================================
+// Admin Layout - Sidebar + contenu principal
+// ==========================================================================
+
+.adminLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .adminLayout {
+    grid-template-columns: 1fr;
+  }
+}
+

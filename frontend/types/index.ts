@@ -2,7 +2,7 @@
 export type {
   Profile,
   Project,
-  ProjectImages,
+  ProjectImage,
   Skill,
   SkillCategory,
   SkillsData,

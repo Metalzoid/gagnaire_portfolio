@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../utils/AppError.js";
 import { ErrorCode } from "../utils/errorCodes.js";
 
+/* eslint-disable @typescript-eslint/no-namespace -- extension standard du type Express Request */
 declare global {
   namespace Express {
     interface Request {

@@ -32,3 +32,7 @@ Thumbs.db
 # Debug
 debug/
 .next/
+
+# Uploads (stockés côté backend, persistés via volume Docker)
+backend/uploads/
+frontend/public/uploads/

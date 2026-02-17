@@ -2,6 +2,7 @@ import { Router } from "express";
 import { createHealthRoutes } from "./health.routes.js";
 import { createAuthRoutes } from "./auth.routes.js";
 import { createProjectsRoutes } from "./projects.routes.js";
+import { createTechnologiesRoutes } from "./technologies.routes.js";
 import { createSkillsRoutes } from "./skills.routes.js";
 import { createExperienceRoutes } from "./experience.routes.js";
 import { createTestimonialsRoutes } from "./testimonials.routes.js";
@@ -14,6 +15,7 @@ export function createV1Router(): Router {
   router.use(createHealthRoutes());
   router.use(createAuthRoutes());
   router.use(createProjectsRoutes());
+  router.use(createTechnologiesRoutes());
   router.use(createSkillsRoutes());
   router.use(createExperienceRoutes());
   router.use(createTestimonialsRoutes());

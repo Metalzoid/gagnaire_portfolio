@@ -1,9 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import type { Profile } from "shared";
 import { Button } from "@/components/ui/button";
+import {
+  ImageWithFallback,
+  PLACEHOLDER_AVATAR,
+} from "@/components/ui/image-with-fallback";
+import { getBackendImageUrl } from "@/services/api";
 import styles from "./HomeBio.module.scss";
 
 // --------------------------------------------------------------------------
@@ -11,6 +15,9 @@ import styles from "./HomeBio.module.scss";
 // --------------------------------------------------------------------------
 export function HomeBio({ profile }: { profile: Profile }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
+  const photoSrc = profile.photo?.startsWith("/uploads/")
+    ? getBackendImageUrl(profile.photo)
+    : profile.photo || PLACEHOLDER_AVATAR;
 
   return (
     <div
@@ -20,8 +27,9 @@ export function HomeBio({ profile }: { profile: Profile }) {
       <div className={styles.content}>
         <div className={styles.photoWrapper}>
           <div className={styles.photoFrame}>
-            <Image
-              src={profile.photo}
+            <ImageWithFallback
+              src={photoSrc}
+              fallbackSrc={PLACEHOLDER_AVATAR}
               alt={`${profile.firstName} ${profile.lastName}`}
               width={200}
               height={200}
