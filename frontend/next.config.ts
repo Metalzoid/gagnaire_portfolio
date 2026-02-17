@@ -12,6 +12,23 @@ const BACKEND_INTERNAL =
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3001",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "backend",
+        port: "3001",
+        pathname: "/uploads/**",
+      },
+    ],
+    formats: ["image/webp", "image/avif"],
+  },
   experimental: {
     // Évite les erreurs "No link element found for chunk" avec les CSS modules (not-found, etc.)
     cssChunking: "strict",

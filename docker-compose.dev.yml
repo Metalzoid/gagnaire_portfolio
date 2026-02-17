@@ -41,8 +41,7 @@ services:
       - ./frontend/tsconfig.json:/app/frontend/tsconfig.json:delegated
     environment:
       - NODE_ENV=development
-      # En Docker uniquement : le serveur SSR joint le backend via le nom de service
-      - DOCKER_ENV=true
+      # SSR : le frontend joint le backend via le réseau Docker interne
       - API_URL_INTERNAL=http://backend:3001
       - NEXT_PUBLIC_API_URL=http://localhost:3001
       # Détection des changements de fichiers avec volumes Docker (Mac/Windows)

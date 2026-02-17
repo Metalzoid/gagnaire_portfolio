@@ -17,6 +17,7 @@ type TagVariant =
 
 interface TagProps {
   label: string;
+  icon?: React.ReactNode;
   active?: boolean;
   disabled?: boolean;
   variant?: TagVariant;
@@ -29,6 +30,7 @@ interface TagProps {
 // --------------------------------------------------------------------------
 const Tag = ({
   label,
+  icon,
   active = false,
   disabled = false,
   variant = "default",
@@ -45,6 +47,13 @@ const Tag = ({
     .filter(Boolean)
     .join(" ");
 
+  const content = (
+    <>
+      {icon && <span className={styles.iconWrapper}>{icon}</span>}
+      {label}
+    </>
+  );
+
   if (onClick && !disabled) {
     return (
       <button
@@ -54,17 +63,14 @@ const Tag = ({
         aria-pressed={active}
         aria-label={`Filtrer par ${label}`}
       >
-        {label}
+        {content}
       </button>
     );
   }
 
   return (
-    <span
-      className={classes}
-      aria-disabled={disabled || undefined}
-    >
-      {label}
+    <span className={classes} aria-disabled={disabled || undefined}>
+      {content}
     </span>
   );
 };

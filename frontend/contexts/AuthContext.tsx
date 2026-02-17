@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { adminApi, configureAdminApi } from "@/services/admin-api";
+import { API_BASE_CLIENT, API_PREFIX } from "@/services/api-config";
 
 // --------------------------------------------------------------------------
 // Types
@@ -115,9 +116,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const tryRefresh = useCallback(async () => {
     setRefreshError(false);
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     try {
-      const res = await fetch(`${apiBase}/v1/auth/refresh`, {
+      const res = await fetch(`${API_BASE_CLIENT}${API_PREFIX}/auth/refresh`, {
         method: "POST",
         credentials: "include",
       });

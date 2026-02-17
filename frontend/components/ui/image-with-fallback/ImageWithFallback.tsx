@@ -11,6 +11,8 @@ export const PLACEHOLDER_AVATAR = "/images/profile/photo.svg";
 
 interface ImageWithFallbackProps extends Omit<ImageProps, "onError"> {
   fallbackSrc?: string;
+  /** Force la désactivation de l'optimisation (ex: SVG locaux) */
+  unoptimized?: boolean;
 }
 
 /**
@@ -21,9 +23,12 @@ export function ImageWithFallback({
   src,
   fallbackSrc = PLACEHOLDER_PROJECT_IMAGE,
   alt,
+  unoptimized = false,
   ...rest
 }: ImageWithFallbackProps) {
-  const [failedSrc, setFailedSrc] = useState<NonNullable<ImageProps["src"]> | null>(null);
+  const [failedSrc, setFailedSrc] = useState<NonNullable<
+    ImageProps["src"]
+  > | null>(null);
 
   const effectiveSrc = failedSrc === src ? fallbackSrc : src;
 
@@ -32,8 +37,8 @@ export function ImageWithFallback({
       src={effectiveSrc}
       alt={alt}
       onError={() => setFailedSrc(src)}
+      unoptimized={unoptimized}
       {...rest}
-      unoptimized
     />
   );
 }

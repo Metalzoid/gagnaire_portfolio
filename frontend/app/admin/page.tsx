@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { adminApi } from "@/services/admin-api";
+import { API_BASE_CLIENT } from "@/services/api-config";
 import { Button } from "@/components/ui/button";
 import styles from "./dashboard.module.scss";
 
@@ -18,7 +19,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const controller = new AbortController();
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/health`,
+      `${API_BASE_CLIENT}/api/health`,
       { signal: controller.signal },
     )
       .then((r) => r.ok)

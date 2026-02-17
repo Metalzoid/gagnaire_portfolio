@@ -70,36 +70,91 @@ async function main() {
   if (skillCount === 0) {
     await prisma.skill.createMany({
       data: [
-        { name: "React", level: 85, categoryId: catFrontend.id, order: 0 },
-        { name: "TypeScript", level: 80, categoryId: catFrontend.id, order: 1 },
-        { name: "Next.js", level: 75, categoryId: catFrontend.id, order: 2 },
-        { name: "Node.js", level: 80, categoryId: catBackend.id, order: 0 },
-        { name: "Express", level: 75, categoryId: catBackend.id, order: 1 },
-        { name: "Prisma", level: 70, categoryId: catBackend.id, order: 2 },
-        { name: "PostgreSQL", level: 70, categoryId: catBackend.id, order: 3 },
-        { name: "Git", level: 85, categoryId: catTools.id, order: 0 },
-        { name: "Docker", level: 70, categoryId: catTools.id, order: 1 },
+        {
+          name: "React",
+          level: 85,
+          categoryId: catFrontend.id,
+          order: 0,
+          icon: "FaReact",
+        },
+        {
+          name: "TypeScript",
+          level: 80,
+          categoryId: catFrontend.id,
+          order: 1,
+          icon: "SiTypescript",
+        },
+        {
+          name: "Next.js",
+          level: 75,
+          categoryId: catFrontend.id,
+          order: 2,
+          icon: "SiNextdotjs",
+        },
+        {
+          name: "Node.js",
+          level: 80,
+          categoryId: catBackend.id,
+          order: 0,
+          icon: "FaNode",
+        },
+        {
+          name: "Express",
+          level: 75,
+          categoryId: catBackend.id,
+          order: 1,
+          icon: "SiExpress",
+        },
+        {
+          name: "Prisma",
+          level: 70,
+          categoryId: catBackend.id,
+          order: 2,
+          icon: "SiPrisma",
+        },
+        {
+          name: "PostgreSQL",
+          level: 70,
+          categoryId: catBackend.id,
+          order: 3,
+          icon: "SiPostgresql",
+        },
+        {
+          name: "Git",
+          level: 85,
+          categoryId: catTools.id,
+          order: 0,
+          icon: "FaGitAlt",
+        },
+        {
+          name: "Docker",
+          level: 70,
+          categoryId: catTools.id,
+          order: 1,
+          icon: "FaDocker",
+        },
       ],
     });
     console.log("✅ Skills seedés");
   }
 
   // --- Technologies ---
-  const techNames = [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Express",
-    "Prisma",
-    "PostgreSQL",
-    "Node.js",
+  const techData: { name: string; icon: string }[] = [
+    { name: "Next.js", icon: "SiNextdotjs" },
+    { name: "React", icon: "FaReact" },
+    { name: "TypeScript", icon: "SiTypescript" },
+    { name: "Express", icon: "SiExpress" },
+    { name: "Prisma", icon: "SiPrisma" },
+    { name: "PostgreSQL", icon: "SiPostgresql" },
+    { name: "Node.js", icon: "FaNode" },
   ];
   const techMap: Record<string, { id: string }> = {};
-  for (const name of techNames) {
+  for (let i = 0; i < techData.length; i++) {
+    const { name, icon } = techData[i];
     const tech = await prisma.technology.upsert({
       where: { name },
       update: {},
-      create: { name, category: "Frontend", order: techNames.indexOf(name) },
+      create: { name, icon, category: "Frontend", order: i },
     });
     techMap[name] = { id: tech.id };
   }

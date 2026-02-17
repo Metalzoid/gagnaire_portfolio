@@ -23,8 +23,10 @@ import type {
   UpdateTestimonialSchemaType,
   UpdateProfileSchemaType,
 } from "shared";
+import { API_BASE_CLIENT, API_PREFIX } from "./api-config";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_BASE = API_BASE_CLIENT;
+const API_PATH_PREFIX = API_PREFIX;
 
 export class AdminApiError extends Error {
   constructor(
@@ -56,7 +58,7 @@ export function configureAdminApi(config: {
 }
 
 async function refreshTokens(): Promise<{ accessToken: string } | null> {
-  const res = await fetch(`${API_BASE}/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}${API_PATH_PREFIX}/auth/refresh`, {
     method: "POST",
     credentials: "include",
   });
@@ -88,7 +90,7 @@ async function fetchWithAuth<T>(
   };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
     ...options,
     credentials: "include",
     headers,
@@ -129,7 +131,7 @@ async function uploadWithAuth<T = { path: string }>(
     Authorization: `Bearer ${token}`,
   };
 
-  const res = await fetch(`${API_BASE}/v1${endpoint}`, {
+  const res = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
     method: "POST",
     credentials: "include",
     headers,
@@ -140,7 +142,7 @@ async function uploadWithAuth<T = { path: string }>(
     const newTokens = await refreshTokens();
     if (newTokens) {
       headers.Authorization = `Bearer ${newTokens.accessToken}`;
-      const retry = await fetch(`${API_BASE}/v1${endpoint}`, {
+      const retry = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
         method: "POST",
         credentials: "include",
         headers,
@@ -220,7 +222,7 @@ export const adminApi = {
   },
   auth: {
     login: async (email: string, password: string) => {
-      const res = await fetch(`${API_BASE}/v1/auth/login`, {
+      const res = await fetch(`${API_BASE}${API_PATH_PREFIX}/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -239,7 +241,7 @@ export const adminApi = {
       return json.data;
     },
     logout: async () => {
-      await fetch(`${API_BASE}/v1/auth/logout`, {
+      await fetch(`${API_BASE}${API_PATH_PREFIX}/auth/logout`, {
         method: "POST",
         credentials: "include",
       }).catch(() => {});

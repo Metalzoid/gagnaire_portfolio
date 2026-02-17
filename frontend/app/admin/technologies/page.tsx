@@ -5,6 +5,7 @@ import { getTechnologies } from "@/services/api";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { AdminIconCell } from "@/components/admin/AdminIconCell";
 import { TechnologyForm } from "@/components/admin/TechnologyForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,12 @@ export default function AdminTechnologiesPage() {
     {
       key: "icon",
       header: "Icône",
-      render: (t: TechnologyWithId) => t.icon ?? "—",
+      render: (t: TechnologyWithId) =>
+        t.icon ? (
+          <AdminIconCell icon={t.icon} name={t.name} size={20} />
+        ) : (
+          "—"
+        ),
     },
   ];
 

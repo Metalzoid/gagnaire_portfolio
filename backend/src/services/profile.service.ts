@@ -32,6 +32,13 @@ async function deleteProfilePhotoFileIfNeeded(
   await fs.unlink(filePath).catch(() => {});
 }
 
+async function deleteCvFileIfUploaded(oldCv: string): Promise<void> {
+  if (!oldCv?.startsWith("/uploads/cv/")) return;
+  const relPath = oldCv.replace(/^\//, "");
+  const filePath = path.join(UPLOAD_DIR, relPath);
+  await fs.unlink(filePath).catch(() => {});
+}
+
 export async function updateProfile(data: UpdateProfileSchemaType) {
   const profile = await prisma.profile.findFirst({
     orderBy: { createdAt: "asc" },
@@ -42,6 +49,9 @@ export async function updateProfile(data: UpdateProfileSchemaType) {
 
   if (data.photo !== undefined) {
     await deleteProfilePhotoFileIfNeeded(profile.photo, data.photo);
+  }
+  if (data.cv !== undefined && data.cv !== profile.cv) {
+    await deleteCvFileIfUploaded(profile.cv);
   }
 
   return prisma.profile.update({ where: { id: profile.id }, data });

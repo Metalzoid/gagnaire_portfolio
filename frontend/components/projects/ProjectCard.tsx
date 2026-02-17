@@ -6,6 +6,7 @@ import {
   PLACEHOLDER_PROJECT_IMAGE,
 } from "@/components/ui/image-with-fallback";
 import { Tag } from "@/components/ui/tag";
+import { TechIcon } from "@/utils/technologyIcon";
 import { getBackendImageUrl } from "@/services/api";
 import type { Project } from "shared";
 import styles from "./ProjectCard.module.scss";
@@ -45,7 +46,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
         {project.technologies && project.technologies.length > 0 && (
           <div className={styles.tags}>
             {project.technologies.slice(0, 4).map((tech) => (
-              <Tag key={tech.id} label={tech.name} variant="tech" />
+              <Tag
+                key={tech.id}
+                label={tech.name}
+                variant="tech"
+                icon={
+                  tech.icon ? (
+                    <TechIcon icon={tech.icon} name={tech.name} size={16} />
+                  ) : undefined
+                }
+              />
             ))}
           </div>
         )}
