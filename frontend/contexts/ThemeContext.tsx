@@ -48,7 +48,10 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
 
   useEffect(() => {
     if (!isTransitioning) return;
-    const timer = setTimeout(() => setIsTransitioning(false), THEME_TRANSITION_MS);
+    const timer = setTimeout(
+      () => setIsTransitioning(false),
+      THEME_TRANSITION_MS,
+    );
     return () => clearTimeout(timer);
   }, [isTransitioning]);
 
