@@ -78,7 +78,7 @@ export function OrderableList<T>({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -99,7 +99,10 @@ export function OrderableList<T>({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={items.map(getId)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={items.map(getId)}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="admin-orderable-list">
           {items.map((item) => (
             <SortableItem key={item.id} item={item} renderItem={renderItem} />

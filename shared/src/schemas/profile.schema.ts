@@ -7,11 +7,12 @@ export const pitchSchema = z.object({
   method: z.string().min(1),
 });
 
-export const socialSchema = z.object({
-  github: z.string(),
-  linkedin: z.string(),
-  email: z.string().email(),
+export const socialLinkSchema = z.object({
+  label: z.string().min(1),
+  url: z.string().min(1),
 });
+
+export const socialSchema = z.array(socialLinkSchema);
 
 export const profileSchema = z.object({
   firstName: z.string().min(1),

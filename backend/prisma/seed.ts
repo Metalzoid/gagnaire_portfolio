@@ -39,11 +39,11 @@ async function main() {
           why: "Transformer des idées en solutions numériques",
           method: "Agile, tests, code propre",
         },
-        social: {
-          github: "https://github.com/Metalzoid",
-          linkedin: "https://linkedin.com/in/florian-gagnaire",
-          email: "contact@florian-gagnaire.dev",
-        },
+        social: [
+          { label: "GitHub", url: "https://github.com/Metalzoid" },
+          { label: "LinkedIn", url: "https://linkedin.com/in/florian-gagnaire" },
+          { label: "Email", url: "contact@florian-gagnaire.dev" },
+        ],
       },
     });
     console.log(`✅ Profile seedé : ${profile.firstName} ${profile.lastName}`);

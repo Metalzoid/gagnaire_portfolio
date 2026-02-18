@@ -1,4 +1,4 @@
-export type { Profile } from "./profile";
+export type { Profile, SocialLink } from "./profile";
 export type { Project, ProjectImage } from "./project";
 export type { Skill, SkillCategory, SkillsData } from "./skill";
 export type { Technology } from "./technology";

@@ -3,18 +3,20 @@
 import { useState } from "react";
 import { FormField } from "./FormField";
 import { ProfileMediaManager } from "./ProfileMediaManager";
+import { OrderableList } from "./OrderableList";
 import { Button } from "@/components/ui/button";
-import type { UpdateProfileSchemaType, Profile } from "shared";
+import type { UpdateProfileSchemaType, Profile, SocialLink } from "shared";
 
 const defaultPitch = { who: "", what: "", why: "", method: "" };
-const defaultSocial = { github: "", linkedin: "", email: "" };
+const defaultSocial: SocialLink[] = [];
 
 interface ProfileFormProps {
   defaultValues?: Partial<Profile>;
   onSubmit: (data: UpdateProfileSchemaType) => Promise<void>;
+  onSocialReorder?: (social: SocialLink[]) => void | Promise<void>;
 }
 
-export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
+export function ProfileForm({ defaultValues, onSubmit, onSocialReorder }: ProfileFormProps) {
   const [firstName, setFirstName] = useState(defaultValues?.firstName ?? "");
   const [lastName, setLastName] = useState(defaultValues?.lastName ?? "");
   const [role, setRole] = useState(defaultValues?.role ?? "");
@@ -23,7 +25,12 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
   const [photo, setPhoto] = useState(defaultValues?.photo ?? "");
   const [cv, setCv] = useState(defaultValues?.cv ?? "");
   const [pitch, setPitch] = useState(defaultValues?.pitch ?? defaultPitch);
-  const [social, setSocial] = useState(defaultValues?.social ?? defaultSocial);
+  const [social, setSocial] = useState<SocialLink[]>(
+    defaultValues?.social ?? defaultSocial,
+  );
+  const [socialIds, setSocialIds] = useState<string[]>(() =>
+    (defaultValues?.social ?? defaultSocial).map(() => crypto.randomUUID()),
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -51,114 +58,164 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Identité</h3>
-      <FormField
-        label="Prénom"
-        name="firstName"
-        value={firstName}
-        onChange={(e) => setFirstName((e.target as HTMLInputElement).value)}
-        required
-      />
-      <FormField
-        label="Nom"
-        name="lastName"
-        value={lastName}
-        onChange={(e) => setLastName((e.target as HTMLInputElement).value)}
-        required
-      />
-      <FormField
-        label="Rôle"
-        name="role"
-        value={role}
-        onChange={(e) => setRole((e.target as HTMLInputElement).value)}
-        required
-      />
-      <FormField
-        label="Statut"
-        name="status"
-        value={status}
-        onChange={(e) => setStatus((e.target as HTMLInputElement).value)}
-        required
-      />
-      <h3>Bio</h3>
-      <FormField
-        type="textarea"
-        label="Biographie"
-        name="bio"
-        value={bio}
-        onChange={(e) => setBio((e.target as HTMLTextAreaElement).value)}
-        required
-      />
-      <h3>Pitch</h3>
-      <FormField
-        label="Qui"
-        name="pitch.who"
-        value={pitch.who}
-        onChange={(e) =>
-          setPitch({ ...pitch, who: (e.target as HTMLInputElement).value })
-        }
-      />
-      <FormField
-        label="Quoi"
-        name="pitch.what"
-        value={pitch.what}
-        onChange={(e) =>
-          setPitch({ ...pitch, what: (e.target as HTMLInputElement).value })
-        }
-      />
-      <FormField
-        label="Pourquoi"
-        name="pitch.why"
-        value={pitch.why}
-        onChange={(e) =>
-          setPitch({ ...pitch, why: (e.target as HTMLInputElement).value })
-        }
-      />
-      <FormField
-        label="Comment"
-        name="pitch.method"
-        value={pitch.method}
-        onChange={(e) =>
-          setPitch({ ...pitch, method: (e.target as HTMLInputElement).value })
-        }
-      />
-      <h3>Réseaux</h3>
-      <FormField
-        label="GitHub"
-        name="social.github"
-        value={social.github}
-        onChange={(e) =>
-          setSocial({ ...social, github: (e.target as HTMLInputElement).value })
-        }
-      />
-      <FormField
-        label="LinkedIn"
-        name="social.linkedin"
-        value={social.linkedin}
-        onChange={(e) =>
-          setSocial({
-            ...social,
-            linkedin: (e.target as HTMLInputElement).value,
-          })
-        }
-      />
-      <FormField
-        type="email"
-        label="Email"
-        name="social.email"
-        value={social.email}
-        onChange={(e) =>
-          setSocial({ ...social, email: (e.target as HTMLInputElement).value })
-        }
-      />
+    <form onSubmit={handleSubmit} className="admin-profile-form">
+      <section className="admin-profile-form__section">
+        <h3 className="admin-profile-form__title">Identité</h3>
+        <div className="admin-profile-form__row">
+          <FormField
+            label="Prénom"
+            name="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName((e.target as HTMLInputElement).value)}
+            required
+          />
+          <FormField
+            label="Nom"
+            name="lastName"
+            value={lastName}
+            onChange={(e) => setLastName((e.target as HTMLInputElement).value)}
+            required
+          />
+        </div>
+        <div className="admin-profile-form__row">
+          <FormField
+            label="Rôle"
+            name="role"
+            value={role}
+            onChange={(e) => setRole((e.target as HTMLInputElement).value)}
+            required
+          />
+          <FormField
+            label="Statut"
+            name="status"
+            value={status}
+            onChange={(e) => setStatus((e.target as HTMLInputElement).value)}
+            required
+          />
+        </div>
+      </section>
+      <section className="admin-profile-form__section">
+        <h3 className="admin-profile-form__title">Bio</h3>
+        <FormField
+          type="textarea"
+          label="Biographie"
+          name="bio"
+          value={bio}
+          onChange={(e) => setBio((e.target as HTMLTextAreaElement).value)}
+          required
+        />
+      </section>
+      <section className="admin-profile-form__section">
+        <h3 className="admin-profile-form__title">Pitch</h3>
+        <FormField
+          label="Qui"
+          name="pitch.who"
+          value={pitch.who}
+          onChange={(e) =>
+            setPitch({ ...pitch, who: (e.target as HTMLInputElement).value })
+          }
+        />
+        <FormField
+          label="Quoi"
+          name="pitch.what"
+          value={pitch.what}
+          onChange={(e) =>
+            setPitch({ ...pitch, what: (e.target as HTMLInputElement).value })
+          }
+        />
+        <FormField
+          label="Pourquoi"
+          name="pitch.why"
+          value={pitch.why}
+          onChange={(e) =>
+            setPitch({ ...pitch, why: (e.target as HTMLInputElement).value })
+          }
+        />
+        <FormField
+          label="Comment"
+          name="pitch.method"
+          value={pitch.method}
+          onChange={(e) =>
+            setPitch({ ...pitch, method: (e.target as HTMLInputElement).value })
+          }
+        />
+      </section>
+      <section className="admin-profile-form__section admin-profile-form__section--social">
+        <h3 className="admin-profile-form__title">Réseaux sociaux</h3>
+        <OrderableList<SocialLink>
+          items={social.map((s, i) => ({ id: socialIds[i] ?? crypto.randomUUID(), data: s }))}
+          onReorder={(items) => {
+            const nextData = items.map((item) => item.data);
+            const nextIds = items.map((item) => item.id);
+            setSocial(nextData);
+            setSocialIds(nextIds);
+            onSocialReorder?.(nextData);
+          }}
+          renderItem={({ data, id }) => {
+            const idx = socialIds.indexOf(id);
+            if (idx < 0) return null;
+            return (
+              <div className="admin-profile-form__social-item">
+                <div className="admin-profile-form__social-fields">
+                  <FormField
+                    label="Label"
+                    name={`social.${idx}.label`}
+                    value={data.label}
+                    onChange={(e) => {
+                      const next = [...social];
+                      next[idx] = { ...next[idx], label: (e.target as HTMLInputElement).value };
+                      setSocial(next);
+                    }}
+                  />
+                  <FormField
+                    label="Valeur"
+                    name={`social.${idx}.url`}
+                    value={data.url}
+                    onChange={(e) => {
+                      const next = [...social];
+                      next[idx] = { ...next[idx], url: (e.target as HTMLInputElement).value };
+                      setSocial(next);
+                    }}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSocial(social.filter((_, i) => i !== idx));
+                    setSocialIds(socialIds.filter((_, i) => i !== idx));
+                  }}
+                  ariaLabel="Supprimer le lien"
+                  className="admin-profile-form__social-remove"
+                >
+                  Supprimer
+                </Button>
+              </div>
+            );
+          }}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setSocial([...social, { label: "", url: "" }]);
+            setSocialIds([...socialIds, crypto.randomUUID()]);
+          }}
+          ariaLabel="Ajouter un lien"
+          className="admin-profile-form__social-add"
+        >
+          + Ajouter un lien
+        </Button>
+      </section>
       <ProfileMediaManager
         photo={photo}
         cv={cv}
         onPhotoChange={setPhoto}
         onCvChange={setCv}
       />
-      {error && <p style={{ color: "var(--color-error)" }}>{error}</p>}
+      {error && <p className="admin-form-error" role="alert">{error}</p>}
       <Button
         type="submit"
         loading={loading}

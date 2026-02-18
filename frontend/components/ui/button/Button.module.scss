@@ -69,6 +69,7 @@
 
   @include on-hover {
     &:hover:not(:disabled) {
+      color: var(--color-bg-primary);
       filter: brightness(1.15);
     }
   }
@@ -87,6 +88,7 @@
     &:hover:not(:disabled) {
       background-color: var(--color-bg-tertiary);
       border-color: var(--color-accent-primary);
+      color: var(--color-text-primary);
     }
   }
 

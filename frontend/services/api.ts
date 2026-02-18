@@ -28,6 +28,18 @@ export function getBackendImageUrl(path: string): string {
   return `${BROWSER_API_BASE}${path}`;
 }
 
+/**
+ * URL pour télécharger un fichier uploadé (CV, etc.).
+ * Quand NEXT_PUBLIC_API_URL est défini (dev), le backend est sur un autre port → URL absolue.
+ * Quand vide (prod), same-origin → chemin relatif (rewrite Next.js).
+ */
+export function getUploadUrl(path: string): string {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:")) return path;
+  if (!path.startsWith("/uploads/")) return path;
+  return BROWSER_API_BASE ? `${BROWSER_API_BASE}${path}` : path;
+}
+
 /** Timeout en ms pour les appels API (évite les blocages au build Coolify/Docker) */
 const API_TIMEOUT_MS = 5000;
 
@@ -93,7 +105,7 @@ const FALLBACK_PROFILE: Profile = {
   pitch: { who: "", what: "", why: "", method: "" },
   photo: "/images/profile/photo.svg",
   cv: "#",
-  social: { github: "", linkedin: "", email: "" },
+  social: [],
 };
 
 // --------------------------------------------------------------------------
