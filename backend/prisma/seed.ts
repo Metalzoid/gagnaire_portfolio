@@ -9,17 +9,23 @@ const url =
 const adapter = new PrismaPg({ connectionString: url });
 const prisma = new PrismaClient({ adapter });
 
+const isLocal = process.env.NODE_ENV === "development";
+
 async function main() {
-  // --- Admin ---
-  const email = process.env.ADMIN_EMAIL ?? "admin@portfolio.dev";
-  const password = process.env.ADMIN_PASSWORD ?? "changeme";
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const admin = await prisma.admin.upsert({
-    where: { email },
-    update: { password: hashedPassword },
-    create: { email, password: hashedPassword },
-  });
-  console.log(`✅ Admin seedé : ${admin.email}`);
+  // --- Admin (uniquement en local) ---
+  if (isLocal) {
+    const email = process.env.ADMIN_EMAIL ?? "admin@portfolio.dev";
+    const password = process.env.ADMIN_PASSWORD ?? "changeme";
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const admin = await prisma.admin.upsert({
+      where: { email },
+      update: { password: hashedPassword },
+      create: { email, password: hashedPassword },
+    });
+    console.log(`✅ Admin seedé : ${admin.email}`);
+  } else {
+    console.log("⏭️ Admin : skip (non local)");
+  }
 
   // --- Profile ---
   let profile = await prisma.profile.findFirst();
@@ -41,7 +47,10 @@ async function main() {
         },
         social: [
           { label: "GitHub", url: "https://github.com/Metalzoid" },
-          { label: "LinkedIn", url: "https://linkedin.com/in/florian-gagnaire" },
+          {
+            label: "LinkedIn",
+            url: "https://linkedin.com/in/florian-gagnaire",
+          },
           { label: "Email", url: "contact@florian-gagnaire.dev" },
         ],
       },
@@ -50,21 +59,30 @@ async function main() {
   }
 
   // --- Skills ---
-  const catFrontend = await prisma.skillCategory.upsert({
+  let catFrontend = await prisma.skillCategory.findFirst({
     where: { name: "Frontend" },
-    update: {},
-    create: { name: "Frontend", order: 0 },
   });
-  const catBackend = await prisma.skillCategory.upsert({
+  if (!catFrontend) {
+    catFrontend = await prisma.skillCategory.create({
+      data: { name: "Frontend", order: 0 },
+    });
+  }
+  let catBackend = await prisma.skillCategory.findFirst({
     where: { name: "Backend" },
-    update: {},
-    create: { name: "Backend", order: 1 },
   });
-  const catTools = await prisma.skillCategory.upsert({
+  if (!catBackend) {
+    catBackend = await prisma.skillCategory.create({
+      data: { name: "Backend", order: 1 },
+    });
+  }
+  let catTools = await prisma.skillCategory.findFirst({
     where: { name: "Outils" },
-    update: {},
-    create: { name: "Outils", order: 2 },
   });
+  if (!catTools) {
+    catTools = await prisma.skillCategory.create({
+      data: { name: "Outils", order: 2 },
+    });
+  }
 
   const skillCount = await prisma.skill.count();
   if (skillCount === 0) {
@@ -151,11 +169,12 @@ async function main() {
   const techMap: Record<string, { id: string }> = {};
   for (let i = 0; i < techData.length; i++) {
     const { name, icon } = techData[i];
-    const tech = await prisma.technology.upsert({
-      where: { name },
-      update: {},
-      create: { name, icon, category: "Frontend", order: i },
-    });
+    let tech = await prisma.technology.findFirst({ where: { name } });
+    if (!tech) {
+      tech = await prisma.technology.create({
+        data: { name, icon, category: "Frontend", order: i },
+      });
+    }
     techMap[name] = { id: tech.id };
   }
   console.log("✅ Technologies seedées");

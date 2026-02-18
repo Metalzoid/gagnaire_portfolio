@@ -6,7 +6,7 @@ export function validate<T extends z.ZodType>(schema: T) {
   return (req: Request, _res: Response, next: NextFunction) => {
     const parsed = schema.safeParse(req.body);
     if (!parsed.success) {
-      const msg = parsed.error.errors.map((e) => e.message).join(", ");
+      const msg = parsed.error.issues.map((e) => e.message).join(", ");
       return next(new AppError(400, msg, "VALIDATION_ERROR"));
     }
     req.body = parsed.data;

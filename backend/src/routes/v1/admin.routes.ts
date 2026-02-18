@@ -6,6 +6,7 @@ import * as testimonialsController from "../../controllers/testimonials.controll
 import * as profileController from "../../controllers/profile.controller.js";
 import * as technologiesController from "../../controllers/technologies.controller.js";
 import * as projectImagesController from "../../controllers/project-images.controller.js";
+import * as contactsAdminController from "../../controllers/contacts-admin.controller.js";
 import { upload, handleUpload } from "../../controllers/upload.controller.js";
 import { requireAuth } from "../../middlewares/auth.js";
 import { validate } from "../../middlewares/validate.js";
@@ -25,6 +26,7 @@ import {
   createTestimonialSchema,
   updateTestimonialSchema,
   updateProfileSchema,
+  updateContactStatusSchema,
 } from "shared";
 
 export function createAdminRoutes(): Router {
@@ -121,6 +123,13 @@ export function createAdminRoutes(): Router {
     "/admin/profile",
     validate(updateProfileSchema),
     profileController.updateProfile,
+  );
+
+  router.get("/admin/contacts", contactsAdminController.list);
+  router.patch(
+    "/admin/contacts/:id",
+    validate(updateContactStatusSchema),
+    contactsAdminController.updateStatus,
   );
 
   router.post(

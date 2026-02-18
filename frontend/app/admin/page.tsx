@@ -13,15 +13,13 @@ export default function AdminDashboardPage() {
     skills: number;
     experience: number;
     testimonials: number;
+    contacts: number;
   } | null>(null);
   const [apiOk, setApiOk] = useState<boolean | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(
-      `${API_BASE_CLIENT}/api/health`,
-      { signal: controller.signal },
-    )
+    fetch(`${API_BASE_CLIENT}/api/health`, { signal: controller.signal })
       .then((r) => r.ok)
       .then(setApiOk)
       .catch(() => setApiOk(false));
@@ -31,8 +29,9 @@ export default function AdminDashboardPage() {
       adminApi.skills.list(),
       adminApi.experience.list(),
       adminApi.testimonials.list(),
+      adminApi.contacts.list(),
     ])
-      .then(([projects, skills, exp, testimonials]) => {
+      .then(([projects, skills, exp, testimonials, contacts]) => {
         const skillCount = skills.reduce(
           (acc, cat) => acc + cat.skills.length,
           0,
@@ -42,10 +41,17 @@ export default function AdminDashboardPage() {
           skills: skillCount,
           experience: exp.length,
           testimonials: testimonials.length,
+          contacts: contacts.length,
         });
       })
       .catch(() =>
-        setStats({ projects: 0, skills: 0, experience: 0, testimonials: 0 }),
+        setStats({
+          projects: 0,
+          skills: 0,
+          experience: 0,
+          testimonials: 0,
+          contacts: 0,
+        }),
       );
 
     return () => controller.abort();
@@ -70,6 +76,10 @@ export default function AdminDashboardPage() {
         <Link href="/admin/testimonials" className={styles.card}>
           <span className={styles.number}>{stats?.testimonials ?? "—"}</span>
           <span className={styles.label}>Témoignages</span>
+        </Link>
+        <Link href="/admin/contacts" className={styles.card}>
+          <span className={styles.number}>{stats?.contacts ?? "—"}</span>
+          <span className={styles.label}>Contacts</span>
         </Link>
       </div>
       <div className={styles.quickActions}>

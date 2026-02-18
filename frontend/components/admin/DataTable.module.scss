@@ -32,6 +32,14 @@
   }
 }
 
+.clickableRow {
+  cursor: pointer;
+
+  &:hover td {
+    background-color: var(--color-bg-tertiary, var(--color-bg-primary));
+  }
+}
+
 .actions {
   display: flex;
   gap: var(--spacing-sm);

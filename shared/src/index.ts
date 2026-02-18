@@ -10,6 +10,8 @@ export type {
   SkillsData,
   Experience,
   Testimonial,
+  ContactRequest,
+  ContactRequestStatus,
   PitchKey,
   PitchBlock,
   AboutValue,
@@ -38,6 +40,9 @@ export {
   updateTestimonialSchema,
   loginSchema,
   refreshTokenSchema,
+  createContactSchema,
+  updateContactStatusSchema,
+  contactStatusEnum,
 } from "./schemas";
 
 export type {
@@ -59,4 +64,7 @@ export type {
   UpdateTestimonialSchemaType,
   LoginSchemaType,
   RefreshTokenSchemaType,
+  CreateContactSchemaType,
+  UpdateContactStatusSchemaType,
+  ContactStatusEnum,
 } from "./schemas";

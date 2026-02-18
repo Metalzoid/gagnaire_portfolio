@@ -15,12 +15,24 @@
   overflow: hidden;
 }
 
+.error {
+  color: var(--color-error, #dc3545);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
 .success {
   padding: var(--spacing-xl);
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-success);
   border-radius: var(--border-radius-lg);
-  color: var(--color-text-primary);
+  color: var(--color-success);
+
+  p {
+    color: var(--color-success);
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
 }
 
 .successNote {

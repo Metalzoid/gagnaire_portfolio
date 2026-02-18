@@ -16,7 +16,8 @@ cp "$BACKEND_DIR/package.json" "$TMP_DIR/backend/"
 cp -r "$ROOT_DIR/shared/." "$TMP_DIR/shared/"
 
 cd "$TMP_DIR/backend"
-npm install --package-lock-only
+# Utiliser npm 11 pour que le lock soit identique à celui attendu dans le Dockerfile (npm ci avec npm@11)
+npx --yes npm@11 install --package-lock-only
 
 cp package-lock.json "$BACKEND_DIR/"
 echo "✓ package-lock.json généré dans backend/"

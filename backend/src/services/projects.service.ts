@@ -53,7 +53,7 @@ export async function createProject(data: CreateProjectSchemaType) {
       ...rest,
       order: 0,
       technologies: {
-        connect: (technologyIds ?? []).map((id) => ({ id })),
+        connect: (technologyIds ?? []).map((id: string) => ({ id })),
       },
     },
     include: projectInclude,
@@ -83,7 +83,7 @@ export async function updateProject(id: string, data: UpdateProjectSchemaType) {
   };
   if (technologyIds !== undefined) {
     updateData.technologies = {
-      set: technologyIds.map((id) => ({ id })),
+      set: technologyIds.map((id: string) => ({ id })),
     };
   }
   return prisma.project.update({

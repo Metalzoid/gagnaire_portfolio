@@ -14,6 +14,8 @@ WORKDIR /app
 
 # 1. Copie des fichiers de dépendances uniquement (cache layer Docker)
 COPY frontend/package.json frontend/package-lock.json ./frontend/
+# .npmrc (ex. legacy-peer-deps) doit être identique au contexte de génération du lock
+COPY frontend/.npmrc ./frontend/
 COPY shared/package.json ./shared/
 
 # 2. Installation des dépendances (layer caché tant que package*.json ne change pas)

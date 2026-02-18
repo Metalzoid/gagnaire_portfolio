@@ -16,6 +16,7 @@ interface DataTableProps<T extends { id: string }> {
   editHref?: (item: T) => string;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
+  onRowClick?: (item: T) => void;
   emptyMessage?: string;
 }
 
@@ -25,6 +26,7 @@ export function DataTable<T extends { id: string }>({
   editHref,
   onEdit,
   onDelete,
+  onRowClick,
   emptyMessage = "Aucun élément",
 }: DataTableProps<T>) {
   if (data.length === 0) {
@@ -46,7 +48,23 @@ export function DataTable<T extends { id: string }>({
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item.id}>
+            <tr
+              key={item.id}
+              onClick={onRowClick ? () => onRowClick(item) : undefined}
+              className={onRowClick ? styles.clickableRow : undefined}
+              role={onRowClick ? "button" : undefined}
+              tabIndex={onRowClick ? 0 : undefined}
+              onKeyDown={
+                onRowClick
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onRowClick(item);
+                      }
+                    }
+                  : undefined
+              }
+            >
               {columns.map((col) => (
                 <td key={col.key}>
                   {col.render

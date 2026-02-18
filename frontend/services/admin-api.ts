@@ -9,6 +9,7 @@ import type {
   Profile,
   Testimonial,
   Technology,
+  ContactRequest,
   CreateProjectSchemaType,
   UpdateProjectSchemaType,
   CreateSkillSchemaType,
@@ -323,6 +324,11 @@ export const adminApi = {
     update: (id: string, data: UpdateTechnologySchemaType) =>
       putAdmin<Technology>(`/admin/technologies/${id}`, data),
     delete: (id: string) => deleteAdmin(`/admin/technologies/${id}`),
+  },
+  contacts: {
+    list: () => fetchWithAuth<ContactRequest[]>("/admin/contacts"),
+    updateStatus: (id: string, status: ContactRequest["status"]) =>
+      patchAdmin<ContactRequest>(`/admin/contacts/${id}`, { status }),
   },
   profile: {
     get: async () => {
