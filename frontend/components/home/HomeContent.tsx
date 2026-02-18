@@ -41,7 +41,13 @@ export function HomeContent({
     string,
     React.ReactNode
   > = {
-    hero: <TerminalHero profile={profile} />,
+    hero: (
+      <TerminalHero
+        profile={profile}
+        skills={skills}
+        topProjects={topProjects}
+      />
+    ),
     "a-propos": <HomeBio profile={profile} />,
     competences: <HomeSkills skills={skills} />,
     projets: <HomeFeaturedProjects projects={topProjects} />,

@@ -35,10 +35,17 @@ function getServerReducedMotionSnapshot() {
 // --------------------------------------------------------------------------
 // Hook - Effet de frappe (typewriter)
 // --------------------------------------------------------------------------
+export interface UseTypewriterResult {
+  /** Texte affiché (lignes jointes par \n) */
+  text: string;
+  /** true quand toutes les lignes ont été tapées */
+  isComplete: boolean;
+}
+
 export function useTypewriter(
   lines: string[],
   options: UseTypewriterOptions = {},
-): string {
+): UseTypewriterResult {
   const { speed = 50, delayBetweenLines = 800, initialDelay = 500 } = options;
 
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
@@ -108,10 +115,11 @@ export function useTypewriter(
 
   // Si reduced motion → afficher tout directement (pas de setState nécessaire)
   if (prefersReducedMotion) {
-    return lines.join("\n");
+    return { text: lines.join("\n"), isComplete: true };
   }
 
-  return displayedLines.join("\n");
+  const isComplete = currentLineIndex >= lines.length;
+  return { text: displayedLines.join("\n"), isComplete };
 }
 
 // --------------------------------------------------------------------------
@@ -131,6 +139,5 @@ export function formatTerminalLines(profile: {
     profile.role,
     "> status",
     profile.status,
-    "> _",
   ];
 }

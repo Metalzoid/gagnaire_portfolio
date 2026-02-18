@@ -17,6 +17,7 @@
 // Fenêtre terminal
 // --------------------------------------------------------------------------
 .terminal {
+  position: relative;
   width: 100%;
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
@@ -24,6 +25,12 @@
   overflow: hidden;
   box-shadow: var(--shadow-xl);
   @include theme-transition;
+
+  &[data-focused="true"] {
+    border-color: var(--color-accent-primary);
+    box-shadow: var(--shadow-xl), 0 0 0 2px var(--color-accent-primary);
+    outline: none;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -70,22 +77,43 @@
 // Contenu
 // --------------------------------------------------------------------------
 .content {
-  height: 200px;
+  position: relative;
+  height: 360px;
   padding: var(--spacing-sm);
+  overflow-x: auto;
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.hiddenInput {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2em;
+  opacity: 0;
+  cursor: text;
+  font-size: inherit;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  background: transparent;
+  z-index: 1;
+  /* En bas pour que le scroll-into-view du focus garde la vue en bas */
 }
 
 .output {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-base);
-  line-height: 1.8;
+  line-height: 1.35;
   color: var(--color-text-primary);
   margin: 0;
   padding: 0;
   background: none;
   border-radius: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
+  white-space: pre;
+  word-break: normal;
+  letter-spacing: 0;
 }
 
 .line {
@@ -99,6 +127,11 @@
 .lineResult {
   color: var(--color-text-primary);
   padding-left: var(--spacing-md);
+}
+
+/* Lignes type ASCII (neofetch, teapot) : pas de padding pour garder l’alignement */
+.lineAscii {
+  padding-left: 0;
 }
 
 // --------------------------------------------------------------------------
@@ -123,6 +156,57 @@
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Easter eggs - overlay
+// --------------------------------------------------------------------------
+.easterGlitch {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: glitch 0.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .easterGlitch {
+    animation-duration: 0.1s;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    opacity: 1;
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    opacity: 0.9;
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% {
+    opacity: 0.95;
+    transform: translate(2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    opacity: 0.95;
+    transform: translate(2px, 2px);
+    filter: hue-rotate(320deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0);
+    filter: hue-rotate(360deg);
+    visibility: hidden;
   }
 }
 

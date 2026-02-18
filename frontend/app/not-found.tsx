@@ -25,7 +25,7 @@ export default function NotFound() {
     "> _",
   ];
 
-  const displayedText = useTypewriter(lines, {
+  const { text: displayedText } = useTypewriter(lines, {
     speed: 30,
     delayBetweenLines: 200,
     initialDelay: 300,
