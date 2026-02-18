@@ -4,8 +4,6 @@ import { prisma } from "../config/database.js";
 import { AppError } from "../utils/AppError.js";
 import { ErrorCode } from "../utils/errorCodes.js";
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
-
 export async function addImage(projectId: string, filePath: string) {
   const project = await prisma.project.findUnique({ where: { id: projectId } });
   if (!project) {
@@ -31,9 +29,12 @@ export async function removeImage(projectId: string, imageId: string) {
     throw new AppError(404, "Image non trouvée", ErrorCode.NOT_FOUND);
   }
 
-  // Supprimer le fichier du disque
-  const fullPath = path.join(UPLOAD_DIR, image.path.replace(/^\//, ""));
-  await fs.unlink(fullPath).catch(() => {});
+  // Supprimer le fichier du disque uniquement pour les chemins /uploads/ (fichiers hébergés par le backend)
+  // Les chemins /images/ sont des assets statiques frontend, pas sur ce serveur
+  if (image.path.startsWith("/uploads/")) {
+    const fullPath = path.join(process.cwd(), image.path.replace(/^\//, ""));
+    await fs.unlink(fullPath).catch(() => {});
+  }
 
   await prisma.projectImage.delete({ where: { id: imageId } });
 

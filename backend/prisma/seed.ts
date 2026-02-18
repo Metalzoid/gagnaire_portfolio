@@ -190,7 +190,7 @@ async function main() {
     await prisma.projectImage.create({
       data: {
         projectId: project.id,
-        path: "/images/projects/portfolio-1.jpg",
+        path: "/images/placeholder-project.svg",
         order: 0,
       },
     });
