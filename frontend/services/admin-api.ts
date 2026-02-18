@@ -336,4 +336,36 @@ export const adminApi = {
     update: (data: UpdateProfileSchemaType) =>
       putAdmin<Profile>("/admin/profile", data),
   },
+  cv: {
+    /** Récupère toutes les données nécessaires pour générer le CV */
+    getData: async () => {
+      const [profile, experience, skills, projects] = await Promise.all([
+        adminApi.profile.get(),
+        fetchWithAuth<Experience[]>("/experience"),
+        fetchWithAuth<SkillCategory[]>("/skills"),
+        fetchWithAuth<Project[]>("/projects/featured").catch(() =>
+          fetchWithAuth<Project[]>("/projects"),
+        ),
+      ]);
+
+      const defaultProfile: Profile = {
+        firstName: "",
+        lastName: "",
+        role: "",
+        status: "",
+        bio: "",
+        pitch: { who: "", what: "", why: "", method: "" },
+        photo: "",
+        social: [],
+        cv: "",
+      };
+
+      return {
+        profile: profile ?? defaultProfile,
+        experience: experience ?? [],
+        skills: skills ?? [],
+        projects: projects ?? [],
+      };
+    },
+  },
 };

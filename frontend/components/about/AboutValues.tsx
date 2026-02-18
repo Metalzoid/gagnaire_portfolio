@@ -58,13 +58,15 @@ export function AboutValues({
       </div>
 
       <div className={styles.ctas}>
-        <Button
-          href={profile.cv}
-          variant="primary"
-          ariaLabel="Télécharger mon CV"
-        >
-          Télécharger mon CV
-        </Button>
+        {profile.cv && profile.cv.startsWith("/uploads/") ? (
+          <Button
+            href="/api/cv"
+            variant="primary"
+            ariaLabel="Télécharger mon CV"
+          >
+            Télécharger mon CV
+          </Button>
+        ) : null}
         <Button
           variant="outline"
           ariaLabel="Me contacter"

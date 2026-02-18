@@ -144,20 +144,18 @@ export default function AdminSkillsPage() {
     <div>
       <div className="admin-skills-accordion__add-category">
         <form
+          className="admin-skills-accordion__add-category-form"
           onSubmit={handleAddCategory}
-          style={{
-            display: "flex",
-            gap: "var(--spacing-sm)",
-            alignItems: "flex-end",
-          }}
         >
-          <FormField
-            label="Nouvelle catégorie"
-            name="newCategory"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-            placeholder="Ex: Frontend"
-          />
+          <div className="admin-skills-accordion__add-category-field">
+            <FormField
+              label="Nouvelle catégorie"
+              name="newCategory"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="Ex: Frontend"
+            />
+          </div>
           <Button type="submit" ariaLabel="Ajouter la catégorie">
             Ajouter catégorie
           </Button>

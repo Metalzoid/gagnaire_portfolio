@@ -11,7 +11,9 @@ export function PersonSchema({ profile }: { profile: Profile }) {
     name: fullName,
     jobTitle: profile.role,
     url: SITE_URL,
-    sameAs: [profile.social.github, profile.social.linkedin].filter(Boolean),
+    sameAs: (profile.social ?? [])
+      .map((s) => s.url)
+      .filter((url) => url && !url.startsWith("mailto:")),
     knowsAbout: ["React", "Node.js", "TypeScript", "Next.js"],
     alumniOf: {
       "@type": "EducationalOrganization" as const,

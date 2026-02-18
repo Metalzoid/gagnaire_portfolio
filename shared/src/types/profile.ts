@@ -1,6 +1,11 @@
 // --------------------------------------------------------------------------
 // Profile
 // --------------------------------------------------------------------------
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
 export interface Profile {
   firstName: string;
   lastName: string;
@@ -14,10 +19,6 @@ export interface Profile {
     method: string;
   };
   photo: string;
-  social: {
-    github: string;
-    linkedin: string;
-    email: string;
-  };
+  social: SocialLink[];
   cv: string;
 }

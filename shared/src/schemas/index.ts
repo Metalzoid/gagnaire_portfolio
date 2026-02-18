@@ -3,6 +3,7 @@ export {
   updateProfileSchema,
   pitchSchema,
   socialSchema,
+  socialLinkSchema,
 } from "./profile.schema";
 export type {
   ProfileSchemaType,

@@ -1,0 +1,146 @@
+// ==========================================================================
+// Page Admin CV - Génération et gestion du CV
+// ==========================================================================
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: var(--spacing-xl);
+  min-height: 400px;
+}
+
+.previewColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.previewWrapper {
+  flex: 1;
+  min-height: 500px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+}
+
+.previewLoading,
+.previewError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: var(--spacing-lg);
+  color: var(--color-text-secondary);
+}
+
+.previewError {
+  color: var(--color-error);
+}
+
+.previewIframe {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  border: none;
+  display: block;
+}
+
+.actionsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.actionsSection {
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+}
+
+.actionsTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md);
+}
+
+.generateBtn {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: white;
+  background-color: var(--color-accent-primary, #7c3aed);
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.uploadZone {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-md);
+  text-align: center;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-bg-primary);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+
+  &:hover {
+    border-color: var(--color-accent-primary);
+    background-color: var(--color-bg-secondary);
+  }
+
+  input {
+    display: none;
+  }
+}
+
+.cvLink {
+  display: inline-block;
+  margin-top: var(--spacing-sm);
+  color: var(--color-link, #0d7e8c);
+  text-decoration: underline;
+  font-size: var(--font-size-sm);
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.cvPlaceholder {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--spacing-md) 0;
+  border: none;
+}
+
+@media (max-width: 1024px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .actionsColumn {
+    order: -1;
+  }
+}

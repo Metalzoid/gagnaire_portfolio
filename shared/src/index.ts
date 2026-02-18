@@ -1,6 +1,7 @@
 // Types
 export type {
   Profile,
+  SocialLink,
   Project,
   ProjectImage,
   Technology,
@@ -20,6 +21,7 @@ export {
   updateProfileSchema,
   pitchSchema,
   socialSchema,
+  socialLinkSchema,
   createProjectSchema,
   updateProjectSchema,
   updateProjectOrderSchema,

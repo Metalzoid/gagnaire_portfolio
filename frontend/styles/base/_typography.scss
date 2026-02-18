@@ -88,9 +88,9 @@ p {
 }
 
 // --------------------------------------------------------------------------
-// Liens
+// Liens (hors boutons : les <a> avec classe "button" gardent le style bouton)
 // --------------------------------------------------------------------------
-a {
+a:not([class*="button"]) {
   color: var(--color-link);
   transition: color var(--transition-fast);
 

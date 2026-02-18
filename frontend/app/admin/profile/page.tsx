@@ -31,12 +31,22 @@ export default function AdminProfilePage() {
     toast.success("Profil enregistré");
   };
 
+  const handleSocialReorder = async (social: Profile["social"]) => {
+    await adminApi.profile.update({ social });
+    setProfile((prev) => (prev ? { ...prev, social } : null));
+    toast.success("Ordre des réseaux enregistré");
+  };
+
   if (loading) return <p>Chargement...</p>;
   if (!profile) return <p>Aucun profil en base. Exécutez le seed backend.</p>;
 
   return (
     <div>
-      <ProfileForm defaultValues={profile} onSubmit={handleSubmit} />
+      <ProfileForm
+        defaultValues={profile}
+        onSubmit={handleSubmit}
+        onSocialReorder={handleSocialReorder}
+      />
     </div>
   );
 }
