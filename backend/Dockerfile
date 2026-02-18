@@ -66,6 +66,7 @@ WORKDIR /app
 COPY --from=builder /app/backend/package.json /app/backend/package-lock.json ./backend/
 COPY --from=builder /app/backend/node_modules ./backend/node_modules
 COPY --from=builder /app/backend/dist ./backend/dist
+COPY --from=builder /app/backend/templates ./backend/templates
 COPY --from=builder /app/backend/prisma ./backend/prisma
 COPY --from=builder /app/backend/prisma.config.ts ./backend/
 COPY --from=builder /app/shared ./shared
