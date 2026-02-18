@@ -4,18 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { searchTechnologies } from "@/services/api";
 import { adminApi } from "@/services/admin-api";
 import type { Technology } from "shared";
+import { TECHNOLOGY_CATEGORIES, type TechnologyCategory } from "shared";
 import styles from "./TechnologySearch.module.scss";
 
 const DEBOUNCE_MS = 300;
-const CATEGORIES = [
-  "Frontend",
-  "Backend",
-  "DevOps",
-  "Base de données",
-  "Outils",
-  "Mobile",
-  "Autre",
-];
 
 interface TechnologySearchProps {
   value: string[];
@@ -248,7 +240,7 @@ export function TechnologySearch({
             className={styles.select}
           >
             <option value="">Catégorie (optionnel)</option>
-            {CATEGORIES.map((c) => (
+            {TECHNOLOGY_CATEGORIES.map((c: TechnologyCategory) => (
               <option key={c} value={c}>
                 {c}
               </option>

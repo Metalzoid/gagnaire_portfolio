@@ -92,6 +92,7 @@ async function fetchWithAuth<T>(
 
   const res = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
     ...options,
+    cache: "no-store",
     credentials: "include",
     headers,
   });
@@ -133,6 +134,7 @@ async function uploadWithAuth<T = { path: string }>(
 
   const res = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
     method: "POST",
+    cache: "no-store",
     credentials: "include",
     headers,
     body: formData,
@@ -144,6 +146,7 @@ async function uploadWithAuth<T = { path: string }>(
       headers.Authorization = `Bearer ${newTokens.accessToken}`;
       const retry = await fetch(`${API_BASE}${API_PATH_PREFIX}${endpoint}`, {
         method: "POST",
+        cache: "no-store",
         credentials: "include",
         headers,
         body: formData,
@@ -224,6 +227,7 @@ export const adminApi = {
     login: async (email: string, password: string) => {
       const res = await fetch(`${API_BASE}${API_PATH_PREFIX}/auth/login`, {
         method: "POST",
+        cache: "no-store",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -243,6 +247,7 @@ export const adminApi = {
     logout: async () => {
       await fetch(`${API_BASE}${API_PATH_PREFIX}/auth/logout`, {
         method: "POST",
+        cache: "no-store",
         credentials: "include",
       }).catch(() => {});
     },

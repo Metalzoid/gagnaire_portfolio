@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -10,8 +11,14 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const BACKEND_INTERNAL =
   process.env.API_URL_INTERNAL || "http://localhost:3001";
 
+// Racine du monorepo (parent de frontend) : permet à Turbopack de résoudre le package "shared"
+const monorepoRoot = path.join(process.cwd(), "..");
+
 const nextConfig: NextConfig = {
   output: "standalone",
+  turbopack: {
+    root: monorepoRoot,
+  },
   images: {
     remotePatterns: [
       {

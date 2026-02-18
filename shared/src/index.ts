@@ -4,6 +4,7 @@ export type {
   Project,
   ProjectImage,
   Technology,
+  TechnologyCategory,
   Skill,
   SkillCategory,
   SkillsData,
@@ -13,6 +14,7 @@ export type {
   PitchBlock,
   AboutValue,
 } from "./types";
+export { TECHNOLOGY_CATEGORIES } from "./types";
 
 // Schemas Zod
 export {
