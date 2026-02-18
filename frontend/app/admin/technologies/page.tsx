@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getTechnologies } from "@/services/api";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -26,7 +25,7 @@ export default function AdminTechnologiesPage() {
 
   const load = useCallback(() => {
     setLoading(true);
-    getTechnologies()
+    adminApi.technologies.list()
       .then((data) => setTechnologies(data as TechnologyWithId[]))
       .catch(() => setTechnologies([]))
       .finally(() => setLoading(false));

@@ -7,17 +7,8 @@ import { Container } from "@/components/ui/container";
 import { SITE_URL } from "@/lib/site-config";
 import styles from "../projects.module.scss";
 
-// --------------------------------------------------------------------------
-// SSG - Génère les pages pour tous les slugs (vide si API injoignable au build)
-// --------------------------------------------------------------------------
-export async function generateStaticParams() {
-  try {
-    const projects = await getProjects();
-    return projects.map((p) => ({ slug: p.slug }));
-  } catch {
-    return [];
-  }
-}
+/** Force le rendu dynamique : compatible avec cookies() du root layout. */
+export const dynamic = "force-dynamic";
 
 // --------------------------------------------------------------------------
 // SEO par projet

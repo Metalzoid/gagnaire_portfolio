@@ -11,6 +11,7 @@ import styles from "./TechnologyForm.module.scss";
 const CATEGORIES = [
   "Frontend",
   "Backend",
+  "Fullstack",
   "DevOps",
   "Base de données",
   "Outils",

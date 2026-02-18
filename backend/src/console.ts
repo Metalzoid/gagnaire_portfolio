@@ -10,7 +10,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 config({ path: resolve(process.cwd(), ".env") });
 config({ path: resolve(process.cwd(), "../.env") });
 
-const defaultUrl = "postgresql://portfolio:portfolio_dev@localhost:5432/portfolio_db";
+const defaultUrl =
+  "postgresql://portfolio:portfolio_dev@localhost:5432/portfolio_db";
 let url = process.env.DATABASE_URL || defaultUrl;
 if (url.includes("api_key") || url.startsWith("prisma+postgres")) {
   url = defaultUrl;
@@ -24,7 +25,7 @@ async function main() {
   console.log(chalk.green("✓ Console Portfolio - Prisma connecté"));
   console.log(
     chalk.cyan("Modèles disponibles :") +
-      " db.project, db.skill, db.skillCategory, db.experience, db.testimonial, db.profile, db.admin"
+      " db.admin, db.refreshToken, db.profile, db.project, db.projectImage, db.technology, db.skillCategory, db.skill, db.experience, db.testimonial",
   );
   console.log(chalk.dim("Tapez .help pour l'aide, .exit pour quitter\n"));
 
@@ -44,22 +45,32 @@ async function main() {
   r.context.prisma = prisma;
   r.context.chalk = chalk;
   r.context.db = {
+    admin: prisma.admin,
+    refreshToken: prisma.refreshToken,
+    profile: prisma.profile,
     project: prisma.project,
-    skill: prisma.skill,
+    projectImage: prisma.projectImage,
+    technology: prisma.technology,
     skillCategory: prisma.skillCategory,
+    skill: prisma.skill,
     experience: prisma.experience,
     testimonial: prisma.testimonial,
-    profile: prisma.profile,
-    admin: prisma.admin,
   };
 
   r.context.findAll = (model: string) =>
-    (prisma as unknown as Record<string, { findMany: () => Promise<unknown> }>)[model]?.findMany();
+    (prisma as unknown as Record<string, { findMany: () => Promise<unknown> }>)[
+      model
+    ]?.findMany();
   r.context.count = (model: string) =>
-    (prisma as unknown as Record<string, { count: () => Promise<number> }>)[model]?.count();
+    (prisma as unknown as Record<string, { count: () => Promise<number> }>)[
+      model
+    ]?.count();
   r.context.truncate = async (model: string) => {
     const result = await (
-      prisma as unknown as Record<string, { deleteMany: () => Promise<{ count: number }> }>
+      prisma as unknown as Record<
+        string,
+        { deleteMany: () => Promise<{ count: number }> }
+      >
     )[model]?.deleteMany();
     return `${result?.count ?? 0} enregistrements supprimés`;
   };
