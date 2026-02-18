@@ -11,14 +11,16 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const BACKEND_INTERNAL =
   process.env.API_URL_INTERNAL || "http://localhost:3001";
 
-// Racine du monorepo (parent de frontend) : permet à Turbopack de résoudre le package "shared"
+// En dev uniquement : Turbopack doit voir le parent pour résoudre le package "shared" (file:../shared).
+// En prod (next build), ne pas définir root pour que .next/standalone reste dans frontend/ et server.js soit trouvé au runtime.
+const isDev = process.env.NODE_ENV === "development";
 const monorepoRoot = path.join(process.cwd(), "..");
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  turbopack: {
-    root: monorepoRoot,
-  },
+  ...(isDev && {
+    turbopack: { root: monorepoRoot },
+  }),
   images: {
     remotePatterns: [
       {
