@@ -1,10 +1,23 @@
+// Topbar style « dashboard » : hauteur marquée, bordure Dracula, zone droite
+
 .header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  min-height: 64px;
   padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 2px solid var(--color-accent-primary);
   background-color: var(--color-bg-primary);
+  flex-wrap: wrap;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .menuButton {
@@ -20,6 +33,7 @@
   color: var(--color-text-primary);
   cursor: pointer;
   transition: background-color 0.15s;
+  flex-shrink: 0;
 
   &:hover {
     background-color: var(--color-bg-secondary);
@@ -30,9 +44,120 @@
   }
 }
 
-.title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  margin: 0;
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.searchSlot {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  min-width: 200px;
+  max-width: 280px;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+.searchIcon {
+  display: flex;
+  color: var(--color-text-secondary);
+}
+
+.searchPlaceholder {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userTrigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  min-height: 44px;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
   color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+
+  &:hover {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-accent-primary);
+  }
+}
+
+.userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-full);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+.userLabel {
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.userChevron {
+  display: flex;
+  opacity: 0.8;
+}
+
+.userDropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  right: 0;
+  min-width: 180px;
+  padding: var(--spacing-xs);
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+}
+
+.userDropdownItem {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  &:not(:last-child) {
+    margin-bottom: var(--spacing-xs);
+  }
 }

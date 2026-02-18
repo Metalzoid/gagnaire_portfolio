@@ -4,17 +4,17 @@ export const createProjectSchema = z.object({
   slug: z
     .string()
     .min(1)
-    .regex(
-      /^[a-z0-9-]+$/,
-      "Slug doit contenir uniquement lettres minuscules, chiffres et tirets",
-    ),
+    .regex(/^[a-z0-9-]+$/, {
+      error:
+        "Slug doit contenir uniquement lettres minuscules, chiffres et tirets",
+    }),
   title: z.string().min(1),
   description: z.string().min(1),
   longDescription: z.string().min(1),
   technologyIds: z.array(z.string()),
   category: z.string().min(1),
-  github: z.string().url().optional().nullable(),
-  demo: z.string().url().optional().nullable(),
+  github: z.url().optional().nullable(),
+  demo: z.url().optional().nullable(),
   featured: z.boolean().default(false),
   date: z.string().min(1),
 });

@@ -13,10 +13,12 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 # Structure tmp/frontend et tmp/shared pour que file:../shared existe
 mkdir -p "$TMP_DIR/frontend" "$TMP_DIR/shared"
 cp "$FRONTEND_DIR/package.json" "$TMP_DIR/frontend/"
+[ -f "$FRONTEND_DIR/.npmrc" ] && cp "$FRONTEND_DIR/.npmrc" "$TMP_DIR/frontend/"
 cp -r "$ROOT_DIR/shared/." "$TMP_DIR/shared/"
 
 cd "$TMP_DIR/frontend"
-npm install --package-lock-only
+# Utiliser npm 11 pour que le lock soit identique à celui attendu dans le Dockerfile (npm ci avec npm@11)
+npx --yes npm@11 install --package-lock-only
 
 cp package-lock.json "$FRONTEND_DIR/"
 echo "✓ package-lock.json généré dans frontend/"

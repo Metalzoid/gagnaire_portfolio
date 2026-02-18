@@ -7,6 +7,7 @@ import { createSkillsRoutes } from "./skills.routes.js";
 import { createExperienceRoutes } from "./experience.routes.js";
 import { createTestimonialsRoutes } from "./testimonials.routes.js";
 import { createProfileRoutes } from "./profile.routes.js";
+import { createContactRoutes } from "./contact.routes.js";
 import { createAdminRoutes } from "./admin.routes.js";
 
 export function createV1Router(): Router {
@@ -14,6 +15,7 @@ export function createV1Router(): Router {
 
   router.use(createHealthRoutes());
   router.use(createAuthRoutes());
+  router.use(createContactRoutes());
   router.use(createProjectsRoutes());
   router.use(createTechnologiesRoutes());
   router.use(createSkillsRoutes());

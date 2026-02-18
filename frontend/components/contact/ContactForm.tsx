@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { submitContact } from "@/services/contact-api";
 import styles from "./ContactForm.module.scss";
 
 interface FormState {
@@ -52,7 +53,7 @@ export function ContactForm() {
   }, [formData]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
       if (formData.honeypot) {
@@ -63,17 +64,18 @@ export function ContactForm() {
 
       setStatus("loading");
 
-      const mailto = `mailto:gagnaire.flo@gmail.com?subject=Contact portfolio - ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(
-        `Nom: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`,
-      )}`;
-
-      window.location.href = mailto;
-
-      setTimeout(() => {
+      try {
+        await submitContact({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+        });
         setStatus("success");
         setFormData({ name: "", email: "", message: "", honeypot: "" });
         setErrors({});
-      }, 500);
+      } catch {
+        setStatus("error");
+      }
     },
     [formData, validate],
   );
@@ -90,12 +92,7 @@ export function ContactForm() {
     return (
       <div className={styles.success} role="status" aria-live="polite">
         <p>
-          Votre message a été préparé. Votre client de messagerie va
-          s&apos;ouvrir.
-        </p>
-        <p className={styles.successNote}>
-          Si rien ne s&apos;est passé, contactez-moi directement à{" "}
-          <a href="mailto:gagnaire.flo@gmail.com">gagnaire.flo@gmail.com</a>
+          Votre message a été envoyé. Je vous recontacterai dès que possible.
         </p>
       </div>
     );
@@ -130,6 +127,11 @@ export function ContactForm() {
         error={errors.message}
         required
       />
+      {status === "error" && (
+        <p className={styles.error} role="alert">
+          Une erreur est survenue. Réessaiez plus tard.
+        </p>
+      )}
       <div className={styles.honeypot} aria-hidden="true">
         <label htmlFor="honeypot">Ne pas remplir</label>
         <input

@@ -65,3 +65,14 @@ export type {
 
 export { loginSchema, refreshTokenSchema } from "./auth.schema";
 export type { LoginSchemaType, RefreshTokenSchemaType } from "./auth.schema";
+
+export {
+  createContactSchema,
+  updateContactStatusSchema,
+  contactStatusEnum,
+} from "./contact.schema";
+export type {
+  CreateContactSchemaType,
+  UpdateContactStatusSchemaType,
+  ContactStatusEnum,
+} from "./contact.schema";

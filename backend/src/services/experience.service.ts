@@ -19,7 +19,7 @@ export async function createExperience(data: CreateExperienceSchemaType) {
     data: {
       ...rest,
       technologies: {
-        connect: (technologyIds ?? []).map((id) => ({ id })),
+        connect: (technologyIds ?? []).map((id: string) => ({ id })),
       },
     },
     include: { technologies: true },
@@ -40,7 +40,7 @@ export async function updateExperience(
   };
   if (technologyIds !== undefined) {
     updateData.technologies = {
-      set: technologyIds.map((id) => ({ id })),
+      set: technologyIds.map((id: string) => ({ id })),
     };
   }
   return prisma.experience.update({

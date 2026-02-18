@@ -12,6 +12,8 @@ const segmentLabels: Record<string, string> = {
   skills: "Compétences",
   experience: "Expériences",
   testimonials: "Témoignages",
+  contacts: "Contacts",
+  cv: "CV",
   profile: "Profil",
   new: "Nouveau",
   edit: "Modifier",
