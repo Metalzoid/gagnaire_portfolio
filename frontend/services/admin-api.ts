@@ -311,6 +311,13 @@ export const adminApi = {
     delete: (id: string) => deleteAdmin(`/admin/testimonials/${id}`),
   },
   technologies: {
+    list: () => fetchWithAuth<Technology[]>("/technologies"),
+    search: (query: string) => {
+      const q = encodeURIComponent(query.trim());
+      return fetchWithAuth<Technology[]>(
+        q ? `/technologies/search?q=${q}` : "/technologies",
+      );
+    },
     create: (data: CreateTechnologySchemaType) =>
       postAdmin<Technology>("/admin/technologies", data),
     update: (id: string, data: UpdateTechnologySchemaType) =>

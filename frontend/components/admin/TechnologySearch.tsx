@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { searchTechnologies } from "@/services/api";
 import { adminApi } from "@/services/admin-api";
 import type { Technology } from "shared";
 import styles from "./TechnologySearch.module.scss";
@@ -51,7 +50,7 @@ export function TechnologySearch({
       setSelectedTechs([]);
       return;
     }
-    searchTechnologies("").then((all) => {
+    adminApi.technologies.search("").then((all) => {
       const selected = value
         .map((id) => all.find((t) => t.id === id))
         .filter((t): t is Technology => Boolean(t));
@@ -61,13 +60,13 @@ export function TechnologySearch({
 
   const search = useCallback(async (query: string) => {
     if (!query.trim()) {
-      const all = await searchTechnologies("");
+      const all = await adminApi.technologies.search("");
       setResults(all);
       return;
     }
     setLoading(true);
     try {
-      const techs = await searchTechnologies(query);
+      const techs = await adminApi.technologies.search(query);
       setResults(techs);
       setShowDropdown(true);
     } catch {
