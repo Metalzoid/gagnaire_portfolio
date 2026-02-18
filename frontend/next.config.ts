@@ -1,4 +1,3 @@
-import path from "node:path";
 import type { NextConfig } from "next";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -11,16 +10,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const BACKEND_INTERNAL =
   process.env.API_URL_INTERNAL || "http://localhost:3001";
 
-// En dev uniquement : Turbopack doit voir le parent pour résoudre le package "shared" (file:../shared).
-// En prod (next build), ne pas définir root pour que .next/standalone reste dans frontend/ et server.js soit trouvé au runtime.
-const isDev = process.env.NODE_ENV === "development";
-const monorepoRoot = path.join(process.cwd(), "..");
-
 const nextConfig: NextConfig = {
   output: "standalone",
-  ...(isDev && {
-    turbopack: { root: monorepoRoot },
-  }),
   images: {
     remotePatterns: [
       {

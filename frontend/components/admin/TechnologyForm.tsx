@@ -6,8 +6,18 @@ import { Button } from "@/components/ui/button";
 import { IconPicker } from "./icon-picker";
 import { adminApi, getUploadUrl } from "@/services/admin-api";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
-import { TECHNOLOGY_CATEGORIES, type TechnologyCategory } from "shared";
 import styles from "./TechnologyForm.module.scss";
+
+const CATEGORIES = [
+  "Frontend",
+  "Backend",
+  "Fullstack",
+  "DevOps",
+  "Base de données",
+  "Outils",
+  "Mobile",
+  "Autre",
+];
 
 function isImagePath(v: string): boolean {
   return v.startsWith("/uploads/") || v.startsWith("http");
@@ -184,7 +194,7 @@ export function TechnologyForm({
           className={styles.select}
         >
           <option value="">Aucune</option>
-          {TECHNOLOGY_CATEGORIES.map((c: TechnologyCategory) => (
+          {CATEGORIES.map((c) => (
             <option key={c} value={c}>
               {c}
             </option>
