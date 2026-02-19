@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "@/hooks/useTheme";
-import { FiSun, FiMoon } from "react-icons/fi";
+import { FiSun, FiMoon } from "@/components/ui/icons";
 import styles from "./ThemeToggle.module.scss";
 
 const ThemeToggle = () => {

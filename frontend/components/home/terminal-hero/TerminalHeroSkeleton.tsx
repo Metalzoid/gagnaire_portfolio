@@ -1,19 +1,10 @@
-import type { Profile } from "shared";
 import styles from "./TerminalHero.module.scss";
 
 // --------------------------------------------------------------------------
 // Skeleton léger pour le chargement du TerminalHero (évite CLS)
+// Contenu vide : uniquement le cadre du terminal, pas de texte placeholder
 // --------------------------------------------------------------------------
-export interface TerminalHeroSkeletonProps {
-  profile?: Profile;
-}
-
-export function TerminalHeroSkeleton({ profile }: TerminalHeroSkeletonProps) {
-  const fullName = profile
-    ? `${profile.firstName} ${profile.lastName}`
-    : "...";
-  const role = profile?.role ?? "...";
-
+export function TerminalHeroSkeleton() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.terminal} data-focused="false">
@@ -34,20 +25,7 @@ export function TerminalHeroSkeleton({ profile }: TerminalHeroSkeletonProps) {
           <span className={styles.terminalTitle}>zsh</span>
         </div>
         <div className={styles.content}>
-          <pre className={styles.output}>
-            <span className={`${styles.line} ${styles.lineCommand}`}>
-              &gt; whoami
-            </span>
-            <span className={`${styles.line} ${styles.lineResult}`}>
-              {fullName}
-            </span>
-            <span className={`${styles.line} ${styles.lineCommand}`}>
-              &gt; role
-            </span>
-            <span className={`${styles.line} ${styles.lineResult}`}>
-              {role}
-            </span>
-          </pre>
+          <pre className={styles.output} aria-busy="true" />
         </div>
       </div>
       <div className={styles.ctas} aria-hidden="true">

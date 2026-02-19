@@ -1,6 +1,5 @@
 import { SocialLinks } from "@/components/shared/social-links";
-import { FaGithub, FaLinkedin, FaLink } from "react-icons/fa";
-import { MdEmail, MdPhone } from "react-icons/md";
+import { FaGithub, FaLinkedin, FaLink, MdEmail, MdPhone } from "@/components/ui/icons";
 import type { Profile } from "shared";
 import styles from "./ContactInfo.module.scss";
 

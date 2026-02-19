@@ -1,4 +1,4 @@
-import { HomeContent } from "@/components/home";
+import { HomeContent, TerminalChunkPreload } from "@/components/home";
 import {
   getProfile,
   getSkills,
@@ -15,11 +15,14 @@ export default async function HomePage() {
   ]);
 
   return (
-    <HomeContent
-      profile={profile}
-      skills={skills}
-      topProjects={topProjects}
-      testimonials={testimonials}
-    />
+    <>
+      <TerminalChunkPreload />
+      <HomeContent
+        profile={profile}
+        skills={skills}
+        topProjects={topProjects}
+        testimonials={testimonials}
+      />
+    </>
   );
 }

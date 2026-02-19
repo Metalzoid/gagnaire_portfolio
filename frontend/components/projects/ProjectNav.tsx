@@ -1,4 +1,4 @@
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import styles from "./ProjectNav.module.scss";
 
