@@ -12,6 +12,8 @@ interface UseTypewriterOptions {
   delayBetweenLines?: number;
   /** Délai avant de commencer en ms */
   initialDelay?: number;
+  /** Caractères par mise à jour (batch) - réduit les re-renders, améliore les perfs */
+  charsPerUpdate?: number;
 }
 
 // --------------------------------------------------------------------------
@@ -46,7 +48,12 @@ export function useTypewriter(
   lines: string[],
   options: UseTypewriterOptions = {},
 ): UseTypewriterResult {
-  const { speed = 50, delayBetweenLines = 800, initialDelay = 500 } = options;
+  const {
+    speed = 50,
+    delayBetweenLines = 800,
+    initialDelay = 500,
+    charsPerUpdate = 1,
+  } = options;
 
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
@@ -71,14 +78,18 @@ export function useTypewriter(
     return () => clearTimeout(startTimer);
   }, [prefersReducedMotion, initialDelay]);
 
-  // Animation caractère par caractère
+  // Animation par batch de caractères (réduit les re-renders)
   useEffect(() => {
     if (prefersReducedMotion || !hasStarted) return;
     if (currentLineIndex >= lines.length) return;
 
     const currentLine = lines[currentLineIndex];
+    const charsLeft = currentLine.length - currentCharIndex;
 
-    if (currentCharIndex < currentLine.length) {
+    if (charsLeft > 0) {
+      const batchSize = Math.min(charsPerUpdate, charsLeft);
+      const batchDelay = speed * batchSize;
+
       const timer = setTimeout(() => {
         setDisplayedLines((prev) => {
           const newLines = [...prev];
@@ -87,12 +98,12 @@ export function useTypewriter(
           }
           newLines[currentLineIndex] = currentLine.slice(
             0,
-            currentCharIndex + 1,
+            currentCharIndex + batchSize,
           );
           return newLines;
         });
-        setCurrentCharIndex((c) => c + 1);
-      }, speed);
+        setCurrentCharIndex((c) => c + batchSize);
+      }, batchDelay);
       return () => clearTimeout(timer);
     }
 
@@ -111,6 +122,7 @@ export function useTypewriter(
     lines,
     speed,
     delayBetweenLines,
+    charsPerUpdate,
   ]);
 
   // Si reduced motion → afficher tout directement (pas de setState nécessaire)

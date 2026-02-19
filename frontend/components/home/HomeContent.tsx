@@ -1,13 +1,26 @@
 "use client";
 
 import { lazy, Suspense } from "react";
+import dynamic from "next/dynamic";
 import useSnapScroll from "@/hooks/useSnapScroll";
 import { ProgressBar } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { TerminalHero, HomeBio } from "@/components/home";
+import { HomeBio } from "@/components/home";
+import { TerminalHeroSkeleton } from "@/components/home/terminal-hero/TerminalHeroSkeleton";
 import { homeSections } from "@/data/sections";
 import type { Profile, SkillCategory, Project, Testimonial } from "shared";
 import styles from "@/app/page.module.scss";
+
+const TerminalHero = dynamic(
+  () =>
+    import("@/components/home/terminal-hero").then((m) => ({
+      default: m.TerminalHero,
+    })),
+  {
+    ssr: true,
+    loading: () => <TerminalHeroSkeleton />,
+  }
+);
 
 const HomeSkills = lazy(() =>
   import("@/components/home/home-skills/HomeSkills").then((m) => ({

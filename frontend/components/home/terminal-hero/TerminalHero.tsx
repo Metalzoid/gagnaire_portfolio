@@ -38,6 +38,7 @@ export function TerminalHero({
     speed: 18,
     delayBetweenLines: 260,
     initialDelay: 500,
+    charsPerUpdate: 4,
   });
 
   const terminalContext = {
@@ -67,27 +68,17 @@ export function TerminalHero({
   const isInteractive = isComplete && isDesktop;
   const [isFocused, setIsFocused] = useState(false);
 
-  // Scroll en bas quand le contenu change ; plusieurs passes pour rester en bas après layout complet
+  // Scroll en bas - une seule RAF par changement (réduit la charge sur le main thread)
   useLayoutEffect(() => {
     const el = contentRef.current;
     if (!el) return;
 
     const scrollToBottom = () => {
-      const maxScroll = el.scrollHeight - el.clientHeight;
-      el.scrollTop = Math.max(0, maxScroll);
+      el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight);
     };
 
-    scrollToBottom();
-    const raf1 = requestAnimationFrame(() => {
-      scrollToBottom();
-      requestAnimationFrame(scrollToBottom);
-    });
-    const t = setTimeout(scrollToBottom, 80);
-
-    return () => {
-      cancelAnimationFrame(raf1);
-      clearTimeout(t);
-    };
+    const rafId = requestAnimationFrame(scrollToBottom);
+    return () => cancelAnimationFrame(rafId);
   }, [displayedText, displayLines]);
 
   const handleTerminalClick = () => {
