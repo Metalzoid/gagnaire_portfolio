@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Évite les erreurs "No link element found for chunk" avec les CSS modules (not-found, etc.)
     cssChunking: "strict",
+    // Tree-shaking des imports (react-icons)
+    optimizePackageImports: ["react-icons"],
   },
   // Proxy /api et /uploads vers le backend (nécessaire quand seul le frontend est exposé, ex. Coolify)
   async rewrites() {

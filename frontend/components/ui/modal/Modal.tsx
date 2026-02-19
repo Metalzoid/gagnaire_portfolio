@@ -6,9 +6,9 @@ import {
   useId,
   useRef,
   useSyncExternalStore,
+  useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import useLockBodyScroll from "@/hooks/useLockBodyScroll";
 import useKeyPress from "@/hooks/useKeyPress";
 import styles from "./Modal.module.scss";
@@ -27,21 +27,6 @@ interface ModalProps {
 }
 
 // --------------------------------------------------------------------------
-// Variantes framer-motion
-// --------------------------------------------------------------------------
-const overlayVariants = {
-  closed: { opacity: 0 },
-  open: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-const contentVariants = {
-  closed: { opacity: 0, scale: 0.95 },
-  open: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.95 },
-};
-
-// --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
 const Modal = ({
@@ -53,8 +38,10 @@ const Modal = ({
 }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const closingHandledRef = useRef(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Détection client sans mismatch d'hydratation (serveur → false, client → true)
   const isBrowser = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -63,17 +50,40 @@ const Modal = ({
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
+  useEffect(() => {
+    if (isOpen && !isClosing) {
+      const t = requestAnimationFrame(() => setIsVisible(true));
+      return () => cancelAnimationFrame(t);
+    }
+    if (!isOpen) {
+      const t = requestAnimationFrame(() => setIsVisible(false));
+      return () => cancelAnimationFrame(t);
+    }
+  }, [isOpen, isClosing]);
+
   const handleClose = useCallback(() => {
-    onClose();
-    requestAnimationFrame(() => {
-      previousFocusRef.current?.focus();
-    });
-  }, [onClose]);
+    if (isClosing) return;
+    closingHandledRef.current = false;
+    setIsClosing(true);
+  }, [isClosing]);
+
+  const handleDialogTransitionEnd = useCallback(
+    (e: React.TransitionEvent<HTMLDivElement>) => {
+      if (e.target !== dialogRef.current || !isClosing) return;
+      if (closingHandledRef.current) return;
+      closingHandledRef.current = true;
+      const focusEl = previousFocusRef.current;
+      onClose();
+      requestAnimationFrame(() => {
+        focusEl?.focus();
+      });
+    },
+    [isClosing, onClose],
+  );
 
   useLockBodyScroll(isOpen);
   useKeyPress("Escape", handleClose, isOpen);
 
-  // Focus trap : piège le focus dans le dialog quand ouvert
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!isOpen || !dialogRef.current) return;
@@ -124,69 +134,74 @@ const Modal = ({
     };
   }, [isOpen, handleKeyDown]);
 
+  if (!isOpen && !isClosing) return null;
+
+  const overlayClass = [
+    styles.overlay,
+    isVisible && !isClosing ? styles["overlay--open"] : "",
+    isClosing ? styles["overlay--closing"] : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const dialogClass = [
+    styles.dialog,
+    isVisible && !isClosing ? styles["dialog--open"] : "",
+    isClosing ? styles["dialog--closing"] : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   const modalContent = (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            className={styles.overlay}
-            variants={overlayVariants}
-            initial="closed"
-            animate="open"
-            exit="exit"
-            transition={{ duration: 0.2 }}
-            onClick={handleClose}
-            aria-hidden="true"
-          />
-          <div
-            className={`${styles.dialogWrapper} ${styles[`dialogWrapper--${size}`]}`}
-          >
-            <motion.div
-              ref={dialogRef}
-              className={styles.dialog}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={title ? titleId : undefined}
-              variants={contentVariants}
-              initial="closed"
-              animate="open"
-              exit="exit"
-              transition={{ duration: 0.2 }}
-              onClick={(e) => e.stopPropagation()}
+    <>
+      <div
+        className={overlayClass}
+        onClick={handleClose}
+        aria-hidden="true"
+      />
+      <div
+        className={`${styles.dialogWrapper} ${styles[`dialogWrapper--${size}`]}`}
+      >
+        <div
+          ref={dialogRef}
+          className={dialogClass}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          onClick={(e) => e.stopPropagation()}
+          onTransitionEnd={handleDialogTransitionEnd}
+        >
+          <div className={styles.header}>
+            {title && (
+              <h2 id={titleId} className={styles.title}>
+                {title}
+              </h2>
+            )}
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={handleClose}
+              aria-label="Fermer la fenêtre"
             >
-              <div className={styles.header}>
-                {title && (
-                  <h2 id={titleId} className={styles.title}>
-                    {title}
-                  </h2>
-                )}
-                <button
-                  type="button"
-                  className={styles.closeButton}
-                  onClick={handleClose}
-                  aria-label="Fermer la fenêtre"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className={styles.content}>{children}</div>
-            </motion.div>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-        </>
-      )}
-    </AnimatePresence>
+          <div className={styles.content}>{children}</div>
+        </div>
+      </div>
+    </>
   );
 
   if (!isBrowser) return null;
