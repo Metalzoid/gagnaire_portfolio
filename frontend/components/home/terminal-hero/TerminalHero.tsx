@@ -1,6 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
+import {
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useTypewriter, formatTerminalLines } from "@/hooks/useTypewriter";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { useInteractiveTerminal } from "@/hooks/useInteractiveTerminal";
@@ -47,7 +54,7 @@ export function TerminalHero({
           observer.disconnect(); // Une seule fois, ne plus observer
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(wrapper);
@@ -56,9 +63,9 @@ export function TerminalHero({
 
   const lines = useMemo(() => formatTerminalLines(profile), [profile]);
   const { text: displayedText, isComplete } = useTypewriter(lines, {
-    speed: 18,
-    delayBetweenLines: 260,
-    initialDelay: 500,
+    speed: 1,
+    delayBetweenLines: 10,
+    initialDelay: 1,
     charsPerUpdate: 1,
     enabled: isVisible,
   });
@@ -87,7 +94,7 @@ export function TerminalHero({
 
   const linesDisplay = useMemo(
     () => displayedText.split("\n"),
-    [displayedText]
+    [displayedText],
   );
   const showCursor = linesDisplay.length > 0;
   const isInteractive = isComplete && isDesktop;
@@ -122,14 +129,14 @@ export function TerminalHero({
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const isNavigationKey = ["ArrowUp", "ArrowDown", "Tab", "Enter"].includes(
-        e.key
+        e.key,
       );
       if (!isNavigationKey) {
         scrollContentToBottom();
       }
       onKeyDown(e);
     },
-    [onKeyDown, scrollContentToBottom]
+    [onKeyDown, scrollContentToBottom],
   );
 
   // Listener natif en phase capture : intercepte le wheel avant le snap scroll du container
@@ -145,7 +152,7 @@ export function TerminalHero({
       const { scrollTop, scrollHeight, clientHeight } = content;
       content.scrollTop = Math.max(
         0,
-        Math.min(scrollHeight - clientHeight, scrollTop + e.deltaY)
+        Math.min(scrollHeight - clientHeight, scrollTop + e.deltaY),
       );
     };
 
@@ -210,9 +217,11 @@ export function TerminalHero({
                       }`}
                     >
                       {line}
-                      {i === linesDisplay.length - 1 && showCursor && !isInteractive && (
-                        <span className={styles.cursor} aria-hidden="true" />
-                      )}
+                      {i === linesDisplay.length - 1 &&
+                        showCursor &&
+                        !isInteractive && (
+                          <span className={styles.cursor} aria-hidden="true" />
+                        )}
                     </span>
                   );
                 })}
@@ -244,7 +253,7 @@ export function TerminalHero({
                         {outputLine}
                       </span>
                     ))
-                  )
+                  ),
                 )}
                 <span className={`${styles.line} ${styles.lineCommand}`}>
                   ~/portfolio &gt; {input}
