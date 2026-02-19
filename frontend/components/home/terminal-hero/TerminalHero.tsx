@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useLayoutEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
 import { useTypewriter, formatTerminalLines } from "@/hooks/useTypewriter";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { useInteractiveTerminal } from "@/hooks/useInteractiveTerminal";
@@ -29,16 +29,38 @@ export function TerminalHero({
 }: TerminalHeroProps) {
   const { goToSectionById } = useSnapScrollContext();
   const { openContactModal } = useContactModal();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
-  const lines = formatTerminalLines(profile);
+  // IntersectionObserver : démarrer l'animation uniquement quand le terminal est visible
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Une seule fois, ne plus observer
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, []);
+
+  const lines = useMemo(() => formatTerminalLines(profile), [profile]);
   const { text: displayedText, isComplete } = useTypewriter(lines, {
     speed: 18,
     delayBetweenLines: 260,
     initialDelay: 500,
-    charsPerUpdate: 4,
+    charsPerUpdate: 1,
+    enabled: isVisible,
   });
 
   const terminalContext = {
@@ -63,7 +85,10 @@ export function TerminalHero({
     openContactModal,
   });
 
-  const linesDisplay = displayedText.split("\n");
+  const linesDisplay = useMemo(
+    () => displayedText.split("\n"),
+    [displayedText]
+  );
   const showCursor = linesDisplay.length > 0;
   const isInteractive = isComplete && isDesktop;
   const [isFocused, setIsFocused] = useState(false);
@@ -136,7 +161,7 @@ export function TerminalHero({
   }, []);
 
   return (
-    <div className={styles.wrapper}>
+    <div ref={wrapperRef} className={styles.wrapper}>
       <div
         ref={terminalRef}
         className={styles.terminal}

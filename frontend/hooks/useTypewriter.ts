@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 
 // --------------------------------------------------------------------------
 // Types
@@ -14,6 +14,8 @@ interface UseTypewriterOptions {
   initialDelay?: number;
   /** Caractères par mise à jour (batch) - réduit les re-renders, améliore les perfs */
   charsPerUpdate?: number;
+  /** Démarrer l'animation uniquement quand true (ex: visible via IntersectionObserver) */
+  enabled?: boolean;
 }
 
 // --------------------------------------------------------------------------
@@ -35,7 +37,7 @@ function getServerReducedMotionSnapshot() {
 }
 
 // --------------------------------------------------------------------------
-// Hook - Effet de frappe (typewriter)
+// Hook - Effet de frappe (typewriter) avec requestAnimationFrame
 // --------------------------------------------------------------------------
 export interface UseTypewriterResult {
   /** Texte affiché (lignes jointes par \n) */
@@ -53,12 +55,18 @@ export function useTypewriter(
     delayBetweenLines = 800,
     initialDelay = 500,
     charsPerUpdate = 1,
+    enabled = true,
   } = options;
 
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+
+  const lineIndexRef = useRef(0);
+  const charIndexRef = useRef(0);
+  const lastTimestampRef = useRef<number>(0);
+  const accumulatedTimeRef = useRef(0);
+  const hasStartedRef = useRef(false);
+  const waitingBetweenLinesRef = useRef(false);
 
   // Lecture safe de prefers-reduced-motion (compatible SSR)
   const prefersReducedMotion = useSyncExternalStore(
@@ -67,61 +75,101 @@ export function useTypewriter(
     getServerReducedMotionSnapshot,
   );
 
-  // Démarrer l'animation après le délai initial
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !enabled || lines.length === 0) return;
 
-    const startTimer = setTimeout(() => {
-      setHasStarted(true);
-    }, initialDelay);
+    lineIndexRef.current = 0;
+    charIndexRef.current = 0;
+    lastTimestampRef.current = 0;
+    accumulatedTimeRef.current = 0;
+    hasStartedRef.current = false;
+    waitingBetweenLinesRef.current = false;
 
-    return () => clearTimeout(startTimer);
-  }, [prefersReducedMotion, initialDelay]);
+    // Report différé pour éviter cascading renders (règle react-hooks/set-state-in-effect)
+    const resetId = requestAnimationFrame(() => {
+      setDisplayedLines([]);
+      setIsComplete(false);
+    });
 
-  // Animation par batch de caractères (réduit les re-renders)
-  useEffect(() => {
-    if (prefersReducedMotion || !hasStarted) return;
-    if (currentLineIndex >= lines.length) return;
+    let rafId: number;
 
-    const currentLine = lines[currentLineIndex];
-    const charsLeft = currentLine.length - currentCharIndex;
+    const tick = (timestamp: number) => {
+      if (!hasStartedRef.current) {
+        accumulatedTimeRef.current += timestamp - lastTimestampRef.current;
+        lastTimestampRef.current = timestamp;
+        if (accumulatedTimeRef.current >= initialDelay) {
+          hasStartedRef.current = true;
+          accumulatedTimeRef.current = 0;
+        }
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
 
-    if (charsLeft > 0) {
-      const batchSize = Math.min(charsPerUpdate, charsLeft);
-      const batchDelay = speed * batchSize;
+      const dt = timestamp - lastTimestampRef.current;
+      lastTimestampRef.current = timestamp;
+      accumulatedTimeRef.current += dt;
 
-      const timer = setTimeout(() => {
-        setDisplayedLines((prev) => {
-          const newLines = [...prev];
-          if (!newLines[currentLineIndex]) {
-            newLines[currentLineIndex] = "";
+      if (lineIndexRef.current >= lines.length) {
+        return; // Animation terminée, arrêter la boucle
+      }
+
+      const currentLine = lines[lineIndexRef.current];
+
+      if (waitingBetweenLinesRef.current) {
+        if (accumulatedTimeRef.current >= delayBetweenLines) {
+          waitingBetweenLinesRef.current = false;
+          accumulatedTimeRef.current = 0;
+          lineIndexRef.current += 1;
+          charIndexRef.current = 0;
+          if (lineIndexRef.current >= lines.length) {
+            setIsComplete(true);
+            return;
           }
-          newLines[currentLineIndex] = currentLine.slice(
-            0,
-            currentCharIndex + batchSize,
-          );
-          return newLines;
-        });
-        setCurrentCharIndex((c) => c + batchSize);
-      }, batchDelay);
-      return () => clearTimeout(timer);
-    }
+        }
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
 
-    // Fin de la ligne actuelle, passer à la suivante
-    const timer = setTimeout(() => {
-      setCurrentLineIndex((l) => l + 1);
-      setCurrentCharIndex(0);
-    }, delayBetweenLines);
+      if (charIndexRef.current < currentLine.length) {
+        const batchSize = Math.min(charsPerUpdate, currentLine.length - charIndexRef.current);
+        const batchDelay = speed * batchSize;
 
-    return () => clearTimeout(timer);
+        if (accumulatedTimeRef.current >= batchDelay) {
+          accumulatedTimeRef.current -= batchDelay;
+          charIndexRef.current += batchSize;
+
+          setDisplayedLines((prev) => {
+            const newLines = [...prev];
+            if (!newLines[lineIndexRef.current]) {
+              newLines[lineIndexRef.current] = "";
+            }
+            newLines[lineIndexRef.current] = currentLine.slice(
+              0,
+              charIndexRef.current,
+            );
+            return newLines;
+          });
+        }
+      } else {
+        waitingBetweenLinesRef.current = true;
+        accumulatedTimeRef.current = 0;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(resetId);
+      cancelAnimationFrame(rafId);
+    };
   }, [
     prefersReducedMotion,
-    hasStarted,
-    currentLineIndex,
-    currentCharIndex,
+    enabled,
     lines,
     speed,
     delayBetweenLines,
+    initialDelay,
     charsPerUpdate,
   ]);
 
@@ -130,8 +178,10 @@ export function useTypewriter(
     return { text: lines.join("\n"), isComplete: true };
   }
 
-  const isComplete = currentLineIndex >= lines.length;
-  return { text: displayedLines.join("\n"), isComplete };
+  return {
+    text: displayedLines.join("\n"),
+    isComplete,
+  };
 }
 
 // --------------------------------------------------------------------------

@@ -17,7 +17,7 @@ const TerminalHero = dynamic(
       default: m.TerminalHero,
     })),
   {
-    ssr: true,
+    ssr: false,
     loading: () => <TerminalHeroSkeleton />,
   }
 );

@@ -30,8 +30,6 @@ const nextConfig: NextConfig = {
     formats: ["image/webp", "image/avif"],
   },
   experimental: {
-    // Évite les erreurs "No link element found for chunk" avec les CSS modules (not-found, etc.)
-    cssChunking: "strict",
     // Tree-shaking des imports (react-icons)
     optimizePackageImports: ["react-icons", "recharts"],
   },
