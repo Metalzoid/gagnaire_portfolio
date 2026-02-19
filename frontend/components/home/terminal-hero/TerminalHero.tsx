@@ -56,7 +56,9 @@ export function TerminalHero({
     hasCleared,
     focusInput,
   } = useInteractiveTerminal(terminalContext, {
-    goToSectionById,
+    goToSectionById: (sectionId: string) => {
+      if (isDesktop) goToSectionById(sectionId);
+    },
     openContactModal,
   });
 
@@ -156,6 +158,7 @@ export function TerminalHero({
             ? "Terminal interactif, cliquez pour taper une commande"
             : undefined
         }
+        inert={!isDesktop}
       >
         {/* Barre de titre */}
         <div className={styles.titleBar}>
