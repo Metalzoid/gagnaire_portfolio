@@ -223,9 +223,7 @@ export function TerminalHero({
                     item.lines.map((outputLine, j) => (
                       <span
                         key={`out-${i}-${j}`}
-                        className={`${styles.line} ${styles.lineResult} ${
-                          item.ascii ? styles.lineAscii : ""
-                        }`}
+                        className={`${styles.line} ${styles.lineResult}`}
                       >
                         {outputLine}
                       </span>

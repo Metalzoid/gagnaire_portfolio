@@ -26,8 +26,6 @@ export type TerminalAction =
 export interface TerminalCommandResult {
   lines: string[];
   action?: TerminalAction;
-  /** true si la sortie est de l’ASCII art (neofetch, teapot…) pour un rendu sans padding */
-  ascii?: boolean;
 }
 
 export interface TerminalContext {
@@ -85,8 +83,6 @@ function helpCmd(): TerminalCommandResult {
       "  cat <fichier>     Afficher un fichier (README.md, about.txt, skills.txt, projects.txt, contact.txt)",
       "  clear             Effacer l'écran",
       "  open <réseau>     Ouvrir un lien (github, linkedin, ...)",
-      "",
-      "Easter eggs : sudo, neofetch, make coffee",
     ],
   };
 }
@@ -293,38 +289,6 @@ function rmRfCmd(): TerminalCommandResult {
   };
 }
 
-const NEOFETCH_ART = `
-    .-***-.    Portfolio
-   ( O   O )   --------
-    |  ^  |    OS: Portfolio v1.0
-   (|  -  |)   Shell: zsh
-    |  \_/ |   Theme: Dracula
-     \___/     Lang: TypeScript
-`;
-
-function neofetchCmd(): TerminalCommandResult {
-  return {
-    lines: NEOFETCH_ART.trim().split("\n"),
-    ascii: true,
-  };
-}
-
-const TEAPOT_ART = `
-   ( (
-    ) )
-  ........
-  |      |__
-  \______/
-  418 I'm a teapot
-`;
-
-function makeCoffeeCmd(): TerminalCommandResult {
-  return {
-    lines: TEAPOT_ART.trim().split("\n"),
-    ascii: true,
-  };
-}
-
 // --------------------------------------------------------------------------
 // Parsing et registre
 // --------------------------------------------------------------------------
@@ -382,20 +346,7 @@ export const COMMANDS: CommandDef[] = [
     description: "(easter egg)",
     execute: (args) => {
       if (args[0] === "-rf" && args[1] === "/") return rmRfCmd();
-      return { lines: ["rm: usage: rm -rf / (easter egg)"] };
-    },
-  },
-  {
-    name: "neofetch",
-    description: "(easter egg)",
-    execute: () => neofetchCmd(),
-  },
-  {
-    name: "make",
-    description: "(easter egg)",
-    execute: (args) => {
-      if (args[0] === "coffee") return makeCoffeeCmd();
-      return { lines: ["make: rien à faire pour '" + (args[0] ?? "") + "'."] };
+      return { lines: ["rm: usage: rm -rf /"] };
     },
   },
 ];

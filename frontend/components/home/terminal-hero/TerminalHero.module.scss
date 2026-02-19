@@ -11,6 +11,11 @@
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
+
+  @include respond-to("mobile") {
+    max-width: 100%;
+    padding: 0 var(--spacing-md);
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -43,6 +48,10 @@
   padding: var(--spacing-xs);
   background-color: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
 }
 
 .dots {
@@ -83,6 +92,11 @@
   overflow-x: auto;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  @include respond-to("mobile") {
+    height: 240px;
+    padding: var(--spacing-xs);
+  }
 }
 
 .hiddenInput {
@@ -114,6 +128,10 @@
   white-space: pre;
   word-break: normal;
   letter-spacing: 0;
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-sm);
+  }
 }
 
 .line {
@@ -127,11 +145,6 @@
 .lineResult {
   color: var(--color-text-primary);
   padding-left: var(--spacing-md);
-}
-
-/* Lignes type ASCII (neofetch, teapot) : pas de padding pour garder l’alignement */
-.lineAscii {
-  padding-left: 0;
 }
 
 // --------------------------------------------------------------------------

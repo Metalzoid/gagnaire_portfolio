@@ -17,7 +17,7 @@ import type { TerminalCommandResult } from "@/data/terminal-commands";
 
 export type TerminalDisplayLine =
   | { type: "command"; text: string }
-  | { type: "output"; lines: string[]; ascii?: boolean };
+  | { type: "output"; lines: string[] };
 
 export interface TerminalActions {
   goToSectionById: (sectionId: string) => void;
@@ -148,13 +148,7 @@ export function useInteractiveTerminal(
           ...prev,
           { type: "command", text: trimmed },
           ...(result.lines.length > 0
-            ? [
-                {
-                  type: "output" as const,
-                  lines: result.lines,
-                  ...(result.ascii && { ascii: true }),
-                },
-              ]
+            ? [{ type: "output" as const, lines: result.lines }]
             : []),
         ]);
       }
