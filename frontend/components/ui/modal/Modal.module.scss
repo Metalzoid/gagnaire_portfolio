@@ -5,7 +5,7 @@
 @use "../../../styles/abstracts/mixins" as *;
 
 // --------------------------------------------------------------------------
-// Overlay (fond sombre + backdrop blur)
+// Overlay (fond sombre + backdrop blur) — animation fade
 // --------------------------------------------------------------------------
 .overlay {
   position: fixed;
@@ -13,9 +13,21 @@
   z-index: $z-overlay;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+
+  &.overlay--open {
+    opacity: 1;
+  }
+
+  &.overlay--closing {
+    opacity: 0;
+    transition-timing-function: ease-in;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     backdrop-filter: none;
+    transition: none;
   }
 }
 
@@ -56,7 +68,7 @@
 }
 
 // --------------------------------------------------------------------------
-// Dialog (contenu modal)
+// Dialog (contenu modal) — animation fade + scale
 // --------------------------------------------------------------------------
 .dialog {
   width: 100%;
@@ -68,9 +80,29 @@
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-xl);
   overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
+
+  &.dialog--open {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &.dialog--closing {
+    opacity: 0;
+    transform: scale(0.95);
+    transition-timing-function: ease-in;
+  }
 
   @include respond-to("mobile") {
     max-height: 85vh;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }
 

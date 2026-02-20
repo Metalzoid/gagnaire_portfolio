@@ -1,4 +1,5 @@
 export { HomeContent } from "./HomeContent";
+export { TerminalChunkPreload } from "./TerminalChunkPreload";
 export { TerminalHero } from "./terminal-hero";
 export { HomeBio } from "./home-bio";
 export { HomeSkills } from "./home-skills";

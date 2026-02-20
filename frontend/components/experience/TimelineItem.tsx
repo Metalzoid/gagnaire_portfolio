@@ -1,6 +1,6 @@
 "use client";
 
-import { FaBriefcase, FaGraduationCap } from "react-icons/fa";
+import { FaBriefcase, FaGraduationCap } from "@/components/ui/icons";
 import { Tag } from "@/components/ui/tag";
 import { TechIcon } from "@/utils/technologyIcon";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";

@@ -15,7 +15,6 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@react-pdf/renderer": "^4.3.2",
-    "framer-motion": "^12.34.2",
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -33,5 +32,11 @@
         "eslint": "^10.0.0",
         "eslint-config-next": "^16.1.6",
         "typescript": "^5"
-      }
+      },
+  "browserslist": [
+    "Chrome >= 92",
+    "Firefox >= 90",
+    "Safari >= 15.4",
+    "Edge >= 92"
+  ]
 }

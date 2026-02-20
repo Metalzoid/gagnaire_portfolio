@@ -6,9 +6,9 @@
 
 ARG NODE_ENV=production
 
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
-RUN apk add --no-cache curl && npm install -g npm@11
+RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && npm install -g npm@11
 
 WORKDIR /app
 
@@ -64,9 +64,9 @@ RUN npm run build
 # =============================================================================
 # Stage PRODUCTION (standalone)
 # =============================================================================
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
-RUN apk add --no-cache curl
+RUN apk update && apk upgrade --no-cache && apk add --no-cache curl
 
 WORKDIR /app
 ENV NODE_ENV=production

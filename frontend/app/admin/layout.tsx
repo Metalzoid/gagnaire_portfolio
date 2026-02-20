@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import "@/styles/admin/admin-globals.scss";
 import styles from "@/styles/admin/admin-layout.module.scss";
 
 function AdminGuard({ children }: { children: React.ReactNode }) {

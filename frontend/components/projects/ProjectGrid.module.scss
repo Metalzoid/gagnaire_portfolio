@@ -14,4 +14,26 @@
 .gridItem {
   display: flex;
   min-height: 0;
+  opacity: 0;
+  transform: scale(0.95);
+  animation: gridItemEnter 0.2s ease-out forwards;
+
+  @for $i from 0 through 20 {
+    &:nth-child(#{$i + 1}) {
+      animation-delay: #{$i * 0.03}s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes gridItemEnter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

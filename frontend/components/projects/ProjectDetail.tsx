@@ -1,4 +1,4 @@
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { FaGithub, FaExternalLinkAlt } from "@/components/ui/icons";
 import { ProjectGallery } from "./ProjectGallery";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ProjectNav } from "./ProjectNav";

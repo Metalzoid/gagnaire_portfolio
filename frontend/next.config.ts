@@ -30,8 +30,8 @@ const nextConfig: NextConfig = {
     formats: ["image/webp", "image/avif"],
   },
   experimental: {
-    // Évite les erreurs "No link element found for chunk" avec les CSS modules (not-found, etc.)
-    cssChunking: "strict",
+    // Tree-shaking des imports (react-icons)
+    optimizePackageImports: ["react-icons", "recharts"],
   },
   // Proxy /api et /uploads vers le backend (nécessaire quand seul le frontend est exposé, ex. Coolify)
   async rewrites() {
@@ -60,6 +60,24 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/images/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
           },
         ],
       },

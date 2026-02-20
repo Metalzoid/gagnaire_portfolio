@@ -12,8 +12,6 @@ import {
   FaCode,
   FaFigma,
   FaServer,
-} from "react-icons/fa";
-import {
   SiTypescript,
   SiPostgresql,
   SiNextdotjs,
@@ -30,8 +28,8 @@ import {
   SiAmazon,
   SiVercel,
   SiGraphql,
-} from "react-icons/si";
-import type { IconType } from "react-icons";
+} from "@/components/ui/icons";
+import type { IconType } from "@/components/ui/icons";
 
 /** Sous-ensemble d'icônes react-icons pour l'affichage public (technologies, skills) */
 const ICON_MAP: Record<string, IconType> = {

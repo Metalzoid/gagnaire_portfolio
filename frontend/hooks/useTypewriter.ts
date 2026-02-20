@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 
 // --------------------------------------------------------------------------
 // Types
@@ -12,6 +12,10 @@ interface UseTypewriterOptions {
   delayBetweenLines?: number;
   /** Délai avant de commencer en ms */
   initialDelay?: number;
+  /** Caractères par mise à jour (batch) - réduit les re-renders, améliore les perfs */
+  charsPerUpdate?: number;
+  /** Démarrer l'animation uniquement quand true (ex: visible via IntersectionObserver) */
+  enabled?: boolean;
 }
 
 // --------------------------------------------------------------------------
@@ -33,18 +37,36 @@ function getServerReducedMotionSnapshot() {
 }
 
 // --------------------------------------------------------------------------
-// Hook - Effet de frappe (typewriter)
+// Hook - Effet de frappe (typewriter) avec requestAnimationFrame
 // --------------------------------------------------------------------------
+export interface UseTypewriterResult {
+  /** Texte affiché (lignes jointes par \n) */
+  text: string;
+  /** true quand toutes les lignes ont été tapées */
+  isComplete: boolean;
+}
+
 export function useTypewriter(
   lines: string[],
   options: UseTypewriterOptions = {},
-): string {
-  const { speed = 50, delayBetweenLines = 800, initialDelay = 500 } = options;
+): UseTypewriterResult {
+  const {
+    speed = 50,
+    delayBetweenLines = 800,
+    initialDelay = 500,
+    charsPerUpdate = 1,
+    enabled = true,
+  } = options;
 
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+
+  const lineIndexRef = useRef(0);
+  const charIndexRef = useRef(0);
+  const lastTimestampRef = useRef<number>(0);
+  const accumulatedTimeRef = useRef(0);
+  const hasStartedRef = useRef(false);
+  const waitingBetweenLinesRef = useRef(false);
 
   // Lecture safe de prefers-reduced-motion (compatible SSR)
   const prefersReducedMotion = useSyncExternalStore(
@@ -53,65 +75,113 @@ export function useTypewriter(
     getServerReducedMotionSnapshot,
   );
 
-  // Démarrer l'animation après le délai initial
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !enabled || lines.length === 0) return;
 
-    const startTimer = setTimeout(() => {
-      setHasStarted(true);
-    }, initialDelay);
+    lineIndexRef.current = 0;
+    charIndexRef.current = 0;
+    lastTimestampRef.current = 0;
+    accumulatedTimeRef.current = 0;
+    hasStartedRef.current = false;
+    waitingBetweenLinesRef.current = false;
 
-    return () => clearTimeout(startTimer);
-  }, [prefersReducedMotion, initialDelay]);
+    // Report différé pour éviter cascading renders (règle react-hooks/set-state-in-effect)
+    const resetId = requestAnimationFrame(() => {
+      setDisplayedLines([]);
+      setIsComplete(false);
+    });
 
-  // Animation caractère par caractère
-  useEffect(() => {
-    if (prefersReducedMotion || !hasStarted) return;
-    if (currentLineIndex >= lines.length) return;
+    let rafId: number;
 
-    const currentLine = lines[currentLineIndex];
+    const tick = (timestamp: number) => {
+      if (!hasStartedRef.current) {
+        accumulatedTimeRef.current += timestamp - lastTimestampRef.current;
+        lastTimestampRef.current = timestamp;
+        if (accumulatedTimeRef.current >= initialDelay) {
+          hasStartedRef.current = true;
+          accumulatedTimeRef.current = 0;
+        }
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
 
-    if (currentCharIndex < currentLine.length) {
-      const timer = setTimeout(() => {
-        setDisplayedLines((prev) => {
-          const newLines = [...prev];
-          if (!newLines[currentLineIndex]) {
-            newLines[currentLineIndex] = "";
+      const dt = timestamp - lastTimestampRef.current;
+      lastTimestampRef.current = timestamp;
+      accumulatedTimeRef.current += dt;
+
+      if (lineIndexRef.current >= lines.length) {
+        return; // Animation terminée, arrêter la boucle
+      }
+
+      const currentLine = lines[lineIndexRef.current];
+
+      if (waitingBetweenLinesRef.current) {
+        if (accumulatedTimeRef.current >= delayBetweenLines) {
+          waitingBetweenLinesRef.current = false;
+          accumulatedTimeRef.current = 0;
+          lineIndexRef.current += 1;
+          charIndexRef.current = 0;
+          if (lineIndexRef.current >= lines.length) {
+            setIsComplete(true);
+            return;
           }
-          newLines[currentLineIndex] = currentLine.slice(
-            0,
-            currentCharIndex + 1,
-          );
-          return newLines;
-        });
-        setCurrentCharIndex((c) => c + 1);
-      }, speed);
-      return () => clearTimeout(timer);
-    }
+        }
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
 
-    // Fin de la ligne actuelle, passer à la suivante
-    const timer = setTimeout(() => {
-      setCurrentLineIndex((l) => l + 1);
-      setCurrentCharIndex(0);
-    }, delayBetweenLines);
+      if (charIndexRef.current < currentLine.length) {
+        const batchSize = Math.min(charsPerUpdate, currentLine.length - charIndexRef.current);
+        const batchDelay = speed * batchSize;
 
-    return () => clearTimeout(timer);
+        if (accumulatedTimeRef.current >= batchDelay) {
+          accumulatedTimeRef.current -= batchDelay;
+          charIndexRef.current += batchSize;
+
+          setDisplayedLines((prev) => {
+            const newLines = [...prev];
+            if (!newLines[lineIndexRef.current]) {
+              newLines[lineIndexRef.current] = "";
+            }
+            newLines[lineIndexRef.current] = currentLine.slice(
+              0,
+              charIndexRef.current,
+            );
+            return newLines;
+          });
+        }
+      } else {
+        waitingBetweenLinesRef.current = true;
+        accumulatedTimeRef.current = 0;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(resetId);
+      cancelAnimationFrame(rafId);
+    };
   }, [
     prefersReducedMotion,
-    hasStarted,
-    currentLineIndex,
-    currentCharIndex,
+    enabled,
     lines,
     speed,
     delayBetweenLines,
+    initialDelay,
+    charsPerUpdate,
   ]);
 
   // Si reduced motion → afficher tout directement (pas de setState nécessaire)
   if (prefersReducedMotion) {
-    return lines.join("\n");
+    return { text: lines.join("\n"), isComplete: true };
   }
 
-  return displayedLines.join("\n");
+  return {
+    text: displayedLines.join("\n"),
+    isComplete,
+  };
 }
 
 // --------------------------------------------------------------------------
@@ -131,6 +201,5 @@ export function formatTerminalLines(profile: {
     profile.role,
     "> status",
     profile.status,
-    "> _",
   ];
 }
