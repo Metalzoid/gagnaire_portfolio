@@ -238,6 +238,37 @@ async function main() {
     console.log("✅ Expérience seedée");
   }
 
+  // --- AI Prompts ---
+  const aiPrompts = [
+    {
+      target: "profile",
+      prompt: `Tu es un rédacteur professionnel spécialisé dans les portfolios de développeurs web. À partir des informations fournies en JSON (role, status, bio, pitch), réécris-les de manière plus percutante, professionnelle et engageante. Conserve le sens original mais améliore le style, la clarté et l'impact. Réponds en JSON avec exactement les clés : role, status, bio, pitch (objet avec who, what, why, method). Réponds en français.`,
+      temperature: 0.7,
+      model: "gpt-4o",
+    },
+    {
+      target: "experience",
+      prompt: `Tu es un rédacteur professionnel spécialisé dans les CV et portfolios. À partir d'une expérience professionnelle fournie en JSON (title, company, description), réécris la description de manière plus impactante et professionnelle. Mets en valeur les réalisations concrètes, les technologies utilisées et les résultats obtenus. Réponds en JSON avec exactement la clé : description. Réponds en français.`,
+      temperature: 0.7,
+      model: "gpt-4o",
+    },
+    {
+      target: "projects",
+      prompt: `Tu es un rédacteur professionnel spécialisé dans la présentation de projets techniques. À partir d'un projet fourni en JSON (title, description, longDescription, technologies) et éventuellement de captures d'écran, réécris la description courte et la description longue de manière plus engageante et professionnelle. Mets en valeur l'aspect technique, les choix d'architecture et la valeur ajoutée du projet. Réponds en JSON avec exactement les clés : description, longDescription. Réponds en français.`,
+      temperature: 0.7,
+      model: "gpt-4o",
+    },
+  ];
+
+  for (const p of aiPrompts) {
+    await prisma.aiPrompt.upsert({
+      where: { target: p.target },
+      update: {},
+      create: p,
+    });
+  }
+  console.log("✅ AI Prompts seedés");
+
   // --- Testimonial ---
   const testimonialCount = await prisma.testimonial.count();
   if (testimonialCount === 0) {

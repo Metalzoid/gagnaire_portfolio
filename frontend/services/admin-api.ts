@@ -10,6 +10,7 @@ import type {
   Testimonial,
   Technology,
   ContactRequest,
+  AiPrompt,
   CreateProjectSchemaType,
   UpdateProjectSchemaType,
   CreateSkillSchemaType,
@@ -23,6 +24,7 @@ import type {
   CreateTestimonialSchemaType,
   UpdateTestimonialSchemaType,
   UpdateProfileSchemaType,
+  UpdateAiPromptSchemaType,
 } from "shared";
 import { API_BASE_CLIENT, API_PREFIX } from "./api-config";
 
@@ -341,6 +343,20 @@ export const adminApi = {
     },
     update: (data: UpdateProfileSchemaType) =>
       putAdmin<Profile>("/admin/profile", data),
+  },
+  ai: {
+    getStatus: () => fetchWithAuth<{ enabled: boolean }>("/admin/ai/status"),
+    listPrompts: () => fetchWithAuth<AiPrompt[]>("/admin/ai/prompts"),
+    getPrompt: (target: string) =>
+      fetchWithAuth<AiPrompt>(`/admin/ai/prompts/${target}`),
+    updatePrompt: (target: string, data: UpdateAiPromptSchemaType) =>
+      putAdmin<AiPrompt>(`/admin/ai/prompts/${target}`, data),
+    enhanceProfile: () =>
+      postAdmin<Profile>("/admin/ai/enhance/profile", {}),
+    enhanceExperience: (id: string) =>
+      postAdmin<Experience>(`/admin/ai/enhance/experience/${id}`, {}),
+    enhanceProject: (id: string) =>
+      postAdmin<Project>(`/admin/ai/enhance/projects/${id}`, {}),
   },
   cv: {
     /** Récupère toutes les données nécessaires pour générer le CV */

@@ -5,6 +5,7 @@ import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { AiEnhanceButton } from "@/components/admin/AiEnhanceButton";
 import { ExperienceForm } from "@/components/admin/ExperienceForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ export default function AdminExperiencePage() {
   const toast = useToast();
   const [items, setItems] = useState<ExperienceWithId[]>([]);
   const [loading, setLoading] = useState(true);
+  const [aiEnabled, setAiEnabled] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<ExperienceWithId | null>(
     null,
   );
@@ -38,7 +40,10 @@ export default function AdminExperiencePage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => load(), []);
+  useEffect(() => {
+    load();
+    adminApi.ai.getStatus().then((s) => setAiEnabled(s.enabled)).catch(() => {});
+  }, []);
 
   const handleDelete = (item: ExperienceWithId) => setDeleteTarget(item);
 
@@ -81,6 +86,28 @@ export default function AdminExperiencePage() {
       render: (e: ExperienceWithId) =>
         e.current ? <StatusBadge variant="current">Oui</StatusBadge> : "—",
     },
+    ...(aiEnabled
+      ? [
+          {
+            key: "ai",
+            header: "IA",
+            render: (e: ExperienceWithId) => (
+              <AiEnhanceButton
+                label="Améliorer"
+                onEnhance={async () => {
+                  try {
+                    await adminApi.ai.enhanceExperience(e.id);
+                    load();
+                    toast.success("Expérience améliorée par l'IA");
+                  } catch (err) {
+                    toast.error(err instanceof Error ? err.message : "Erreur IA");
+                  }
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (

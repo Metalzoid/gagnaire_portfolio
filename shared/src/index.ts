@@ -15,6 +15,7 @@ export type {
   PitchKey,
   PitchBlock,
   AboutValue,
+  AiPrompt,
 } from "./types";
 
 // Schemas Zod
@@ -43,6 +44,7 @@ export {
   createContactSchema,
   updateContactStatusSchema,
   contactStatusEnum,
+  updateAiPromptSchema,
 } from "./schemas";
 
 export type {
@@ -67,4 +69,5 @@ export type {
   CreateContactSchemaType,
   UpdateContactStatusSchemaType,
   ContactStatusEnum,
+  UpdateAiPromptSchemaType,
 } from "./schemas";

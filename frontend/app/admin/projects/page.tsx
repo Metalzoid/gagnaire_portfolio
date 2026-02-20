@@ -5,6 +5,7 @@ import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { AiEnhanceButton } from "@/components/admin/AiEnhanceButton";
 import { ProjectForm } from "@/components/admin/ProjectForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ export default function AdminProjectsPage() {
   const toast = useToast();
   const [projects, setProjects] = useState<ProjectWithId[]>([]);
   const [loading, setLoading] = useState(true);
+  const [aiEnabled, setAiEnabled] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<ProjectWithId | null>(null);
   const [editingProject, setEditingProject] = useState<ProjectWithId | null>(
     null,
@@ -32,7 +34,10 @@ export default function AdminProjectsPage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => load(), []);
+  useEffect(() => {
+    load();
+    adminApi.ai.getStatus().then((s) => setAiEnabled(s.enabled)).catch(() => {});
+  }, []);
 
   const handleDelete = async (item: ProjectWithId) => {
     setDeleteTarget(item);
@@ -63,6 +68,28 @@ export default function AdminProjectsPage() {
         p.featured ? <StatusBadge variant="featured">Oui</StatusBadge> : "—",
     },
     { key: "date", header: "Date", render: (p: ProjectWithId) => p.date },
+    ...(aiEnabled
+      ? [
+          {
+            key: "ai",
+            header: "IA",
+            render: (p: ProjectWithId) => (
+              <AiEnhanceButton
+                label="Améliorer"
+                onEnhance={async () => {
+                  try {
+                    await adminApi.ai.enhanceProject(p.id);
+                    load();
+                    toast.success("Projet amélioré par l'IA");
+                  } catch (err) {
+                    toast.error(err instanceof Error ? err.message : "Erreur IA");
+                  }
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
