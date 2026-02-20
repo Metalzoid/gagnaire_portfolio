@@ -27,7 +27,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     backdrop-filter: none;
-    transition: none;
+    transition-duration: 0.01ms;
   }
 }
 
@@ -102,7 +102,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
+    transition-duration: 0.01ms;
   }
 }
 

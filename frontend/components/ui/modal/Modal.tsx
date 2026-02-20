@@ -61,24 +61,36 @@ const Modal = ({
     }
   }, [isOpen, isClosing]);
 
+  const finishClose = useCallback(() => {
+    if (closingHandledRef.current) return;
+    closingHandledRef.current = true;
+    const focusEl = previousFocusRef.current;
+    onClose();
+    setIsClosing(false); // Permet le démontage (return null quand !isOpen && !isClosing)
+    requestAnimationFrame(() => {
+      focusEl?.focus();
+    });
+  }, [onClose]);
+
   const handleClose = useCallback(() => {
     if (isClosing) return;
     closingHandledRef.current = false;
     setIsClosing(true);
   }, [isClosing]);
 
+  // Fallback : si onTransitionEnd ne se déclenche pas, forcer la fermeture
+  useEffect(() => {
+    if (!isClosing) return;
+    const fallback = setTimeout(() => finishClose(), 300);
+    return () => clearTimeout(fallback);
+  }, [isClosing, finishClose]);
+
   const handleDialogTransitionEnd = useCallback(
     (e: React.TransitionEvent<HTMLDivElement>) => {
       if (e.target !== dialogRef.current || !isClosing) return;
-      if (closingHandledRef.current) return;
-      closingHandledRef.current = true;
-      const focusEl = previousFocusRef.current;
-      onClose();
-      requestAnimationFrame(() => {
-        focusEl?.focus();
-      });
+      finishClose();
     },
-    [isClosing, onClose],
+    [isClosing, finishClose],
   );
 
   useLockBodyScroll(isOpen);
