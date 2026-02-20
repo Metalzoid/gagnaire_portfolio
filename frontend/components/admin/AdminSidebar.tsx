@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { adminApi } from "@/services/admin-api";
 import styles from "./AdminSidebar.module.scss";
 
 const iconSize = 20;
@@ -98,6 +99,21 @@ const IconStar = () => (
   </svg>
 );
 
+const IconSparkles = () => (
+  <svg
+    width={iconSize}
+    height={iconSize}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    aria-hidden
+  >
+    <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+    <path d="M18 14l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" />
+  </svg>
+);
+
 const IconUser = () => (
   <svg
     width={iconSize}
@@ -171,7 +187,10 @@ const navSections = [
   },
   {
     label: "Paramètres",
-    items: [{ href: "/admin/profile", label: "Profil", icon: IconUser }],
+    items: [
+      { href: "/admin/profile", label: "Profil", icon: IconUser },
+      { href: "/admin/ai", label: "IA", icon: IconSparkles, aiOnly: true as const },
+    ],
   },
 ];
 
@@ -189,6 +208,24 @@ interface AdminSidebarProps {
 export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const { logout } = useAuth();
+  const [aiEnabled, setAiEnabled] = useState(false);
+
+  useEffect(() => {
+    adminApi.ai.getStatus().then((s) => setAiEnabled(s.enabled)).catch(() => {});
+  }, []);
+
+  const filteredSections = useMemo(
+    () =>
+      navSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter(
+            (item) => !("aiOnly" in item && item.aiOnly) || aiEnabled,
+          ),
+        }))
+        .filter((section) => section.items.length > 0),
+    [aiEnabled],
+  );
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname?.startsWith(href);
@@ -231,7 +268,7 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
             <span className={styles.icon}>{<dashboardItem.icon />}</span>
             {dashboardItem.label}
           </Link>
-          {navSections.map((section) => (
+          {filteredSections.map((section) => (
             <div key={section.label} className={styles.section}>
               <span className={styles.sectionLabel}>{section.label}</span>
               {section.items.map((item) => (

@@ -7,6 +7,7 @@ import * as profileController from "../../controllers/profile.controller.js";
 import * as technologiesController from "../../controllers/technologies.controller.js";
 import * as projectImagesController from "../../controllers/project-images.controller.js";
 import * as contactsAdminController from "../../controllers/contacts-admin.controller.js";
+import * as aiController from "../../controllers/ai.controller.js";
 import { upload, handleUpload } from "../../controllers/upload.controller.js";
 import { requireAuth } from "../../middlewares/auth.js";
 import { validate } from "../../middlewares/validate.js";
@@ -27,6 +28,7 @@ import {
   updateTestimonialSchema,
   updateProfileSchema,
   updateContactStatusSchema,
+  updateAiPromptSchema,
 } from "shared";
 
 export function createAdminRoutes(): Router {
@@ -143,6 +145,21 @@ export function createAdminRoutes(): Router {
     technologiesController.update,
   );
   router.delete("/admin/technologies/:id", technologiesController.remove);
+
+  // AI status & prompts management
+  router.get("/admin/ai/status", aiController.getStatus);
+  router.get("/admin/ai/prompts", aiController.listPrompts);
+  router.get("/admin/ai/prompts/:target", aiController.getPrompt);
+  router.put(
+    "/admin/ai/prompts/:target",
+    validate(updateAiPromptSchema),
+    aiController.updatePrompt,
+  );
+
+  // AI enhancement
+  router.post("/admin/ai/enhance/profile", aiController.enhanceProfile);
+  router.post("/admin/ai/enhance/experience/:id", aiController.enhanceExperience);
+  router.post("/admin/ai/enhance/projects/:id", aiController.enhanceProject);
 
   return router;
 }

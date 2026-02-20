@@ -6,3 +6,4 @@ export type { Experience } from "./experience";
 export type { Testimonial } from "./testimonial";
 export type { ContactRequest, ContactRequestStatus } from "./contact";
 export type { PitchKey, PitchBlock, AboutValue } from "./about";
+export type { AiPrompt } from "./ai-prompt";

@@ -15,6 +15,7 @@ const envSchema = z.object({
   CONTACT_NOTIFY_EMAIL: z.email().optional(),
   /** URL publique du frontend (ex. https://portfolio.example.com) pour les liens dans les emails. */
   SITE_URL: z.url().optional(),
+  OPENAI_API_KEY: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -76,3 +76,6 @@ export type {
   UpdateContactStatusSchemaType,
   ContactStatusEnum,
 } from "./contact.schema";
+
+export { updateAiPromptSchema } from "./ai-prompt.schema";
+export type { UpdateAiPromptSchemaType } from "./ai-prompt.schema";
