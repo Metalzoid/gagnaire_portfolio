@@ -2,7 +2,7 @@
 // Experience
 // --------------------------------------------------------------------------
 export interface Experience {
-  type: "work" | "education";
+  type: "work" | "education" | "alternance";
   title: string;
   company?: string;
   location?: string;

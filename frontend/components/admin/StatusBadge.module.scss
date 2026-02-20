@@ -26,6 +26,11 @@
   color: var(--color-bg-primary);
 }
 
+.badge--alternance {
+  background-color: var(--color-accent-tertiary, var(--color-accent-secondary));
+  color: var(--color-bg-primary);
+}
+
 .badge--default {
   background-color: var(--color-bg-secondary);
   color: var(--color-text-secondary);

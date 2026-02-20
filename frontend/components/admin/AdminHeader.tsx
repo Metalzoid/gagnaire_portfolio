@@ -1,35 +1,17 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import styles from "./AdminHeader.module.scss";
 
 interface AdminHeaderProps {
   onMenuClick?: () => void;
-  /** Contenu optionnel à afficher à droite (recherche, etc.) */
+  /** Contenu optionnel à afficher à droite */
   rightActions?: React.ReactNode;
 }
 
-function IconSearch() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
-
-function IconChevronDown() {
+function IconExternalLink() {
   return (
     <svg
       width="16"
@@ -40,24 +22,9 @@ function IconChevronDown() {
       strokeWidth="2"
       aria-hidden
     >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function IconUser() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
     </svg>
   );
 }
@@ -111,57 +78,59 @@ export function AdminHeader({ onMenuClick, rightActions }: AdminHeaderProps) {
 
       <div className={styles.right}>
         {rightActions ?? (
-          <>
-            <div className={styles.searchSlot} aria-hidden>
-              <span className={styles.searchIcon}>
-                <IconSearch />
+          <div className={styles.burgerMenu} ref={userMenuRef}>
+            <button
+              type="button"
+              className={styles.burgerTrigger}
+              onClick={() => setUserMenuOpen((v) => !v)}
+              aria-expanded={userMenuOpen}
+              aria-haspopup="true"
+              aria-label="Menu"
+            >
+              <span className={styles.burgerIcon} aria-hidden>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
               </span>
-              <span className={styles.searchPlaceholder}>
-                Recherche (à venir)
-              </span>
-            </div>
-            <div className={styles.userMenu} ref={userMenuRef}>
-              <button
-                type="button"
-                className={styles.userTrigger}
-                onClick={() => setUserMenuOpen((v) => !v)}
-                aria-expanded={userMenuOpen}
-                aria-haspopup="true"
-                aria-label="Menu utilisateur"
-              >
-                <span className={styles.userAvatar}>
-                  <IconUser />
-                </span>
-                <span className={styles.userLabel}>Compte</span>
-                <span className={styles.userChevron}>
-                  <IconChevronDown />
-                </span>
-              </button>
-              {userMenuOpen && (
-                <div className={styles.userDropdown} role="menu">
-                  <Link
-                    href="/"
-                    className={styles.userDropdownItem}
-                    role="menuitem"
-                    onClick={() => setUserMenuOpen(false)}
-                  >
+            </button>
+            {userMenuOpen && (
+              <div className={styles.userDropdown} role="menu">
+                <a
+                  href="/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.userDropdownItem}
+                  role="menuitem"
+                  onClick={() => setUserMenuOpen(false)}
+                >
+                  <span className={styles.externalLinkWrap}>
                     Voir le site
-                  </Link>
-                  <button
-                    type="button"
-                    className={styles.userDropdownItem}
-                    role="menuitem"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      logout();
-                    }}
-                  >
-                    Déconnexion
-                  </button>
-                </div>
-              )}
-            </div>
-          </>
+                    <IconExternalLink />
+                  </span>
+                </a>
+                <button
+                  type="button"
+                  className={styles.userDropdownItem}
+                  role="menuitem"
+                  onClick={() => {
+                    setUserMenuOpen(false);
+                    logout();
+                  }}
+                >
+                  Déconnexion
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </header>

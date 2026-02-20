@@ -20,9 +20,12 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
     if (isLoginPage) return;
     if (refreshError) return; // Ne pas rediriger si on peut réessayer
     if (!isAuthenticated) {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("adminRedirectAfterLogin", pathname);
+      }
       router.replace("/admin/login");
     }
-  }, [isAuthenticated, isLoading, refreshError, isLoginPage, router]);
+  }, [isAuthenticated, isLoading, refreshError, isLoginPage, pathname, router]);
 
   if (isLoginPage) {
     return <>{children}</>;

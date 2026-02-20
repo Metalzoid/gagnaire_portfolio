@@ -2,7 +2,7 @@
 
 import styles from "./StatusBadge.module.scss";
 
-type Variant = "featured" | "current" | "work" | "education" | "default";
+type Variant = "featured" | "current" | "work" | "education" | "alternance" | "default";
 
 interface StatusBadgeProps {
   children: React.ReactNode;
