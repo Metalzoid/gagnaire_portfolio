@@ -8,7 +8,7 @@ ARG NODE_ENV=production
 
 FROM node:22-alpine AS base
 
-RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && npm install -g npm@11
+RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && npm install -g npm@11.10.1
 
 WORKDIR /app
 

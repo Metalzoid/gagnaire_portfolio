@@ -50,20 +50,36 @@ const NavigationMenu = ({ isOpen, onClose }: NavigationMenuProps) => {
     }
   }, [isOpen, isClosing]);
 
+  const closingHandledRef = useRef(false);
+
+  const finishClose = useCallback(() => {
+    if (closingHandledRef.current) return;
+    closingHandledRef.current = true;
+    onClose();
+  }, [onClose]);
+
   const handleClose = useCallback(() => {
     if (isClosing) return;
+    closingHandledRef.current = false;
     setIsClosing(true);
   }, [isClosing]);
+
+  // Fallback : si onTransitionEnd ne se déclenche pas, forcer la fermeture
+  useEffect(() => {
+    if (!isClosing) return;
+    const fallback = setTimeout(() => finishClose(), 400);
+    return () => clearTimeout(fallback);
+  }, [isClosing, finishClose]);
 
   const handleTransitionEnd = useCallback(
     (e: React.TransitionEvent<HTMLElement>) => {
       if (e.target !== menuRef.current || e.propertyName !== "transform")
         return;
       if (isClosing) {
-        onClose();
+        finishClose();
       }
     },
-    [isClosing, onClose],
+    [isClosing, finishClose],
   );
 
   // Focus trap : piège le focus dans le menu quand ouvert

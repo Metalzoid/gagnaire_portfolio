@@ -161,6 +161,6 @@
   .overlay,
   .menu,
   .item {
-    transition: none;
+    transition-duration: 0.01ms;
   }
 }
