@@ -68,11 +68,19 @@ export default function AdminExperiencePage() {
     {
       key: "type",
       header: "Type",
-      render: (e: ExperienceWithId) => (
-        <StatusBadge variant={e.type === "work" ? "work" : "education"}>
-          {e.type}
-        </StatusBadge>
-      ),
+      render: (e: ExperienceWithId) => {
+        const label =
+          e.type === "work"
+            ? "Travail"
+            : e.type === "alternance"
+              ? "Formation en alternance"
+              : "Formation";
+        return (
+          <StatusBadge variant={e.type === "work" ? "work" : e.type === "alternance" ? "alternance" : "education"}>
+            {label}
+          </StatusBadge>
+        );
+      },
     },
     {
       key: "dates",
@@ -153,7 +161,7 @@ export default function AdminExperiencePage() {
             defaultValues={
               editingItem
                 ? {
-                    type: editingItem.type as "work" | "education",
+                    type: editingItem.type as "work" | "education" | "alternance",
                     title: editingItem.title,
                     company: editingItem.company ?? undefined,
                     location: editingItem.location ?? undefined,

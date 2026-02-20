@@ -110,30 +110,3 @@
   justify-content: center;
   opacity: 0.9;
 }
-
-.footer {
-  padding: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.link {
-  color: var(--color-accent-primary);
-  font-size: var(--font-size-sm);
-}
-
-.logout {
-  background: none;
-  border: none;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  text-align: left;
-  padding: 0;
-
-  &:hover {
-    color: var(--color-accent-primary);
-  }
-}

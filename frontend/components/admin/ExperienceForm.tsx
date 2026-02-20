@@ -17,8 +17,8 @@ export function ExperienceForm({
   onSubmit,
   submitLabel = "Enregistrer",
 }: ExperienceFormProps) {
-  const [type, setType] = useState<"work" | "education">(
-    (defaultValues?.type as "work" | "education") ?? "work",
+  const [type, setType] = useState<"work" | "education" | "alternance">(
+    (defaultValues?.type as "work" | "education" | "alternance") ?? "work",
   );
   const [title, setTitle] = useState(defaultValues?.title ?? "");
   const [company, setCompany] = useState(defaultValues?.company ?? "");
@@ -66,10 +66,11 @@ export function ExperienceForm({
         options={[
           { value: "work", label: "Travail" },
           { value: "education", label: "Formation" },
+          { value: "alternance", label: "Formation en alternance" },
         ]}
         value={type}
         onChange={(e) =>
-          setType((e.target as HTMLSelectElement).value as "work" | "education")
+          setType((e.target as HTMLSelectElement).value as "work" | "education" | "alternance")
         }
         required
       />

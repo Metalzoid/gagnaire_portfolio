@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createExperienceSchema = z.object({
-  type: z.enum(["work", "education"]),
+  type: z.enum(["work", "education", "alternance"]),
   title: z.string().min(1),
   company: z.string().optional(),
   location: z.string().optional(),
