@@ -1,4 +1,6 @@
 // Topbar style « dashboard » : hauteur marquée, bordure Dracula, zone droite
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
 
 .header {
   display: flex;
@@ -39,7 +41,7 @@
     background-color: var(--color-bg-secondary);
   }
 
-  @media (max-width: 768px) {
+  @include respond-to("tablet") {
     display: flex;
   }
 }
@@ -90,7 +92,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
-  z-index: 100;
+  z-index: $z-dropdown;
 }
 
 .userDropdownItem {

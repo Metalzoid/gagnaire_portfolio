@@ -1,3 +1,5 @@
+@use "../../styles/abstracts/mixins" as *;
+
 .wrapper {
   margin-bottom: var(--spacing-lg);
 }
@@ -14,7 +16,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
 
-  @media (max-width: 768px) {
+  @include respond-to("tablet") {
     grid-template-columns: 1fr;
   }
 }

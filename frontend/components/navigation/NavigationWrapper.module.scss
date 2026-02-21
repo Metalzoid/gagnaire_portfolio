@@ -1,5 +1,6 @@
 // ==========================================================================
 // NavigationWrapper - Gestion du décalage morph du contenu
+// Full responsive : desktop, tablet, mobile portrait/paysage
 // ==========================================================================
 @use "../../styles/abstracts/variables" as *;
 @use "../../styles/abstracts/mixins" as *;
@@ -27,13 +28,48 @@
     }
   }
 
-  svg {
-    font-size: 1.25rem;
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
   }
 
-  @include respond-to("mobile") {
-    left: var(--spacing-md);
+  // Tablet
+  @include respond-to("tablet") {
     top: var(--spacing-md);
+    left: var(--spacing-md);
+  }
+
+  // Mobile portrait
+  @include respond-to("mobile") {
+    left: var(--spacing-sm);
+    top: var(--spacing-sm);
+    width: 40px;
+    height: 40px;
+
+    img {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+  }
+
+  // Paysage phone : compact
+  @include respond-to-landscape("phone") {
+    top: var(--spacing-xs);
+    left: var(--spacing-sm);
+    width: 36px;
+    height: 36px;
+
+    img {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  // Paysage tablet
+  @include respond-to-landscape("tablet") {
+    top: var(--spacing-sm);
+    left: var(--spacing-md);
   }
 }
 
@@ -49,13 +85,44 @@
   align-items: center;
   gap: var(--spacing-sm);
 
-  @include respond-to("mobile") {
+  // Tablet
+  @include respond-to("tablet") {
+    top: var(--spacing-md);
     right: var(--spacing-md);
+  }
+
+  // Mobile portrait
+  @include respond-to("mobile") {
+    right: var(--spacing-sm);
+    top: var(--spacing-sm);
+  }
+
+  // Paysage (phone + tablet) : collé au bord droit
+  @include respond-to-landscape("any") {
+    right: 0;
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  @include respond-to-landscape("phone") {
+    top: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+
+  @include respond-to-landscape("tablet") {
+    top: var(--spacing-sm);
   }
 }
 
 .themeToggleDesktop {
-  @include respond-to("mobile") {
+  // Masqué sur tablet portrait et en dessous (le footer du menu prend le relais)
+  @include respond-to("tablet") {
+    display: none;
+  }
+
+  // Paysage phone : visible (la topBar a la place en largeur, pas de footer)
+
+  // Masqué en paysage tablet (le footer du menu prend le relais)
+  @include respond-to-landscape("tablet") {
     display: none;
   }
 }
@@ -69,6 +136,26 @@
   flex: 1;
   transition: transform 300ms ease;
   will-change: transform;
+
+  // CSS custom property consommée par les snap sections pour éviter le double padding
+  --nav-top-offset: 0px;
+
+  // Tablet & mobile : réserver l'espace pour la topBar (burger + theme) afin
+  // d'éviter que le contenu passe sous le bouton menu
+  @include respond-to("tablet") {
+    --nav-top-offset: calc(var(--spacing-md) + 48px);
+    padding-top: var(--nav-top-offset);
+  }
+
+  @include respond-to("mobile") {
+    --nav-top-offset: calc(var(--spacing-sm) + 44px);
+    padding-top: var(--nav-top-offset);
+  }
+
+  @include respond-to-landscape("phone") {
+    --nav-top-offset: calc(var(--spacing-xs) + 40px);
+    padding-top: var(--nav-top-offset);
+  }
 }
 
 // Quand le menu est ouvert, le contenu se décale et se réduit
@@ -76,6 +163,16 @@
   transform: scale(0.95) translateX(-10%);
   pointer-events: none;
   user-select: none;
+
+  // Mobile portrait : pas de scale, juste un léger shift
+  @include respond-to("mobile") {
+    transform: scale(0.92) translateX(0);
+  }
+
+  // Paysage phone : pas de shift (menu plein écran)
+  @include respond-to-landscape("phone") {
+    transform: scale(0.92) translateX(0);
+  }
 }
 
 // Réduction des animations si préférence utilisateur

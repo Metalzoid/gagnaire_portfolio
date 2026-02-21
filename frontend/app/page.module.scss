@@ -47,13 +47,21 @@
 
   @include respond-to("tablet") {
     padding: var(--spacing-xl);
+    // Absorber le nav-top-offset au lieu d'avoir un double padding
+    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-xl));
   }
 
   @include respond-to("mobile") {
     height: 100dvh; // Hauteur fixe pour snap fiable
     min-height: unset; // Override du min-height
     justify-content: flex-start;
-    padding: var(--spacing-4xl) var(--spacing-lg);
+    padding: var(--spacing-lg);
+    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-xl));
+  }
+
+  @include respond-to("small-mobile") {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
   }
 }
 
@@ -67,9 +75,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-height: 0;
 
   @include respond-to("mobile") {
     justify-content: flex-start;
+    overflow-y: auto;
   }
 }
 
@@ -86,6 +96,25 @@
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   max-width: 600px;
+}
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : snap conservé, padding réduit pour garder le contenu lisible
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .snapSection {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-lg));
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : snap conservé, padding réduit
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .snapSection {
+    padding: var(--spacing-xl);
+  }
 }
 
 // --------------------------------------------------------------------------

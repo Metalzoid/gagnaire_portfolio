@@ -110,3 +110,53 @@
   display: flex;
   justify-content: center;
 }
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : grille visible (width > 480px), icônes/gaps/textes compacts
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .iconGrid {
+    display: grid; // Override explicite du display: none mobile
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .mobileCarousel {
+    display: none; // Cacher le carousel en landscape phone
+  }
+
+  .iconItem {
+    padding: var(--spacing-sm);
+    gap: 0;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
+
+  .iconLabel {
+    font-size: 0.7rem;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .intro {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : espacement réduit
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .iconGrid {
+    gap: var(--spacing-md);
+  }
+
+  .intro {
+    margin-bottom: var(--spacing-lg);
+  }
+}

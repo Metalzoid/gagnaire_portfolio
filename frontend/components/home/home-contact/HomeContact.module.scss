@@ -52,3 +52,20 @@
   display: flex;
   justify-content: center;
 }
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : marges réduites (section déjà compacte)
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .title {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .subtitle {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .social {
+    margin-top: var(--spacing-md);
+  }
+}

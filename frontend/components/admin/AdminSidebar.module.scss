@@ -1,14 +1,17 @@
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
+
 .overlay {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: $z-admin-sidebar;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
 
-  @media (max-width: 768px) {
+  @include respond-to("tablet") {
     display: block;
 
     &.overlayVisible {
@@ -24,12 +27,12 @@
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 768px) {
+  @include respond-to("tablet") {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    z-index: 1001;
+    z-index: $z-admin-sidebar + 1;
     width: 240px;
     transform: translateX(-100%);
     transition: transform 0.2s ease;

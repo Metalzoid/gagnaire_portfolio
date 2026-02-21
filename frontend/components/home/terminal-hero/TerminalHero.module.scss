@@ -1,6 +1,7 @@
 // ==========================================================================
 // TerminalHero - Fenêtre terminal avec effet typewriter
 // ==========================================================================
+@use "../../../styles/abstracts/variables" as *;
 @use "../../../styles/abstracts/mixins" as *;
 
 .wrapper {
@@ -99,6 +100,10 @@
     height: 240px;
     padding: var(--spacing-xs);
   }
+
+  @include respond-to("small-mobile") {
+    height: 200px;
+  }
 }
 
 .hiddenInput {
@@ -114,7 +119,7 @@
   border: none;
   outline: none;
   background: transparent;
-  z-index: 1;
+  z-index: $z-base;
   /* En bas pour que le scroll-into-view du focus garde la vue en bas */
 }
 
@@ -133,6 +138,10 @@
 
   @include respond-to("mobile") {
     font-size: var(--font-size-sm);
+  }
+
+  @include respond-to("small-mobile") {
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -181,7 +190,7 @@
 .easterGlitch {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: $z-base + 1; // Local stacking: au-dessus du hiddenInput
   pointer-events: none;
   animation: glitch 0.4s ease-out forwards;
 }
@@ -249,5 +258,34 @@
     flex-direction: column;
     width: 100%;
     max-width: 280px;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : terminal + CTAs côte à côte, contenu compact
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: var(--spacing-md);
+  }
+
+  .content {
+    height: 180px;
+  }
+
+  .output {
+    font-size: var(--font-size-xs);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : contenu réduit
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .content {
+    height: 280px;
   }
 }

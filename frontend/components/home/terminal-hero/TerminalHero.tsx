@@ -9,7 +9,7 @@ import {
   useMemo,
 } from "react";
 import { useTypewriter, formatTerminalLines } from "@/hooks/useTypewriter";
-import useMediaQuery from "@/hooks/useMediaQuery";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { useInteractiveTerminal } from "@/hooks/useInteractiveTerminal";
 import type { Profile, SkillCategory, Project } from "shared";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
@@ -40,7 +40,7 @@ export function TerminalHero({
   const contentRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const { isDesktop } = useBreakpoint();
 
   // IntersectionObserver : démarrer l'animation uniquement quand le terminal est visible
   useEffect(() => {
@@ -63,9 +63,9 @@ export function TerminalHero({
 
   const lines = useMemo(() => formatTerminalLines(profile), [profile]);
   const { text: displayedText, isComplete } = useTypewriter(lines, {
-    speed: 1,
-    delayBetweenLines: 10,
-    initialDelay: 1,
+    speed: 35,
+    delayBetweenLines: 300,
+    initialDelay: 200,
     charsPerUpdate: 1,
     enabled: isVisible,
   });

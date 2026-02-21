@@ -115,3 +115,10 @@
     gap: var(--spacing-sm);
   }
 }
+
+// Small mobile : padding bloc réduit
+@include respond-to("small-mobile") {
+  .block {
+    padding: var(--spacing-sm);
+  }
+}

@@ -7,7 +7,7 @@ import styles from "./TerminalHero.module.scss";
 export function TerminalHeroSkeleton() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.terminal} data-focused="false">
+      <div className={styles.terminal}>
         <div className={styles.titleBar}>
           <div className={styles.dots}>
             <span className={styles.dot} data-color="red" aria-hidden="true" />

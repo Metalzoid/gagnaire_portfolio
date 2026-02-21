@@ -1,26 +1,14 @@
 "use client";
 
 import { lazy, Suspense } from "react";
-import dynamic from "next/dynamic";
 import useSnapScroll from "@/hooks/useSnapScroll";
 import { ProgressBar } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { HomeBio } from "@/components/home";
-import { TerminalHeroSkeleton } from "@/components/home/terminal-hero/TerminalHeroSkeleton";
+import { TerminalHeroWithSafeHydration } from "@/components/home/terminal-hero/TerminalHeroWithSafeHydration";
 import { homeSections } from "@/data/sections";
 import type { Profile, SkillCategory, Project, Testimonial } from "shared";
 import styles from "@/app/page.module.scss";
-
-const TerminalHero = dynamic(
-  () =>
-    import("@/components/home/terminal-hero").then((m) => ({
-      default: m.TerminalHero,
-    })),
-  {
-    ssr: false,
-    loading: () => <TerminalHeroSkeleton />,
-  }
-);
 
 const HomeSkills = lazy(() =>
   import("@/components/home/home-skills/HomeSkills").then((m) => ({
@@ -67,7 +55,7 @@ export function HomeContent({
 
   const sectionContent: Record<string, React.ReactNode> = {
     hero: (
-      <TerminalHero
+      <TerminalHeroWithSafeHydration
         profile={profile}
         skills={skills}
         topProjects={topProjects}
