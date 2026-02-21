@@ -190,72 +190,93 @@ function Carousel<T>({
     [goPrev, goNext],
   );
 
-  // --------------------------------------------------------------------------
-  // Swipe tactile : suivi du doigt en temps réel (mobile)
-  // --------------------------------------------------------------------------
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    isDraggingRef.current = true;
-    setIsDragging(true);
-    viewportRef.current?.style.setProperty("--carousel-drag", "0px");
-  }, []);
+  // Refs stables pour accéder aux valeurs courantes dans les listeners natifs
+  const currentIndexRef = useRef(currentIndex);
+  const isTransitioningRef = useRef(isTransitioning);
+  const goNextRef = useRef(goNext);
+  const goPrevRef = useRef(goPrev);
 
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
+  // Synchroniser les refs après le render (évite d'accéder aux refs pendant le render)
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+    isTransitioningRef.current = isTransitioning;
+    goNextRef.current = goNext;
+    goPrevRef.current = goPrev;
+  });
+
+  // --------------------------------------------------------------------------
+  // Swipe tactile natif : toute la logique est ici pour pouvoir stopper
+  // la propagation et isoler le carousel du snap-scroll parent.
+  // --------------------------------------------------------------------------
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const onStart = (e: TouchEvent) => {
+      e.stopPropagation();
+      touchStartX.current = e.touches[0].clientX;
+      touchStartY.current = e.touches[0].clientY;
+      isDraggingRef.current = true;
+      setIsDragging(true);
+      el.style.setProperty("--carousel-drag", "0px");
+    };
+
+    const onMove = (e: TouchEvent) => {
+      e.stopPropagation();
+      if (!isDraggingRef.current || !e.touches[0]) return;
+
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
+      const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
+
+      // Empêcher le scroll vertical si le geste est horizontal
+      if (deltaX > deltaY && deltaX > 5) {
+        e.preventDefault();
+      }
+
+      // Suivi du doigt en temps réel
       const currentX = e.touches[0].clientX;
       let delta = touchStartX.current - currentX;
 
       // Résistance aux bords (mode non-loop)
       if (!loop && total > 1) {
-        if (currentIndex === 0 && delta < 0) {
+        if (currentIndexRef.current === 0 && delta < 0) {
           delta *= 0.3;
-        } else if (currentIndex >= total - 1 && delta > 0) {
+        } else if (currentIndexRef.current >= total - 1 && delta > 0) {
           delta *= 0.3;
         }
       }
-      viewportRef.current?.style.setProperty("--carousel-drag", `${delta}px`);
-    },
-    [currentIndex, loop, total],
-  );
 
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
+      el.style.setProperty("--carousel-drag", `${delta}px`);
+    };
+
+    const onEnd = (e: TouchEvent) => {
+      e.stopPropagation();
       const endX = e.changedTouches?.[0]?.clientX;
       const diff = endX != null ? touchStartX.current - endX : 0;
 
-      if (!isTransitioning && Math.abs(diff) > SWIPE_THRESHOLD) {
+      if (!isTransitioningRef.current && Math.abs(diff) > SWIPE_THRESHOLD) {
         if (diff > 0) {
-          goNext();
+          goNextRef.current();
         } else {
-          goPrev();
+          goPrevRef.current();
         }
       }
 
-      viewportRef.current?.style.removeProperty("--carousel-drag");
+      el.style.removeProperty("--carousel-drag");
       isDraggingRef.current = false;
       setIsDragging(false);
-    },
-    [goNext, goPrev, isTransitioning],
-  );
-
-  // Désactiver le scroll vertical pendant un drag horizontal (passive: false requis)
-  useEffect(() => {
-    const el = viewportRef.current;
-    if (!el) return;
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDraggingRef.current || !e.touches[0]) return;
-      const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
-      const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
-      if (deltaX > deltaY && deltaX > 5) {
-        e.preventDefault();
-      }
     };
 
-    el.addEventListener("touchmove", handleTouchMove, { passive: false });
-    return () => el.removeEventListener("touchmove", handleTouchMove);
-  }, []);
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
+    el.addEventListener("touchend", onEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+    };
+  }, [loop, total]);
 
   // --------------------------------------------------------------------------
   // Rendu
@@ -318,9 +339,6 @@ function Carousel<T>({
         <div
           ref={viewportRef}
           className={styles.viewport}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           <div className={styles.track} style={trackStyle}>
             {displayItems.map((item, index) => (

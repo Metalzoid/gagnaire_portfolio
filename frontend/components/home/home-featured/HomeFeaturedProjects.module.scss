@@ -71,3 +71,39 @@
   display: flex;
   justify-content: center;
 }
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : grille → scroll horizontal
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    max-width: 100%;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+  }
+
+  .gridItem {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    min-width: 260px;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : grille standard, gaps réduits
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .grid {
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+}

@@ -1,5 +1,6 @@
 // ==========================================================================
 // ProgressBar - Indicateur latéral de section
+// Full responsive : desktop, tablet, mobile portrait/paysage
 // ==========================================================================
 @use "../../styles/abstracts/variables" as *;
 @use "../../styles/abstracts/mixins" as *;
@@ -11,9 +12,25 @@
   transform: translateY(-50%);
   z-index: $z-sticky;
 
-  // Masquée sur mobile
+  // Tablet : plus proche du bord
+  @include respond-to("tablet") {
+    right: var(--spacing-sm);
+  }
+
+  // Masquée sur mobile portrait
   @include respond-to("mobile") {
     display: none;
+  }
+
+  // Masquée en paysage phone (pas assez de place)
+  @include respond-to-landscape("phone") {
+    display: none;
+  }
+
+  // Paysage (tablet) : collée au bord droit
+  @include respond-to-landscape("tablet") {
+    right: 0;
+    padding-right: env(safe-area-inset-right, 0);
   }
 }
 
@@ -25,6 +42,16 @@
   list-style: none;
   padding: 0;
   margin: 0;
+
+  // Tablet : gap réduit
+  @include respond-to("tablet") {
+    gap: var(--spacing-xs);
+  }
+
+  // Paysage tablet : gap compact
+  @include respond-to-landscape("tablet") {
+    gap: var(--spacing-xs);
+  }
 }
 
 .item {
@@ -58,6 +85,18 @@
     outline: 2px solid var(--color-accent-primary);
     outline-offset: 2px;
   }
+
+  // Tablet : légèrement réduit
+  @include respond-to("tablet") {
+    width: 28px;
+    height: 28px;
+  }
+
+  // Paysage tablet
+  @include respond-to-landscape("tablet") {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 .indicator {
@@ -68,6 +107,18 @@
   background-color: var(--color-text-secondary);
   transition: background-color var(--transition-fast),
     transform var(--transition-fast);
+
+  // Tablet : légèrement réduit
+  @include respond-to("tablet") {
+    width: 7px;
+    height: 7px;
+  }
+
+  // Paysage tablet
+  @include respond-to-landscape("tablet") {
+    width: 6px;
+    height: 6px;
+  }
 }
 
 // Dot actif

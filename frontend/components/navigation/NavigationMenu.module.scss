@@ -1,5 +1,6 @@
 // ==========================================================================
 // NavigationMenu - Menu morph plein écran (slide depuis la droite)
+// Full responsive : desktop, tablet, mobile portrait/paysage
 // ==========================================================================
 @use "../../styles/abstracts/variables" as *;
 @use "../../styles/abstracts/mixins" as *;
@@ -57,10 +58,37 @@
     transition-timing-function: ease-in;
   }
 
+  // Tablet : panel proportionnel
+  @include respond-to("desktop") {
+    width: 340px;
+    padding: var(--spacing-2xl) var(--spacing-xl);
+  }
+
+  // Tablet portrait : padding-top pour ne pas passer sous le bouton fermer (X)
+  @include respond-to("tablet") {
+    width: 300px;
+    padding: calc(var(--spacing-md) + 48px) var(--spacing-lg) var(--spacing-2xl);
+  }
+
+  // Mobile portrait : plein écran, padding-top pour ne pas passer sous le bouton fermer (X)
   @include respond-to("mobile") {
     width: 100%;
-    padding: var(--spacing-2xl) var(--spacing-lg);
+    padding: calc(var(--spacing-sm) + 44px) var(--spacing-lg) var(--spacing-xl);
     border-left: none;
+  }
+
+  // Paysage phone : panel latéral compact, padding-top pour le bouton fermer
+  @include respond-to-landscape("phone") {
+    width: 320px;
+    padding: calc(var(--spacing-xs) + 40px) var(--spacing-lg) var(--spacing-md);
+    justify-content: center;
+  }
+
+  // Paysage tablet : panel réduit
+  @include respond-to-landscape("tablet") {
+    width: 360px;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    justify-content: center;
   }
 }
 
@@ -68,16 +96,22 @@
 // Liste de liens
 // --------------------------------------------------------------------------
 .list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: max-content; // une colonne = largeur du plus large lien
   gap: var(--spacing-xs);
   list-style: none;
   padding: 0;
   margin: 0;
+
+  // Paysage phone : une seule colonne (lisibilité)
+  @include respond-to-landscape("phone") {
+    gap: var(--spacing-sm);
+  }
 }
 
 .item {
-  display: flex;
+  display: block;
+  min-width: 0;
   opacity: 0;
   transform: translateX(30px);
   transition:
@@ -100,48 +134,90 @@
     transform: translateX(30px);
     transition-delay: 0s;
   }
+
 }
 
-.link {
-  display: block;
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-2xl);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  background: none;
-  border: none;
-  border-radius: var(--border-radius-md);
-  text-align: left;
-  cursor: pointer;
-  font-family: inherit;
-  transition: color var(--transition-fast),
-    background-color var(--transition-fast);
+// Imbriqué .menu .list pour battre la spécificité de a:not([class*="button"])
+// en typography.scss (sinon tous les liens héritent color: var(--color-link))
+// :link/:visited forcés car Parcours (toujours un <a>) reste bleu sinon
+.menu .list {
+  .link {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: none;
+    border: none;
+    border-radius: var(--border-radius-md);
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color var(--transition-fast),
+      background-color var(--transition-fast);
 
-  @include on-hover {
-    &:hover {
+    &:link,
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    @include on-hover {
+      &:hover {
+        color: var(--color-accent-primary);
+        background-color: var(--color-bg-secondary);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent-primary);
+      outline-offset: 2px;
+    }
+
+    &--active {
       color: var(--color-accent-primary);
       background-color: var(--color-bg-secondary);
+
+      &:link,
+      &:visited {
+        color: var(--color-accent-primary);
+      }
     }
-  }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-accent-primary);
-    outline-offset: 2px;
-  }
+    // Tablet : taille de police réduite
+    @include respond-to("desktop") {
+      font-size: var(--font-size-xl);
+    }
 
-  &--active {
-    color: var(--color-accent-primary);
-    background-color: var(--color-bg-secondary);
-  }
+    // Tablet portrait
+    @include respond-to("tablet") {
+      font-size: var(--font-size-xl);
+      padding: var(--spacing-xs) var(--spacing-md);
+    }
 
-  @include respond-to("mobile") {
-    font-size: var(--font-size-xl);
+    // Mobile portrait
+    @include respond-to("mobile") {
+      font-size: var(--font-size-xl);
+      padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    // Paysage phone : une colonne, taille lisible
+    @include respond-to-landscape("phone") {
+      font-size: var(--font-size-lg);
+      line-height: 1.3;
+      padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    // Paysage tablet
+    @include respond-to-landscape("tablet") {
+      font-size: var(--font-size-lg);
+      padding: var(--spacing-xs) var(--spacing-md);
+    }
   }
 }
 
 // --------------------------------------------------------------------------
-// Footer du menu (toggle thème) — visible uniquement sur mobile
+// Footer du menu (toggle thème) — visible sur mobile et paysage phone
 // --------------------------------------------------------------------------
 .footer {
   display: none;
@@ -149,8 +225,20 @@
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--color-border);
 
-  @include respond-to("mobile") {
+  // Tablet portrait : visible (car le toggle desktop peut manquer de place)
+  @include respond-to("tablet") {
     display: block;
+  }
+
+  // Paysage phone : masqué (le toggle reste dans la topBar)
+  @include respond-to-landscape("phone") {
+    display: none;
+  }
+
+  // Paysage tablet : visible
+  @include respond-to-landscape("tablet") {
+    display: block;
+    padding-top: var(--spacing-md);
   }
 }
 

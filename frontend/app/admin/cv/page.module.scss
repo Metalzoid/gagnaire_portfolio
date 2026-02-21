@@ -1,6 +1,7 @@
 // ==========================================================================
 // Page Admin CV - Génération et gestion du CV
 // ==========================================================================
+@use "../../../styles/abstracts/mixins" as *;
 
 .wrapper {
   display: grid;
@@ -135,7 +136,7 @@
   border: none;
 }
 
-@media (max-width: 1024px) {
+@include respond-to("desktop") {
   .wrapper {
     grid-template-columns: 1fr;
   }

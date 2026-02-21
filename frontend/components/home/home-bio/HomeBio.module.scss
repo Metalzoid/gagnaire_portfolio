@@ -36,12 +36,6 @@
   gap: var(--spacing-xl);
   max-width: 600px;
   margin: 0 auto;
-
-  @include respond-to("tablet") {
-    flex-direction: row;
-    gap: var(--spacing-2xl);
-    max-width: 700px;
-  }
 }
 
 .photoWrapper {
@@ -69,10 +63,7 @@
 
 .text {
   text-align: center;
-
-  @include respond-to("tablet") {
-    text-align: left;
-  }
+  width: 100%;
 }
 
 .title {
@@ -93,7 +84,7 @@
   justify-content: center;
 }
 
-// Mobile : photo plus petite, en haut à gauche, texte qui contourne
+// Mobile : photo en haut centrée, texte en dessous
 @include respond-to("mobile") {
   .wrapper {
     width: 100%;
@@ -103,23 +94,62 @@
   }
 
   .content {
-    display: block;
+    gap: var(--spacing-md);
     max-width: 100%;
-    overflow: auto; // contient le float
   }
 
-  .photoWrapper {
-    float: left;
-    margin-right: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
+  .photoFrame {
+    width: 120px;
+    height: 120px;
   }
+}
 
+// Small mobile : photo compacte, toujours en haut centrée
+@include respond-to("small-mobile") {
   .photoFrame {
     width: 100px;
     height: 100px;
   }
 
-  .text {
-    text-align: left;
+  .wrapper {
+    max-width: 100%;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : photo en haut centrée, texte en dessous
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .content {
+    gap: var(--spacing-md);
+    max-width: 100%;
+  }
+
+  .photoFrame {
+    width: 120px;
+    height: 120px;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .bio {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : photo en haut centrée, texte en dessous
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .photoFrame {
+    width: 150px;
+    height: 150px;
+  }
+
+  .bio {
+    font-size: var(--font-size-base);
   }
 }

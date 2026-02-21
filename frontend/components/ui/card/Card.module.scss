@@ -56,6 +56,10 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+
+  @include respond-to-landscape("phone") {
+    aspect-ratio: 2 / 1;
+  }
 }
 
 .image {
@@ -76,6 +80,14 @@
   @include respond-to("mobile") {
     padding: var(--spacing-sm);
   }
+
+  @include respond-to("small-mobile") {
+    padding: var(--spacing-xs);
+  }
+
+  @include respond-to-landscape("phone") {
+    padding: var(--spacing-sm);
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -86,6 +98,10 @@
   font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
   margin: 0;
+
+  @include respond-to-landscape("phone") {
+    font-size: var(--font-size-base);
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -96,6 +112,10 @@
   color: var(--color-text-secondary);
   line-height: $line-height-normal;
   margin: 0;
+
+  @include respond-to-landscape("phone") {
+    font-size: var(--font-size-xs);
+  }
 }
 
 // --------------------------------------------------------------------------

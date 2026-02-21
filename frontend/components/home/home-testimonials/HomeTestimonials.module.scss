@@ -125,3 +125,66 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
+
+// --------------------------------------------------------------------------
+// Paysage téléphone : cards en row + scroll horizontal
+// --------------------------------------------------------------------------
+@include respond-to-landscape("phone") {
+  .cards {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--spacing-md);
+    max-width: 100%;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+  }
+
+  .card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    min-width: 300px;
+    padding: var(--spacing-md);
+  }
+
+  .quoteMark {
+    font-size: 2rem;
+  }
+
+  .quote {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-md);
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .name,
+  .role {
+    font-size: var(--font-size-xs);
+  }
+}
+
+// --------------------------------------------------------------------------
+// Paysage tablette : cards empilées mais compactes
+// --------------------------------------------------------------------------
+@include respond-to-landscape("tablet") {
+  .cards {
+    gap: var(--spacing-lg);
+  }
+
+  .card {
+    padding: var(--spacing-lg);
+  }
+
+  .quote {
+    font-size: var(--font-size-base);
+  }
+}

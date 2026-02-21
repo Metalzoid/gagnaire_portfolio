@@ -29,8 +29,8 @@
   min-width: 0;
   overflow: hidden;
   border-radius: var(--border-radius-lg);
-  // Support swipe horizontal mobile : le navigateur conserve le scroll vertical
-  touch-action: pan-y;
+  // Capturer tous les gestes tactiles sur le carousel (pas de scroll page)
+  touch-action: none;
 }
 
 // --------------------------------------------------------------------------

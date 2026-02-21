@@ -76,3 +76,21 @@
     max-width: none;
   }
 }
+
+// --------------------------------------------------------------------------
+// Small mobile (375px) : photo et textes encore plus compacts
+// --------------------------------------------------------------------------
+@include respond-to("small-mobile") {
+  .photoWrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .name {
+    font-size: var(--font-size-xl);
+  }
+
+  .role {
+    font-size: var(--font-size-base);
+  }
+}

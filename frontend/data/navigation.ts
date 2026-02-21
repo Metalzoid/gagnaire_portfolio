@@ -29,6 +29,5 @@ export const navigationLinks: NavItem[] = [
   { type: "section", id: "projets" },
   { type: "section", id: "temoignages" },
   { type: "link", href: "/experience", label: "Parcours" },
-  { type: "link", href: "/blog", label: "Blog" },
   { type: "section", id: "contact" },
 ];
