@@ -92,7 +92,7 @@
   height: 360px;
   padding: var(--spacing-sm);
   contain: layout paint;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
 
@@ -132,8 +132,8 @@
   padding: 0;
   background: none;
   border-radius: 0;
-  white-space: pre;
-  word-break: normal;
+  white-space: pre-wrap;
+  word-break: break-word;
   letter-spacing: 0;
 
   @include respond-to("mobile") {

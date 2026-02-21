@@ -18,6 +18,7 @@
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100dvh;
+  overscroll-behavior: contain; // Empêche pull-to-refresh et propagation au parent
   // Masquer la scrollbar native
   scrollbar-width: none; // Firefox
   -ms-overflow-style: none; // IE/Edge
@@ -32,7 +33,9 @@
 // --------------------------------------------------------------------------
 .snapSection {
   scroll-snap-align: start;
+  scroll-snap-stop: always; // Force l'arrêt à chaque section (pas de skip par momentum)
   min-height: 100dvh;
+  overflow: hidden; // Filet de sécurité si contenu déborde
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,6 +52,8 @@
   }
 
   @include respond-to("mobile") {
+    height: 100dvh; // Hauteur fixe pour snap fiable
+    min-height: unset; // Override du min-height
     justify-content: flex-start;
     padding: var(--spacing-lg);
     padding-top: max(var(--nav-top-offset, 0px), var(--spacing-xl));

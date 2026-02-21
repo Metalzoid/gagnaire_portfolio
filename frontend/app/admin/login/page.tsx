@@ -8,6 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import styles from "./login.module.scss";
 
+const REDIRECT_STORAGE_KEY = "adminRedirectAfterLogin";
+
+/** Vérifie que l’URL de redirection est une route admin valide (évite open redirect). */
+function getSafeRedirect(redirect: string | null): string {
+  if (!redirect || typeof redirect !== "string") return "/admin";
+  const path = redirect.startsWith("/") ? redirect : `/${redirect}`;
+  if (!path.startsWith("/admin") || path === "/admin/login") return "/admin";
+  return path;
+}
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const { login } = useAuth();
@@ -22,7 +32,15 @@ export default function AdminLoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.replace("/admin");
+      const redirect =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem(REDIRECT_STORAGE_KEY)
+          : null;
+      const target = getSafeRedirect(redirect);
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem(REDIRECT_STORAGE_KEY);
+      }
+      router.replace(target);
     } catch (err) {
       setError(
         err instanceof AdminApiError

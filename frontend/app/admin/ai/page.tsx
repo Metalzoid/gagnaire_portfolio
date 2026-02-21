@@ -176,11 +176,13 @@ export default function AdminAiPage() {
                 style={{
                   width: "100%",
                   padding: "var(--spacing-sm)",
-                  borderRadius: "var(--radius-sm, 4px)",
-                  border: "1px solid var(--color-border, #e2e8f0)",
+                  borderRadius: "var(--border-radius)",
+                  border: "1px solid var(--color-border)",
                   fontFamily: "inherit",
-                  fontSize: "0.875rem",
+                  fontSize: "var(--font-size-md)",
                   resize: "vertical",
+                  color: "var(--color-text-primary)",
+                  backgroundColor: "var(--color-bg-primary)",
                 }}
               />
             </div>
@@ -211,9 +213,12 @@ export default function AdminAiPage() {
                   style={{
                     width: "100%",
                     padding: "var(--spacing-sm)",
-                    borderRadius: "var(--radius-sm, 4px)",
-                    border: "1px solid var(--color-border, #e2e8f0)",
+                    borderRadius: "var(--border-radius)",
+                    border: "1px solid var(--color-border)",
                     fontFamily: "inherit",
+                    fontSize: "var(--font-size-md)",
+                    color: "var(--color-text-primary)",
+                    backgroundColor: "var(--color-bg-primary)",
                   }}
                 >
                   <option value="gpt-4o">gpt-4o</option>

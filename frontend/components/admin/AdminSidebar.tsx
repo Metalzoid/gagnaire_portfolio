@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
 import { adminApi } from "@/services/admin-api";
 import styles from "./AdminSidebar.module.scss";
 
@@ -207,7 +206,6 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { logout } = useAuth();
   const [aiEnabled, setAiEnabled] = useState(false);
 
   useEffect(() => {
@@ -285,19 +283,6 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
             </div>
           ))}
         </nav>
-        <div className={styles.footer}>
-          <Link href="/" className={styles.link} onClick={handleNavClick}>
-            Voir le site
-          </Link>
-          <button
-            type="button"
-            onClick={() => logout()}
-            className={styles.logout}
-            aria-label="Déconnexion"
-          >
-            Déconnexion
-          </button>
-        </div>
       </aside>
     </>
   );
