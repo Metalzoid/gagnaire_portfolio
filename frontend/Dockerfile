@@ -71,8 +71,11 @@ RUN apk update && apk upgrade --no-cache && apk add --no-cache curl
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Standalone (build dans frontend/) produit standalone/frontend/ + standalone/node_modules
+# On copie frontend à la racine /app pour que node server.js trouve server.js
+COPY --from=builder /app/frontend/.next/standalone/frontend ./
+COPY --from=builder /app/frontend/.next/standalone/node_modules ./node_modules
 # Standalone n'inclut pas public ni .next/static → copie manuelle obligatoire
-COPY --from=builder /app/frontend/.next/standalone ./
 COPY --from=builder /app/frontend/.next/static ./.next/static
 # Assets statiques (icon.svg, images/*.svg, etc.) servis par le serveur Next.js
 COPY --from=builder /app/frontend/public ./public
