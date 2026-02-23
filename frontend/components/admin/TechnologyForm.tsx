@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { FormField } from "./FormField";
+import { FileUpload } from "./FileUpload";
 import { Button } from "@/components/ui/button";
 import { IconPicker } from "./icon-picker";
-import { adminApi, getUploadUrl } from "@/services/admin-api";
+import { getUploadUrl } from "@/services/admin-api";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import styles from "./TechnologyForm.module.scss";
 
@@ -48,7 +49,6 @@ export function TechnologyForm({
   const [mode, setMode] = useState<"icon" | "image">(() =>
     defaultValues?.icon && isImagePath(defaultValues.icon) ? "image" : "icon",
   );
-  const [imageUploading, setImageUploading] = useState(false);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -79,26 +79,6 @@ export function TechnologyForm({
   const handleIconChange = (value: string | null) => {
     setIcon(value);
     setMode("icon");
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file?.type.startsWith("image/")) return;
-
-    setError("");
-    setImageUploading(true);
-    try {
-      const result = await adminApi.upload(file, "technology-icon");
-      if (result.path) {
-        setIcon(result.path);
-        setMode("image");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'upload");
-    } finally {
-      setImageUploading(false);
-      e.target.value = "";
-    }
   };
 
   const clearIcon = () => setIcon(null);
@@ -167,20 +147,18 @@ export function TechnologyForm({
                 </Button>
               </div>
             ) : (
-              <label
-                className={`${styles.uploadZone} ${imageUploading ? styles.uploadZoneLoading : ""}`}
-              >
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/svg+xml"
-                  onChange={handleImageUpload}
-                  disabled={imageUploading}
-                  aria-label="Uploader une image"
-                />
-                {imageUploading
-                  ? "Upload..."
-                  : "Choisir un fichier (SVG, PNG, WebP, JPEG)"}
-              </label>
+              <FileUpload
+                accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                category="technology-icon"
+                size="sm"
+                onComplete={(path) => {
+                  setIcon(path);
+                  setMode("image");
+                }}
+                onError={setError}
+                label="Choisir un fichier (SVG, PNG, WebP, JPEG)"
+                ariaLabel="Uploader une image"
+              />
             )}
           </div>
         )}

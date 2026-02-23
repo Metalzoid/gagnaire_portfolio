@@ -6,6 +6,7 @@ import {
   ImageWithFallback,
   PLACEHOLDER_PROJECT_IMAGE,
 } from "@/components/ui/image-with-fallback";
+import { FileUpload } from "./FileUpload";
 import type { ProjectImage } from "shared";
 import styles from "./ProjectImageManager.module.scss";
 
@@ -20,40 +21,9 @@ export function ProjectImageManager({
   images,
   onImagesChange,
 }: ProjectImageManagerProps) {
-  const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files?.length) return;
-
-    setUploadError("");
-    setUploading(true);
-
-    try {
-      const newImages: ProjectImage[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (!file.type.startsWith("image/")) continue;
-        const img = await adminApi.projects.uploadImage(projectId, file);
-        newImages.push(img);
-      }
-      if (newImages.length > 0) {
-        onImagesChange(
-          [...images, ...newImages].sort((a, b) => a.order - b.order),
-        );
-      }
-    } catch (err) {
-      setUploadError(
-        err instanceof Error ? err.message : "Erreur lors de l'upload",
-      );
-    } finally {
-      setUploading(false);
-      e.target.value = "";
-    }
-  };
 
   const handleDelete = async (image: ProjectImage) => {
     if (!confirm("Supprimer cette image ?")) return;
@@ -163,19 +133,19 @@ export function ProjectImageManager({
           </div>
         ))}
 
-        <label
-          className={`${styles.uploadZone} ${uploading ? styles.uploadZoneLoading : ""}`}
-        >
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/svg+xml"
-            multiple
-            onChange={handleFileSelect}
-            disabled={uploading}
-            aria-label="Ajouter des images"
-          />
-          <span>{uploading ? "Envoi en cours…" : "+ Ajouter des images"}</span>
-        </label>
+        <FileUpload
+          accept="image/jpeg,image/png,image/webp,image/svg+xml"
+          multiple
+          onUpload={async (file) => {
+            const img = await adminApi.projects.uploadImage(projectId, file);
+            onImagesChange([...images, img].sort((a, b) => a.order - b.order));
+            return img.path;
+          }}
+          onError={(msg) => setUploadError(msg)}
+          label="+ Ajouter des images"
+          size="lg"
+          ariaLabel="Ajouter des images"
+        />
       </div>
 
       {uploadError && (

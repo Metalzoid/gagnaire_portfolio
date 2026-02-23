@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DatePicker } from "./DatePicker";
 import { FormField } from "./FormField";
 import { TechnologySearch } from "./TechnologySearch";
 import { Button } from "@/components/ui/button";
@@ -93,12 +94,14 @@ export function ExperienceForm({
         value={location}
         onChange={(e) => setLocation((e.target as HTMLInputElement).value)}
       />
-      <FormField
+      <DatePicker
         label="Date de début"
         name="startDate"
         value={startDate}
-        onChange={(e) => setStartDate((e.target as HTMLInputElement).value)}
-        placeholder="YYYY-MM"
+        onChange={setStartDate}
+        mode="month"
+        placeholder="Sélectionner un mois"
+        ariaLabel="Date de début"
         required
       />
       <div className="form-field">
@@ -112,12 +115,15 @@ export function ExperienceForm({
         </label>
       </div>
       {!current && (
-        <FormField
+        <DatePicker
           label="Date de fin"
           name="endDate"
           value={endDate}
-          onChange={(e) => setEndDate((e.target as HTMLInputElement).value)}
-          placeholder="YYYY-MM"
+          onChange={setEndDate}
+          mode="month"
+          placeholder="Sélectionner un mois"
+          ariaLabel="Date de fin"
+          allowEmpty
         />
       )}
       <FormField

@@ -2,6 +2,7 @@
 
 import { BlobProvider } from "@react-pdf/renderer";
 import { CVDocument } from "./CVDocument";
+import { FileUpload } from "../FileUpload";
 import type { CVData } from "./types";
 
 interface CVPreviewProps {
@@ -9,8 +10,7 @@ interface CVPreviewProps {
   photoUrl: string;
   onGenerateAndSave?: (blob: Blob) => void;
   isSaving?: boolean;
-  onManualUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isUploading?: boolean;
+  onManualUpload?: (file: File) => Promise<string>;
   currentCvUrl?: string;
   /** Formulaire d'édition des textes (affiché au-dessus des actions) */
   editForm?: React.ReactNode;
@@ -24,7 +24,6 @@ export function CVPreview({
   onGenerateAndSave,
   isSaving = false,
   onManualUpload,
-  isUploading = false,
   currentCvUrl,
   editForm,
   styles: s,
@@ -72,16 +71,12 @@ export function CVPreview({
             {onManualUpload && (
               <div className={s.actionsSection}>
                 <h3 className={s.actionsTitle}>Upload manuel</h3>
-                <label className={s.uploadZone}>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={onManualUpload}
-                    disabled={isUploading}
-                    aria-label="Choisir un fichier PDF"
-                  />
-                  <span>{isUploading ? "Envoi…" : "Choisir un PDF"}</span>
-                </label>
+                <FileUpload
+                  accept="application/pdf"
+                  onUpload={onManualUpload}
+                  label="Choisir un PDF"
+                  ariaLabel="Choisir un fichier PDF"
+                />
               </div>
             )}
 

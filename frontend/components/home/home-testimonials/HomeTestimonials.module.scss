@@ -108,10 +108,13 @@
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--color-accent-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .avatarImg {
   object-fit: cover;
+  height: inherit;
+  width: 100%;
 }
 
 .name {
