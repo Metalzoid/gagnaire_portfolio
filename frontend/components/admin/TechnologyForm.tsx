@@ -3,26 +3,15 @@
 import { useState } from "react";
 import { FormField } from "./FormField";
 import { FileUpload } from "./FileUpload";
+import { FormError } from "./FormError";
 import { Button } from "@/components/ui/button";
 import { IconPicker } from "./icon-picker";
-import { getUploadUrl } from "@/services/admin-api";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
+import { getUploadUrl } from "@/utils/url";
+import { isImagePath } from "@/utils/image";
+import { TECHNOLOGY_CATEGORIES } from "@/data/technology-categories";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import styles from "./TechnologyForm.module.scss";
-
-const CATEGORIES = [
-  "Frontend",
-  "Backend",
-  "Fullstack",
-  "DevOps",
-  "Base de données",
-  "Outils",
-  "Mobile",
-  "Autre",
-];
-
-function isImagePath(v: string): boolean {
-  return v.startsWith("/uploads/") || v.startsWith("http");
-}
 
 export interface TechnologyFormData {
   name: string;
@@ -49,32 +38,9 @@ export function TechnologyForm({
   const [mode, setMode] = useState<"icon" | "image">(() =>
     defaultValues?.icon && isImagePath(defaultValues.icon) ? "image" : "icon",
   );
-  const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedName = name.trim();
-    if (!trimmedName) {
-      setError("Le nom est requis");
-      return;
-    }
-    setError("");
-    setSaving(true);
-    try {
-      await onSubmit({
-        name: trimmedName,
-        icon,
-        category: category || null,
-      });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Erreur lors de l'enregistrement",
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
+  const { error, setError, loading, handleSubmit } = useFormSubmit({
+    validate: () => (!name.trim() ? "Le nom est requis" : null),
+  });
 
   const handleIconChange = (value: string | null) => {
     setIcon(value);
@@ -86,7 +52,11 @@ export function TechnologyForm({
   const imageUrl = icon && isImagePath(icon) ? getUploadUrl(icon) : null;
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form onSubmit={handleSubmit(() => onSubmit({
+        name: name.trim(),
+        icon,
+        category: category || null,
+      }))} className={styles.form}>
       <FormField
         label="Nom"
         name="name"
@@ -172,7 +142,7 @@ export function TechnologyForm({
           className={styles.select}
         >
           <option value="">Aucune</option>
-          {CATEGORIES.map((c) => (
+          {TECHNOLOGY_CATEGORIES.map((c) => (
             <option key={c} value={c}>
               {c}
             </option>
@@ -180,11 +150,7 @@ export function TechnologyForm({
         </select>
       </div>
 
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
+      <FormError error={error} />
 
       <div className={styles.actions}>
         {onCancel && (
@@ -197,8 +163,8 @@ export function TechnologyForm({
             Annuler
           </Button>
         )}
-        <Button type="submit" disabled={saving} ariaLabel={submitLabel}>
-          {saving ? "Enregistrement..." : submitLabel}
+        <Button type="submit" disabled={loading} ariaLabel={submitLabel}>
+          {loading ? "Enregistrement..." : submitLabel}
         </Button>
       </div>
     </form>

@@ -1,9 +1,11 @@
 "use client";
 
+import { memo } from "react";
 import { FaBriefcase, FaGraduationCap } from "@/components/ui/icons";
 import { Tag } from "@/components/ui/tag";
 import { TechIcon } from "@/utils/technologyIcon";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { formatDateRange } from "@/utils/date";
 import type { Experience } from "shared";
 import styles from "./TimelineItem.module.scss";
 
@@ -12,39 +14,7 @@ interface TimelineItemProps {
   index: number;
 }
 
-function formatDateRange(
-  startDate: string,
-  endDate: string | null,
-  current: boolean,
-) {
-  const [year, month] = startDate.split("-");
-  const months: Record<string, string> = {
-    "01": "Jan",
-    "02": "Fév",
-    "03": "Mar",
-    "04": "Avr",
-    "05": "Mai",
-    "06": "Juin",
-    "07": "Juil",
-    "08": "Août",
-    "09": "Sep",
-    "10": "Oct",
-    "11": "Nov",
-    "12": "Déc",
-  };
-  const start = `${months[month] || month} ${year}`;
-  const end = current
-    ? "Présent"
-    : endDate
-      ? (() => {
-          const [ey, em] = endDate.split("-");
-          return `${months[em] || em} ${ey}`;
-        })()
-      : "";
-  return end ? `${start} - ${end}` : start;
-}
-
-export function TimelineItem({ item, index }: TimelineItemProps) {
+export const TimelineItem = memo(function TimelineItem({ item, index }: TimelineItemProps) {
   const [ref, isVisible] = useScrollAnimation<HTMLDivElement>({
     threshold: 0.1,
   });
@@ -95,4 +65,4 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       </div>
     </li>
   );
-}
+});

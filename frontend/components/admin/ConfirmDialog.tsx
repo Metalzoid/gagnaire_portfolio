@@ -27,12 +27,12 @@ export function ConfirmDialog({
   return (
     <Modal isOpen={isOpen} onClose={onCancel} title={title}>
       <p className="admin-confirm-message">{message}</p>
-      <div style={{ display: "flex", gap: "var(--spacing-md)", justifyContent: "flex-end", marginTop: "var(--spacing-lg)" }}>
+      <div className="admin-confirm-actions">
         <Button variant="outline" onClick={onCancel} ariaLabel={cancelLabel}>
           {cancelLabel}
         </Button>
         <Button
-          variant={variant === "danger" ? "primary" : "primary"}
+          variant={variant === "danger" ? "secondary" : "primary"}
           onClick={onConfirm}
           ariaLabel={confirmLabel}
         >

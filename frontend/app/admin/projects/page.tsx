@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -10,49 +10,40 @@ import { ProjectForm } from "@/components/admin/ProjectForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/contexts/ToastContext";
+import { useAdminCrud } from "@/hooks/useAdminCrud";
 import type { CreateProjectSchemaType, Project } from "shared";
 
 type ProjectWithId = Project & { id: string };
 
 export default function AdminProjectsPage() {
   const toast = useToast();
-  const [projects, setProjects] = useState<ProjectWithId[]>([]);
-  const [loading, setLoading] = useState(true);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<ProjectWithId | null>(null);
-  const [editingProject, setEditingProject] = useState<ProjectWithId | null>(
-    null,
-  );
-  const [isCreating, setIsCreating] = useState(false);
 
-  const load = () => {
-    setLoading(true);
-    adminApi.projects
-      .list()
-      .then((data) => setProjects(data as ProjectWithId[]))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
-  };
+  const fetchItems = useCallback(
+    () => adminApi.projects.list() as Promise<ProjectWithId[]>,
+    [],
+  );
+  const deleteItem = useCallback(
+    (id: string) => adminApi.projects.delete(id),
+    [],
+  );
+  const {
+    items,
+    loading,
+    deleteTarget,
+    setDeleteTarget,
+    editingItem: editingProject,
+    setEditingItem: setEditingProject,
+    isCreating,
+    setIsCreating,
+    load,
+    confirmDelete,
+    closeForm,
+  } = useAdminCrud<ProjectWithId>({ fetchItems, deleteItem });
 
   useEffect(() => {
-    load();
     adminApi.ai.getStatus().then((s) => setAiEnabled(s.enabled)).catch(() => {});
   }, []);
-
-  const handleDelete = async (item: ProjectWithId) => {
-    setDeleteTarget(item);
-  };
-
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      await adminApi.projects.delete(deleteTarget.id);
-      setProjects((prev) => prev.filter((p) => p.id !== deleteTarget.id));
-      toast.success("Projet supprimé");
-    } finally {
-      setDeleteTarget(null);
-    }
-  };
 
   const columns = [
     { key: "title", header: "Titre", render: (p: ProjectWithId) => p.title },
@@ -104,9 +95,9 @@ export default function AdminProjectsPage() {
       ) : (
         <DataTable<ProjectWithId>
           columns={columns}
-          data={projects}
+          data={items}
           onEdit={(p) => setEditingProject(p)}
-          onDelete={handleDelete}
+          onDelete={setDeleteTarget}
           emptyMessage="Aucun projet"
         />
       )}
@@ -119,15 +110,15 @@ export default function AdminProjectsPage() {
             : ""
         }
         confirmLabel="Supprimer"
-        onConfirm={confirmDelete}
+        onConfirm={async () => {
+          await confirmDelete();
+          toast.success("Projet supprimé");
+        }}
         onCancel={() => setDeleteTarget(null)}
       />
       <Modal
         isOpen={!!editingProject || isCreating}
-        onClose={() => {
-          setEditingProject(null);
-          setIsCreating(false);
-        }}
+        onClose={closeForm}
         title={editingProject ? "Modifier le projet" : "Nouveau projet"}
         size="lg"
       >

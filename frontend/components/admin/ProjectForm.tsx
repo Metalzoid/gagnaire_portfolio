@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { DatePicker } from "./DatePicker";
 import { FormField } from "./FormField";
+import { FormError } from "./FormError";
 import { TechnologySearch } from "./TechnologySearch";
 import { ProjectImageManager } from "./ProjectImageManager";
 import { Button } from "@/components/ui/button";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { CreateProjectSchemaType, ProjectImage } from "shared";
 
 interface ProjectFormProps {
@@ -49,20 +51,15 @@ export function ProjectForm({
   const [demo, setDemo] = useState(defaultValues?.demo ?? "");
   const [featured, setFeatured] = useState(defaultValues?.featured ?? false);
   const [date, setDate] = useState(defaultValues?.date ?? "");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { error, loading, handleSubmit } = useFormSubmit();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
     if (!defaultValues?.slug) setSlug(slugify(e.target.value));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await onSubmit({
+  return (
+    <form onSubmit={handleSubmit(() => onSubmit({
         slug: slug || slugify(title),
         title,
         description,
@@ -73,18 +70,7 @@ export function ProjectForm({
         demo: demo || null,
         featured,
         date,
-      });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Erreur lors de l'enregistrement",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
+      }))}>
       <FormField
         label="Titre"
         name="title"
@@ -183,16 +169,7 @@ export function ProjectForm({
           Mettre en avant (featured)
         </label>
       </div>
-      {error && (
-        <p
-          style={{
-            color: "var(--color-error)",
-            marginBottom: "var(--spacing-md)",
-          }}
-        >
-          {error}
-        </p>
-      )}
+      <FormError error={error} />
       <Button
         type="submit"
         loading={loading}

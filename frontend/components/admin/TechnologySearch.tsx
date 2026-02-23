@@ -1,21 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { adminApi } from "@/services/admin-api";
+import { TechnologySearchCreateForm } from "./TechnologySearchCreateForm";
 import type { Technology } from "shared";
 import styles from "./TechnologySearch.module.scss";
 
 const DEBOUNCE_MS = 300;
-const CATEGORIES = [
-  "Frontend",
-  "Backend",
-  "Fullstack",
-  "DevOps",
-  "Base de données",
-  "Outils",
-  "Mobile",
-  "Autre",
-];
 
 interface TechnologySearchProps {
   value: string[];
@@ -35,16 +26,10 @@ export function TechnologySearch({
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createName, setCreateName] = useState("");
-  const [createIcon, setCreateIcon] = useState("");
-  const [createCategory, setCreateCategory] = useState("");
-  const [createError, setCreateError] = useState("");
-  const [createLoading, setCreateLoading] = useState(false);
   const [selectedTechs, setSelectedTechs] = useState<Technology[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Charger les technologies sélectionnées par ID (pour l'affichage des tags)
   useEffect(() => {
     if (value.length === 0) {
       setSelectedTechs([]);
@@ -88,7 +73,7 @@ export function TechnologySearch({
     };
   }, [input, search]);
 
-  const handleSelect = (tech: Technology) => {
+  const handleSelect = useCallback((tech: Technology) => {
     if (!value.includes(tech.id)) {
       onChange([...value, tech.id]);
       setSelectedTechs((prev) =>
@@ -97,46 +82,14 @@ export function TechnologySearch({
     }
     setInput("");
     setShowDropdown(false);
-  };
+  }, [value, onChange]);
 
-  const handleRemove = (id: string) => {
+  const handleRemove = useCallback((id: string) => {
     onChange(value.filter((x) => x !== id));
     setSelectedTechs((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const handleCreate = async () => {
-    const name = createName.trim();
-    if (!name) {
-      setCreateError("Le nom est requis");
-      return;
-    }
-    setCreateError("");
-    setCreateLoading(true);
-    try {
-      const tech = await adminApi.technologies.create({
-        name,
-        icon: createIcon.trim() || null,
-        category: createCategory || null,
-      });
-      handleSelect(tech);
-      setShowCreateForm(false);
-      setCreateName("");
-      setCreateIcon("");
-      setCreateCategory("");
-    } catch (err) {
-      setCreateError(
-        err instanceof Error ? err.message : "Erreur lors de la création",
-      );
-    } finally {
-      setCreateLoading(false);
-    }
-  };
+  }, [value, onChange]);
 
   const openCreateForm = () => {
-    setCreateName(input.trim() || "");
-    setCreateIcon("");
-    setCreateCategory("");
-    setCreateError("");
     setShowCreateForm(true);
     setShowDropdown(false);
   };
@@ -154,7 +107,10 @@ export function TechnologySearch({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredResults = results.filter((r) => !value.includes(r.id));
+  const filteredResults = useMemo(
+    () => results.filter((r) => !value.includes(r.id)),
+    [results, value],
+  );
   const hasExactMatch = filteredResults.some(
     (r) => r.name.toLowerCase() === input.trim().toLowerCase(),
   );
@@ -225,53 +181,14 @@ export function TechnologySearch({
       )}
 
       {showCreateForm && (
-        <div className={styles.createForm}>
-          <h4 className={styles.createTitle}>Nouvelle technologie</h4>
-          <input
-            type="text"
-            value={createName}
-            onChange={(e) => setCreateName(e.target.value)}
-            placeholder="Nom"
-            className={styles.input}
-            required
-          />
-          <input
-            type="text"
-            value={createIcon}
-            onChange={(e) => setCreateIcon(e.target.value)}
-            placeholder="Icône (chemin ou slug)"
-            className={styles.input}
-          />
-          <select
-            value={createCategory}
-            onChange={(e) => setCreateCategory(e.target.value)}
-            className={styles.select}
-          >
-            <option value="">Catégorie (optionnel)</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-          {createError && (
-            <p className={styles.error} role="alert">
-              {createError}
-            </p>
-          )}
-          <div className={styles.createActions}>
-            <button type="button" onClick={() => setShowCreateForm(false)}>
-              Annuler
-            </button>
-            <button
-              type="button"
-              onClick={handleCreate}
-              disabled={createLoading || !createName.trim()}
-            >
-              {createLoading ? "Création..." : "Créer"}
-            </button>
-          </div>
-        </div>
+        <TechnologySearchCreateForm
+          initialName={input.trim()}
+          onCreated={(tech) => {
+            handleSelect(tech);
+            setShowCreateForm(false);
+          }}
+          onCancel={() => setShowCreateForm(false)}
+        />
       )}
 
       {selectedTechs.length > 0 && (

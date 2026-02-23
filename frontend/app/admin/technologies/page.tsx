@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -9,40 +9,34 @@ import { TechnologyForm } from "@/components/admin/TechnologyForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/contexts/ToastContext";
+import { useAdminCrud } from "@/hooks/useAdminCrud";
 import type { Technology } from "shared";
 
 type TechnologyWithId = Technology & { id: string };
 
 export default function AdminTechnologiesPage() {
   const toast = useToast();
-  const [technologies, setTechnologies] = useState<TechnologyWithId[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [deleteTarget, setDeleteTarget] = useState<TechnologyWithId | null>(
-    null,
+  const fetchItems = useCallback(
+    () => adminApi.technologies.list() as Promise<TechnologyWithId[]>,
+    [],
   );
-  const [editingTech, setEditingTech] = useState<TechnologyWithId | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
-
-  const load = useCallback(() => {
-    setLoading(true);
-    adminApi.technologies.list()
-      .then((data) => setTechnologies(data as TechnologyWithId[]))
-      .catch(() => setTechnologies([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => load(), [load]);
-
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      await adminApi.technologies.delete(deleteTarget.id);
-      setTechnologies((prev) => prev.filter((t) => t.id !== deleteTarget.id));
-      toast.success("Technologie supprimée");
-    } finally {
-      setDeleteTarget(null);
-    }
-  };
+  const deleteItem = useCallback(
+    (id: string) => adminApi.technologies.delete(id),
+    [],
+  );
+  const {
+    items,
+    loading,
+    deleteTarget,
+    setDeleteTarget,
+    editingItem: editingTech,
+    setEditingItem: setEditingTech,
+    isCreating,
+    setIsCreating,
+    load,
+    confirmDelete,
+    closeForm,
+  } = useAdminCrud<TechnologyWithId>({ fetchItems, deleteItem });
 
   const columns = [
     { key: "name", header: "Nom", render: (t: TechnologyWithId) => t.name },
@@ -78,9 +72,9 @@ export default function AdminTechnologiesPage() {
       ) : (
         <DataTable<TechnologyWithId>
           columns={columns}
-          data={technologies}
+          data={items}
           onEdit={(t) => setEditingTech(t)}
-          onDelete={(t) => setDeleteTarget(t)}
+          onDelete={setDeleteTarget}
           emptyMessage="Aucune technologie"
         />
       )}
@@ -93,15 +87,15 @@ export default function AdminTechnologiesPage() {
             : ""
         }
         confirmLabel="Supprimer"
-        onConfirm={confirmDelete}
+        onConfirm={async () => {
+          await confirmDelete();
+          toast.success("Technologie supprimée");
+        }}
         onCancel={() => setDeleteTarget(null)}
       />
       <Modal
         isOpen={!!editingTech || isCreating}
-        onClose={() => {
-          setEditingTech(null);
-          setIsCreating(false);
-        }}
+        onClose={closeForm}
         title={editingTech ? "Modifier la technologie" : "Nouvelle technologie"}
         size="md"
       >
@@ -128,10 +122,7 @@ export default function AdminTechnologiesPage() {
               }
               load();
             }}
-            onCancel={() => {
-              setEditingTech(null);
-              setIsCreating(false);
-            }}
+            onCancel={closeForm}
             submitLabel={editingTech ? "Enregistrer" : "Créer"}
           />
         )}

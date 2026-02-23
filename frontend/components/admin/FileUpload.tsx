@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { adminApi, getUploadUrl } from "@/services/admin-api";
+import { adminApi } from "@/services/admin-api";
+import { getUploadUrl } from "@/utils/url";
+import { isImageFile } from "@/utils/image";
 import {
   ImageWithFallback,
   PLACEHOLDER_AVATAR,
@@ -13,12 +15,6 @@ type UploadCategory =
   | "cv"
   | "testimonial-photo"
   | "technology-icon";
-
-const IMAGE_EXT_REGEX = /\.(jpg|jpeg|png|webp|svg)$/i;
-
-function isImagePath(pathOrUrl: string): boolean {
-  return IMAGE_EXT_REGEX.test(pathOrUrl);
-}
 
 interface FileUploadBaseProps {
   accept?: string;
@@ -113,7 +109,7 @@ export function FileUpload({
 
   const displayUrl = value ? getUploadUrl(value) : "";
   const canShowPreview =
-    showPreview && value && displayUrl && isImagePath(displayUrl);
+    showPreview && value && displayUrl && isImageFile(displayUrl);
 
   return (
     <div>

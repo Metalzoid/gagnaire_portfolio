@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -8,45 +8,34 @@ import { TestimonialForm } from "@/components/admin/TestimonialForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/contexts/ToastContext";
+import { useAdminCrud } from "@/hooks/useAdminCrud";
 import type { CreateTestimonialSchemaType, Testimonial } from "shared";
 
 type TestimonialWithId = Testimonial & { id: string };
 
 export default function AdminTestimonialsPage() {
   const toast = useToast();
-  const [items, setItems] = useState<TestimonialWithId[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [deleteTarget, setDeleteTarget] = useState<TestimonialWithId | null>(
-    null,
+  const fetchItems = useCallback(
+    () => adminApi.testimonials.list() as Promise<TestimonialWithId[]>,
+    [],
   );
-  const [editingItem, setEditingItem] = useState<TestimonialWithId | null>(
-    null,
+  const deleteItem = useCallback(
+    (id: string) => adminApi.testimonials.delete(id),
+    [],
   );
-  const [isCreating, setIsCreating] = useState(false);
-
-  const load = () => {
-    setLoading(true);
-    adminApi.testimonials
-      .list()
-      .then((data) => setItems(data as TestimonialWithId[]))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => load(), []);
-
-  const handleDelete = (item: TestimonialWithId) => setDeleteTarget(item);
-
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      await adminApi.testimonials.delete(deleteTarget.id);
-      setItems((prev) => prev.filter((x) => x.id !== deleteTarget.id));
-      toast.success("Témoignage supprimé");
-    } finally {
-      setDeleteTarget(null);
-    }
-  };
+  const {
+    items,
+    loading,
+    deleteTarget,
+    setDeleteTarget,
+    editingItem,
+    setEditingItem,
+    isCreating,
+    setIsCreating,
+    load,
+    confirmDelete,
+    closeForm,
+  } = useAdminCrud<TestimonialWithId>({ fetchItems, deleteItem });
 
   const columns = [
     { key: "name", header: "Nom", render: (t: TestimonialWithId) => t.name },
@@ -80,7 +69,7 @@ export default function AdminTestimonialsPage() {
           columns={columns}
           data={items}
           onEdit={(t) => setEditingItem(t)}
-          onDelete={handleDelete}
+          onDelete={setDeleteTarget}
           emptyMessage="Aucun témoignage"
         />
       )}
@@ -89,15 +78,15 @@ export default function AdminTestimonialsPage() {
         title="Supprimer le témoignage"
         message={deleteTarget ? `Supprimer "${deleteTarget.name}" ?` : ""}
         confirmLabel="Supprimer"
-        onConfirm={confirmDelete}
+        onConfirm={async () => {
+          await confirmDelete();
+          toast.success("Témoignage supprimé");
+        }}
         onCancel={() => setDeleteTarget(null)}
       />
       <Modal
         isOpen={!!editingItem || isCreating}
-        onClose={() => {
-          setEditingItem(null);
-          setIsCreating(false);
-        }}
+        onClose={closeForm}
         title={editingItem ? "Modifier le témoignage" : "Nouveau témoignage"}
         size="md"
       >

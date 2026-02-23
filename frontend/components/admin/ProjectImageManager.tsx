@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { adminApi, getUploadUrl } from "@/services/admin-api";
+import { adminApi } from "@/services/admin-api";
+import { getUploadUrl } from "@/utils/url";
 import {
   ImageWithFallback,
   PLACEHOLDER_PROJECT_IMAGE,

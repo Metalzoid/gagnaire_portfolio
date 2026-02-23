@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { SkillCategory as SkillCategoryType, Skill } from "shared";
 import { SkillItem } from "./SkillItem";
 import { TechIcon, canRenderTechIcon } from "@/utils/technologyIcon";
@@ -10,7 +11,7 @@ interface SkillCategoryProps {
   category: SkillCategoryType;
 }
 
-export function SkillCategory({ category }: SkillCategoryProps) {
+export const SkillCategory = memo(function SkillCategory({ category }: SkillCategoryProps) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.1 });
 
   return (
@@ -38,4 +39,4 @@ export function SkillCategory({ category }: SkillCategoryProps) {
       </div>
     </div>
   );
-}
+});

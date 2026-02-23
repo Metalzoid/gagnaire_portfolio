@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary";
 import "@/styles/admin/admin-globals.scss";
 import styles from "@/styles/admin/admin-layout.module.scss";
 
@@ -78,7 +79,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       <div className={styles.main}>
         <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
         <main id="main-content" className={styles.content}>
-          {children}
+          <AdminErrorBoundary>{children}</AdminErrorBoundary>
         </main>
       </div>
     </div>

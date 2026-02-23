@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import {
   ImageWithFallback,
@@ -15,7 +16,7 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({ project }: ProjectCardProps) {
   const imageSrc =
     (project.images?.[0]?.path && getBackendImageUrl(project.images[0].path)) ??
     PLACEHOLDER_PROJECT_IMAGE;
@@ -62,4 +63,4 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
     </Link>
   );
-}
+});

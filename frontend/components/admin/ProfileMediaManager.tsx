@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getUploadUrl } from "@/services/admin-api";
+import { getUploadUrl } from "@/utils/url";
 import {
   ImageWithFallback,
   PLACEHOLDER_AVATAR,
