@@ -181,17 +181,6 @@ export function DatePicker({
   const popoverRef = useRef<HTMLDivElement>(null);
   const hasError = Boolean(error);
 
-  // Synchroniser viewYear/viewMonth avec la valeur quand le popover s'ouvre
-  useEffect(() => {
-    if (open) {
-      const parsed = mode === "month" ? parseMonth(value) : parseDate(value);
-      if (parsed) {
-        setViewYear(parsed.year);
-        setViewMonth(parsed.month);
-      }
-    }
-  }, [open, value, mode]);
-
   const displayText = useCallback((): string => {
     if (!value) return placeholder;
     if (mode === "month") {
@@ -202,7 +191,16 @@ export function DatePicker({
     return p ? formatDateDisplay(p.year, p.month, p.day) : value;
   }, [value, mode, placeholder]);
 
-  const handleTriggerClick = () => setOpen((o) => !o);
+  const handleTriggerClick = () => {
+    if (!open) {
+      const parsed = mode === "month" ? parseMonth(value) : parseDate(value);
+      if (parsed) {
+        setViewYear(parsed.year);
+        setViewMonth(parsed.month);
+      }
+    }
+    setOpen((o) => !o);
+  };
 
   const handleSelectMonth = (monthIndex: number) => {
     onChange(toMonthString(viewYear, monthIndex));
