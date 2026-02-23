@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import type { IconEntry, IconSet } from "./iconRegistry";
 import { searchIcons, loadAllIcons, getIconByName } from "./iconRegistry";
 import styles from "./IconPicker.module.scss";
@@ -142,83 +143,86 @@ export function IconPicker({
         )}
       </div>
 
-      {open && (
-        <div
-          className={styles.modal}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Sélecteur d'icônes"
-          onClick={handleBackdropClick}
-        >
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
           <div
-            className={styles.dialog}
-            onClick={(e) => e.stopPropagation()}
-            role="document"
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Sélecteur d'icônes"
+            onClick={handleBackdropClick}
           >
-            <div className={styles.dialogHeader}>
-              <input
-                type="search"
-                className={styles.searchInput}
-                placeholder="Rechercher (ex: react, docker…)"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                autoFocus
-                autoComplete="off"
-              />
-            </div>
-            <div className={styles.setTabs}>
-              <button
-                type="button"
-                className={`${styles.setTab} ${!setFilter ? styles.active : ""}`}
-                onClick={() => setSetFilter(undefined)}
-              >
-                Tous
-              </button>
-              {(["si", "fa", "md", "fi"] as const).map((set) => (
+            <div
+              className={styles.dialog}
+              onClick={(e) => e.stopPropagation()}
+              role="document"
+            >
+              <div className={styles.dialogHeader}>
+                <input
+                  type="search"
+                  className={styles.searchInput}
+                  placeholder="Rechercher (ex: react, docker…)"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  autoFocus
+                  autoComplete="off"
+                />
+              </div>
+              <div className={styles.setTabs}>
                 <button
-                  key={set}
                   type="button"
-                  className={`${styles.setTab} ${setFilter === set ? styles.active : ""}`}
-                  onClick={() => setSetFilter(set)}
+                  className={`${styles.setTab} ${!setFilter ? styles.active : ""}`}
+                  onClick={() => setSetFilter(undefined)}
                 >
-                  {SET_LABELS[set]}
+                  Tous
                 </button>
-              ))}
+                {(["si", "fa", "md", "fi"] as const).map((set) => (
+                  <button
+                    key={set}
+                    type="button"
+                    className={`${styles.setTab} ${setFilter === set ? styles.active : ""}`}
+                    onClick={() => setSetFilter(set)}
+                  >
+                    {SET_LABELS[set]}
+                  </button>
+                ))}
+              </div>
+              <div className={styles.gridWrap}>
+                {loading ? (
+                  <p className={styles.loading}>Chargement…</p>
+                ) : icons.length === 0 ? (
+                  <p className={styles.empty}>
+                    {debouncedQuery
+                      ? `Aucune icône trouvée pour "${debouncedQuery}"`
+                      : "Aucune icône disponible"}
+                  </p>
+                ) : (
+                  <div className={styles.grid} role="list">
+                    {icons.map((entry) => {
+                      const IconComp = entry.component;
+                      return (
+                        <button
+                          key={`${entry.set}-${entry.name}`}
+                          type="button"
+                          className={styles.iconCell}
+                          onClick={() => handleSelect(entry)}
+                          title={entry.name}
+                          aria-label={`Sélectionner ${entry.name}`}
+                          role="listitem"
+                        >
+                          <IconComp size={24} aria-hidden />
+                          <span className={styles.iconName}>{entry.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className={styles.gridWrap}>
-              {loading ? (
-                <p className={styles.loading}>Chargement…</p>
-              ) : icons.length === 0 ? (
-                <p className={styles.empty}>
-                  {debouncedQuery
-                    ? `Aucune icône trouvée pour "${debouncedQuery}"`
-                    : "Aucune icône disponible"}
-                </p>
-              ) : (
-                <div className={styles.grid} role="list">
-                  {icons.map((entry) => {
-                    const IconComp = entry.component;
-                    return (
-                      <button
-                        key={`${entry.set}-${entry.name}`}
-                        type="button"
-                        className={styles.iconCell}
-                        onClick={() => handleSelect(entry)}
-                        title={entry.name}
-                        aria-label={`Sélectionner ${entry.name}`}
-                        role="listitem"
-                      >
-                        <IconComp size={24} aria-hidden />
-                        <span className={styles.iconName}>{entry.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

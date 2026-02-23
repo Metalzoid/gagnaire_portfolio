@@ -6,7 +6,7 @@
 
 ARG NODE_ENV=production
 
-FROM node:22-alpine AS base
+FROM node:lts-alpine3.22 AS base
 
 RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && npm install -g npm@11.10.1
 
@@ -64,16 +64,21 @@ RUN npm run build
 # =============================================================================
 # Stage PRODUCTION (standalone)
 # =============================================================================
-FROM node:22-alpine AS production
+FROM base AS production
 
 RUN apk update && apk upgrade --no-cache && apk add --no-cache curl
 
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Standalone n'inclut pas public ni .next/static → copie manuelle obligatoire
 COPY --from=builder /app/frontend/.next/standalone ./
 COPY --from=builder /app/frontend/.next/static ./.next/static
+# Assets statiques (icon.svg, images/*.svg, etc.) servis par le serveur Next.js
 COPY --from=builder /app/frontend/public ./public
+
+# Vérifier que les SVG par défaut sont bien présents dans l'image
+RUN test -f ./public/icon.svg && test -f ./public/images/profile/photo.svg && test -f ./public/images/placeholder-project.svg || (echo "ERREUR: assets statiques (SVG) manquants dans public/" && exit 1)
 
 EXPOSE 3000
 CMD ["node", "server.js"]

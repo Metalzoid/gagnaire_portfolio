@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { FormField } from "./FormField";
-import { FileField } from "./FileField";
+import { FileUpload } from "./FileUpload";
 import { Button } from "@/components/ui/button";
 import type { CreateTestimonialSchemaType } from "shared";
+import formFieldStyles from "./FormField.module.scss";
+import styles from "./TestimonialForm.module.scss";
 
 interface TestimonialFormProps {
   defaultValues?: Partial<CreateTestimonialSchemaType> & { id?: string };
@@ -69,17 +71,22 @@ export function TestimonialForm({
         onChange={(e) => setQuote((e.target as HTMLTextAreaElement).value)}
         required
       />
-      <FileField
-        label="Photo"
-        name="photo"
-        accept="image/jpeg,image/png,image/webp,image/svg+xml"
-        category="testimonial-photo"
-        value={photo}
-        onUpload={setPhoto}
-        preview
-        required
-      />
-      {error && <p style={{ color: "var(--color-error)" }}>{error}</p>}
+      <div className={styles.photoField}>
+        <label className={formFieldStyles.label}>
+          Photo <span className={formFieldStyles.required}>*</span>
+        </label>
+        <FileUpload
+          accept="image/jpeg,image/png,image/webp,image/svg+xml"
+          category="testimonial-photo"
+          value={photo}
+          showPreview
+          previewShape="circle"
+          onComplete={setPhoto}
+          label="Choisir un fichier"
+          ariaLabel="Changer la photo"
+        />
+      </div>
+      {error && <p className={styles.error}>{error}</p>}
       <Button
         type="submit"
         loading={loading}

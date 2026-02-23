@@ -28,7 +28,6 @@ export default function AdminCVPage() {
   const [cvData, setCvData] = useState<CVData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -89,29 +88,17 @@ export default function AdminCVPage() {
     }
   };
 
-  const handleManualUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file || file.type !== "application/pdf") return;
-
-    setUploading(true);
-    try {
-      const { path } = await adminApi.upload(file, "cv");
-      const profile = cvData?.profile;
-      if (profile) {
-        await adminApi.profile.update({ cv: path });
-        setCvData((prev) =>
-          prev ? { ...prev, profile: { ...prev.profile, cv: path } } : null,
-        );
-      }
-      toast.success("CV uploadé et enregistré");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erreur lors de l'upload");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
+  const handleManualUpload = async (file: File): Promise<string> => {
+    const { path } = await adminApi.upload(file, "cv");
+    const profile = cvData?.profile;
+    if (profile) {
+      await adminApi.profile.update({ cv: path });
+      setCvData((prev) =>
+        prev ? { ...prev, profile: { ...prev.profile, cv: path } } : null,
+      );
     }
+    toast.success("CV uploadé et enregistré");
+    return path;
   };
 
   if (loading) return <p>Chargement des données…</p>;
@@ -127,7 +114,6 @@ export default function AdminCVPage() {
       onGenerateAndSave={handleGenerateAndSave}
       isSaving={saving}
       onManualUpload={handleManualUpload}
-      isUploading={uploading}
       currentCvUrl={currentCvUrl || undefined}
       editForm={
         <CVEditForm

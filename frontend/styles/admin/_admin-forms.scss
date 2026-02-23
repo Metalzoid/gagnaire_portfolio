@@ -51,27 +51,6 @@
   }
 }
 
-.admin-file-field {
-  &__hint {
-    display: block;
-    margin-top: var(--spacing-xs);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-  }
-
-  &__preview {
-    margin-top: var(--spacing-sm);
-
-    img {
-      max-width: 120px;
-      max-height: 120px;
-      object-fit: cover;
-      border-radius: var(--border-radius);
-      border: 1px solid var(--color-border);
-    }
-  }
-}
-
 .admin-skills-accordion {
   &__category {
     margin-bottom: var(--spacing-md);

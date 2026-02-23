@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DatePicker } from "./DatePicker";
 import { FormField } from "./FormField";
 import { TechnologySearch } from "./TechnologySearch";
 import { ProjectImageManager } from "./ProjectImageManager";
@@ -162,12 +163,14 @@ export function ProjectForm({
         value={demo}
         onChange={(e) => setDemo((e.target as HTMLInputElement).value)}
       />
-      <FormField
+      <DatePicker
         label="Date"
         name="date"
         value={date}
-        onChange={(e) => setDate((e.target as HTMLInputElement).value)}
-        placeholder="YYYY-MM"
+        onChange={setDate}
+        mode="month"
+        placeholder="Sélectionner un mois"
+        ariaLabel="Date du projet"
         required
       />
       <div className="form-field">

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { adminApi, getUploadUrl } from "@/services/admin-api";
+import { getUploadUrl } from "@/services/admin-api";
 import {
   ImageWithFallback,
   PLACEHOLDER_AVATAR,
 } from "@/components/ui/image-with-fallback";
+import { FileUpload } from "./FileUpload";
 import styles from "./ProfileMediaManager.module.scss";
 
 const DEFAULT_PHOTO = "/images/profile/photo.svg";
@@ -23,43 +24,7 @@ export function ProfileMediaManager({
   onPhotoChange,
   onCvChange,
 }: ProfileMediaManagerProps) {
-  const [photoUploading, setPhotoUploading] = useState(false);
-  const [cvUploading, setCvUploading] = useState(false);
   const [error, setError] = useState("");
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file?.type.startsWith("image/")) return;
-
-    setError("");
-    setPhotoUploading(true);
-    try {
-      const result = await adminApi.upload(file, "profile-photo");
-      if (result.path) onPhotoChange(result.path);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'upload");
-    } finally {
-      setPhotoUploading(false);
-      e.target.value = "";
-    }
-  };
-
-  const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || file.type !== "application/pdf") return;
-
-    setError("");
-    setCvUploading(true);
-    try {
-      const result = await adminApi.upload(file, "cv");
-      if (result.path) onCvChange(result.path);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'upload");
-    } finally {
-      setCvUploading(false);
-      e.target.value = "";
-    }
-  };
 
   const handleResetPhoto = () => {
     onPhotoChange(DEFAULT_PHOTO);
@@ -88,18 +53,14 @@ export function ProfileMediaManager({
             />
           </div>
           <div className={styles.actions}>
-            <label
-              className={`${styles.uploadZone} ${photoUploading ? styles.uploadZoneLoading : ""}`}
-            >
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/svg+xml"
-                onChange={handlePhotoUpload}
-                disabled={photoUploading}
-                aria-label="Changer la photo"
-              />
-              <span>{photoUploading ? "Envoi…" : "Choisir une image"}</span>
-            </label>
+            <FileUpload
+              accept="image/jpeg,image/png,image/webp,image/svg+xml"
+              category="profile-photo"
+              onComplete={onPhotoChange}
+              onError={setError}
+              label="Choisir une image"
+              ariaLabel="Changer la photo"
+            />
             {photo && photo.startsWith("/uploads/") && (
               <button
                 type="button"
@@ -131,18 +92,14 @@ export function ProfileMediaManager({
             )}
           </div>
           <div className={styles.actions}>
-            <label
-              className={`${styles.uploadZone} ${cvUploading ? styles.uploadZoneLoading : ""}`}
-            >
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handleCvUpload}
-                disabled={cvUploading}
-                aria-label="Changer le CV"
-              />
-              <span>{cvUploading ? "Envoi…" : "Choisir un PDF"}</span>
-            </label>
+            <FileUpload
+              accept="application/pdf"
+              category="cv"
+              onComplete={onCvChange}
+              onError={setError}
+              label="Choisir un PDF"
+              ariaLabel="Changer le CV"
+            />
           </div>
         </div>
       </div>

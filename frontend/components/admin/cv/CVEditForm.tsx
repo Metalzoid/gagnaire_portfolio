@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DatePicker } from "@/components/admin/DatePicker";
 import { FormField } from "@/components/admin/FormField";
 import { OrderableList } from "@/components/admin/OrderableList";
 import { Button } from "@/components/ui/button";
@@ -293,36 +294,35 @@ export function CVEditForm({ data, onChange, className }: CVEditFormProps) {
                             }
                           />
                           <div className={styles.dateRow}>
-                            <FormField
+                            <DatePicker
                               label="Début"
                               name={`exp-${idx}-start`}
                               value={exp.startDate}
-                              onChange={(e) =>
+                              onChange={(v) =>
                                 updateExperienceItem(idx, {
-                                  data: {
-                                    ...exp,
-                                    startDate: (e.target as HTMLInputElement)
-                                      .value,
-                                  },
+                                  data: { ...exp, startDate: v },
                                 })
                               }
-                              placeholder="YYYY-MM"
+                              mode="month"
+                              placeholder="Sélectionner un mois"
+                              ariaLabel="Date de début"
                             />
-                            <FormField
+                            <DatePicker
                               label="Fin"
                               name={`exp-${idx}-end`}
                               value={exp.endDate ?? ""}
-                              onChange={(e) =>
+                              onChange={(v) =>
                                 updateExperienceItem(idx, {
                                   data: {
                                     ...exp,
-                                    endDate:
-                                      (e.target as HTMLInputElement).value ||
-                                      null,
+                                    endDate: v || null,
                                   },
                                 })
                               }
-                              placeholder="YYYY-MM ou vide"
+                              mode="month"
+                              placeholder="Sélectionner ou vide"
+                              ariaLabel="Date de fin"
+                              allowEmpty
                             />
                           </div>
                         </div>
