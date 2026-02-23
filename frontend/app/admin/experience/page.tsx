@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { adminApi } from "@/services/admin-api";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -10,53 +10,45 @@ import { ExperienceForm } from "@/components/admin/ExperienceForm";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/contexts/ToastContext";
+import { useAdminCrud } from "@/hooks/useAdminCrud";
 import type { CreateExperienceSchemaType, Experience } from "shared";
 
 type ExperienceWithId = Experience & { id: string };
 
 export default function AdminExperiencePage() {
   const toast = useToast();
-  const [items, setItems] = useState<ExperienceWithId[]>([]);
-  const [loading, setLoading] = useState(true);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<ExperienceWithId | null>(
-    null,
-  );
-  const [editingItem, setEditingItem] = useState<ExperienceWithId | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
 
-  const load = () => {
-    setLoading(true);
-    adminApi.experience
-      .list()
-      .then((data) =>
-        setItems(
-          (data as ExperienceWithId[]).sort((a, b) =>
-            b.startDate.localeCompare(a.startDate),
-          ),
-        ),
-      )
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  };
+  const fetchItems = useCallback(
+    () => adminApi.experience.list() as Promise<ExperienceWithId[]>,
+    [],
+  );
+  const deleteItem = useCallback(
+    (id: string) => adminApi.experience.delete(id),
+    [],
+  );
+  const transform = useCallback(
+    (data: ExperienceWithId[]) =>
+      [...data].sort((a, b) => b.startDate.localeCompare(a.startDate)),
+    [],
+  );
+  const {
+    items,
+    loading,
+    deleteTarget,
+    setDeleteTarget,
+    editingItem,
+    setEditingItem,
+    isCreating,
+    setIsCreating,
+    load,
+    confirmDelete,
+    closeForm,
+  } = useAdminCrud<ExperienceWithId>({ fetchItems, deleteItem, transform });
 
   useEffect(() => {
-    load();
     adminApi.ai.getStatus().then((s) => setAiEnabled(s.enabled)).catch(() => {});
   }, []);
-
-  const handleDelete = (item: ExperienceWithId) => setDeleteTarget(item);
-
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      await adminApi.experience.delete(deleteTarget.id);
-      setItems((prev) => prev.filter((x) => x.id !== deleteTarget.id));
-      toast.success("Expérience supprimée");
-    } finally {
-      setDeleteTarget(null);
-    }
-  };
 
   const columns = [
     { key: "title", header: "Titre", render: (e: ExperienceWithId) => e.title },
@@ -135,7 +127,7 @@ export default function AdminExperiencePage() {
           columns={columns}
           data={items}
           onEdit={(e) => setEditingItem(e)}
-          onDelete={handleDelete}
+          onDelete={setDeleteTarget}
           emptyMessage="Aucune expérience"
         />
       )}
@@ -144,15 +136,15 @@ export default function AdminExperiencePage() {
         title="Supprimer l'expérience"
         message={deleteTarget ? `Supprimer "${deleteTarget.title}" ?` : ""}
         confirmLabel="Supprimer"
-        onConfirm={confirmDelete}
+        onConfirm={async () => {
+          await confirmDelete();
+          toast.success("Expérience supprimée");
+        }}
         onCancel={() => setDeleteTarget(null)}
       />
       <Modal
         isOpen={!!editingItem || isCreating}
-        onClose={() => {
-          setEditingItem(null);
-          setIsCreating(false);
-        }}
+        onClose={closeForm}
         title={editingItem ? "Modifier l'expérience" : "Nouvelle expérience"}
         size="lg"
       >

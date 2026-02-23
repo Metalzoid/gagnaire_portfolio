@@ -17,6 +17,33 @@
   color: var(--color-error);
 }
 
+// ==========================================================================
+// Error boundary
+// ==========================================================================
+
+.admin-error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  min-height: 200px;
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-error);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  &__message {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+    max-width: 400px;
+  }
+}
+
 .admin-skill-form {
   margin: var(--spacing-md) 0;
 
@@ -75,11 +102,26 @@
         var(--color-bg-primary)
       );
     }
+
+    &-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
   }
 
   &__title {
     font-weight: 600;
     font-size: var(--font-size-md);
+  }
+
+  &__empty {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  &__skill-name {
+    flex: 1;
   }
 
   &__body {

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import type { IconEntry, IconSet } from "./iconRegistry";
 import { searchIcons, loadAllIcons, getIconByName } from "./iconRegistry";
+import { useDebounce } from "@/hooks/useDebounce";
 import styles from "./IconPicker.module.scss";
 
 const SET_LABELS: Record<IconSet, string> = {
@@ -14,17 +15,6 @@ const SET_LABELS: Record<IconSet, string> = {
 };
 
 const DEBOUNCE_MS = 300;
-
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const id = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(id);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 
 interface IconPickerProps {
   label?: string;

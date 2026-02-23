@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { adminApi, getUploadUrl } from "@/services/admin-api";
+import { adminApi } from "@/services/admin-api";
+import { getUploadUrl } from "@/utils/url";
 import { useToast } from "@/contexts/ToastContext";
 import { CVEditForm } from "@/components/admin/cv";
 import type { CVData, CVItem } from "@/components/admin/cv";

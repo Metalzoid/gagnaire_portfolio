@@ -42,6 +42,32 @@ export class AdminApiError extends Error {
   }
 }
 
+function getHttpErrorMessage(status: number): string {
+  switch (status) {
+    case 400:
+      return "Données invalides";
+    case 403:
+      return "Accès refusé";
+    case 404:
+      return "Élément introuvable";
+    case 409:
+      return "Conflit — cet élément existe déjà";
+    case 413:
+      return "Fichier trop volumineux";
+    case 422:
+      return "Données invalides";
+    case 429:
+      return "Trop de requêtes, veuillez patienter";
+    case 500:
+      return "Erreur serveur, veuillez réessayer";
+    case 502:
+    case 503:
+      return "Service temporairement indisponible";
+    default:
+      return `Erreur ${status}`;
+  }
+}
+
 export type TokenProvider = () => string | null;
 
 let tokenProvider: TokenProvider = () => null;
@@ -117,7 +143,8 @@ async function fetchWithAuth<T>(
     const errBody = (await res.json().catch(() => ({}))) as {
       error?: { message?: string };
     };
-    throw new AdminApiError(res.status, endpoint, errBody.error?.message);
+    const message = errBody.error?.message || getHttpErrorMessage(res.status);
+    throw new AdminApiError(res.status, endpoint, message);
   }
 
   const json = (await res.json()) as { success: boolean; data: T };
@@ -158,7 +185,8 @@ async function uploadWithAuth<T = { path: string }>(
         const errBody = (await retry.json().catch(() => ({}))) as {
           error?: { message?: string };
         };
-        throw new AdminApiError(retry.status, endpoint, errBody.error?.message);
+        const message = errBody.error?.message || getHttpErrorMessage(retry.status);
+        throw new AdminApiError(retry.status, endpoint, message);
       }
       const json = (await retry.json()) as { success: boolean; data: T };
       return json.data;
@@ -171,7 +199,8 @@ async function uploadWithAuth<T = { path: string }>(
     const errBody = (await res.json().catch(() => ({}))) as {
       error?: { message?: string };
     };
-    throw new AdminApiError(res.status, endpoint, errBody.error?.message);
+    const message = errBody.error?.message || getHttpErrorMessage(res.status);
+    throw new AdminApiError(res.status, endpoint, message);
   }
 
   const json = (await res.json()) as { success: boolean; data: T };
@@ -206,19 +235,6 @@ async function deleteAdmin(endpoint: string): Promise<void> {
 // --------------------------------------------------------------------------
 // Admin API
 // --------------------------------------------------------------------------
-/**
- * Construit l'URL d'un fichier pour affichage : /uploads/* → backend (proxy direct), /images/* → assets frontend.
- * Ne pas préfixer /api pour /uploads car le backend sert à /uploads, pas /api/uploads.
- */
-export function getUploadUrl(filePath: string): string {
-  if (!filePath) return "";
-  if (filePath.startsWith("http") || filePath.startsWith("data:"))
-    return filePath;
-  if (filePath.startsWith("/images/")) return filePath;
-  if (filePath.startsWith("/uploads/")) return filePath;
-  return `${API_BASE}${filePath}`;
-}
-
 export const adminApi = {
   upload: async (file: File, category: string): Promise<{ path: string }> => {
     const formData = new FormData();

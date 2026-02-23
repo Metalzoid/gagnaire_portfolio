@@ -90,31 +90,11 @@ export default function AdminAiPage() {
   return (
     <div>
       <h1>Configuration IA</h1>
-      <div
-        style={{
-          display: "grid",
-          gap: "var(--spacing-lg)",
-          marginTop: "var(--spacing-lg)",
-        }}
-      >
+      <div className="admin-ai-grid">
         {prompts.map((p) => (
-          <div
-            key={p.id}
-            style={{
-              border: "1px solid var(--color-border, #e2e8f0)",
-              borderRadius: "var(--radius-md, 8px)",
-              padding: "var(--spacing-lg)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "var(--spacing-sm)",
-              }}
-            >
-              <h3 style={{ margin: 0 }}>
+          <div key={p.id} className="admin-ai-card">
+            <div className="admin-ai-card__header">
+              <h3 className="admin-ai-card__title">
                 {TARGET_LABELS[p.target] ?? p.target}
               </h3>
               <Button
@@ -126,26 +106,10 @@ export default function AdminAiPage() {
                 Modifier
               </Button>
             </div>
-            <p
-              style={{
-                color: "var(--color-text-muted, #64748b)",
-                fontSize: "0.875rem",
-                whiteSpace: "pre-wrap",
-                maxHeight: "4.5em",
-                overflow: "hidden",
-              }}
-            >
+            <p className="admin-ai-card__preview">
               {p.prompt}
             </p>
-            <div
-              style={{
-                display: "flex",
-                gap: "var(--spacing-lg)",
-                marginTop: "var(--spacing-sm)",
-                fontSize: "0.875rem",
-                color: "var(--color-text-muted, #64748b)",
-              }}
-            >
+            <div className="admin-ai-card__meta">
               <span>Température : {p.temperature}</span>
               <span>Modèle : {p.model}</span>
             </div>
@@ -163,9 +127,9 @@ export default function AdminAiPage() {
         size="lg"
       >
         {editing && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-md)" }}>
+          <div className="admin-ai-form">
             <div>
-              <label htmlFor="ai-prompt" style={{ display: "block", marginBottom: "var(--spacing-xs)", fontWeight: 500 }}>
+              <label htmlFor="ai-prompt" className="admin-ai-form__label">
                 Prompt
               </label>
               <textarea
@@ -173,22 +137,12 @@ export default function AdminAiPage() {
                 value={formPrompt}
                 onChange={(e) => setFormPrompt(e.target.value)}
                 rows={8}
-                style={{
-                  width: "100%",
-                  padding: "var(--spacing-sm)",
-                  borderRadius: "var(--border-radius)",
-                  border: "1px solid var(--color-border)",
-                  fontFamily: "inherit",
-                  fontSize: "var(--font-size-md)",
-                  resize: "vertical",
-                  color: "var(--color-text-primary)",
-                  backgroundColor: "var(--color-bg-primary)",
-                }}
+                className="admin-ai-form__textarea"
               />
             </div>
-            <div style={{ display: "flex", gap: "var(--spacing-lg)", alignItems: "center" }}>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="ai-temperature" style={{ display: "block", marginBottom: "var(--spacing-xs)", fontWeight: 500 }}>
+            <div className="admin-ai-form__row">
+              <div className="admin-ai-form__field">
+                <label htmlFor="ai-temperature" className="admin-ai-form__label">
                   Température ({formTemperature})
                 </label>
                 <input
@@ -199,27 +153,18 @@ export default function AdminAiPage() {
                   step={0.1}
                   value={formTemperature}
                   onChange={(e) => setFormTemperature(parseFloat(e.target.value))}
-                  style={{ width: "100%" }}
+                  className="admin-ai-form__slider"
                 />
               </div>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="ai-model" style={{ display: "block", marginBottom: "var(--spacing-xs)", fontWeight: 500 }}>
+              <div className="admin-ai-form__field">
+                <label htmlFor="ai-model" className="admin-ai-form__label">
                   Modèle
                 </label>
                 <select
                   id="ai-model"
                   value={formModel}
                   onChange={(e) => setFormModel(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "var(--spacing-sm)",
-                    borderRadius: "var(--border-radius)",
-                    border: "1px solid var(--color-border)",
-                    fontFamily: "inherit",
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--color-text-primary)",
-                    backgroundColor: "var(--color-bg-primary)",
-                  }}
+                  className="admin-ai-form__select"
                 >
                   <option value="gpt-4o">gpt-4o</option>
                   <option value="gpt-4o-mini">gpt-4o-mini</option>
@@ -228,7 +173,7 @@ export default function AdminAiPage() {
                 </select>
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--spacing-md)", marginTop: "var(--spacing-md)" }}>
+            <div className="admin-ai-form__actions">
               <Button variant="outline" onClick={() => setEditing(null)} ariaLabel="Annuler">
                 Annuler
               </Button>

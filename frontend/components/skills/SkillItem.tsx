@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Skill } from "shared";
 import styles from "./SkillItem.module.scss";
 
@@ -6,7 +7,7 @@ interface SkillItemProps {
   icon?: React.ReactNode;
 }
 
-export function SkillItem({ skill, icon }: SkillItemProps) {
+export const SkillItem = memo(function SkillItem({ skill, icon }: SkillItemProps) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -26,4 +27,4 @@ export function SkillItem({ skill, icon }: SkillItemProps) {
       </div>
     </div>
   );
-}
+});

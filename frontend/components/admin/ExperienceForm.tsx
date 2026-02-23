@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { DatePicker } from "./DatePicker";
 import { FormField } from "./FormField";
+import { FormError } from "./FormError";
 import { TechnologySearch } from "./TechnologySearch";
 import { Button } from "@/components/ui/button";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { CreateExperienceSchemaType } from "shared";
 
 interface ExperienceFormProps {
@@ -33,15 +35,10 @@ export function ExperienceForm({
   const [technologyIds, setTechnologyIds] = useState<string[]>(
     defaultValues?.technologyIds ?? [],
   );
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { error, loading, handleSubmit } = useFormSubmit();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await onSubmit({
+  return (
+    <form onSubmit={handleSubmit(() => onSubmit({
         type,
         title,
         company: company || undefined,
@@ -51,16 +48,7 @@ export function ExperienceForm({
         current,
         description,
         technologyIds,
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
+      }))}>
       <FormField
         label="Type"
         name="type"
@@ -142,7 +130,7 @@ export function ExperienceForm({
         label="Technologies"
         placeholder="Rechercher ou ajouter une technologie"
       />
-      {error && <p style={{ color: "var(--color-error)" }}>{error}</p>}
+      <FormError error={error} />
       <Button
         type="submit"
         loading={loading}

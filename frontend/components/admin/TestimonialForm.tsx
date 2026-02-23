@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { FormField } from "./FormField";
 import { FileUpload } from "./FileUpload";
+import { FormError } from "./FormError";
 import { Button } from "@/components/ui/button";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { CreateTestimonialSchemaType } from "shared";
 import formFieldStyles from "./FormField.module.scss";
 import styles from "./TestimonialForm.module.scss";
@@ -24,24 +26,10 @@ export function TestimonialForm({
   const [company, setCompany] = useState(defaultValues?.company ?? "");
   const [quote, setQuote] = useState(defaultValues?.quote ?? "");
   const [photo, setPhoto] = useState(defaultValues?.photo ?? "");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await onSubmit({ name, role, company, quote, photo });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { error, loading, handleSubmit } = useFormSubmit();
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(() => onSubmit({ name, role, company, quote, photo }))}>
       <FormField
         label="Nom"
         name="name"
@@ -86,7 +74,7 @@ export function TestimonialForm({
           ariaLabel="Changer la photo"
         />
       </div>
-      {error && <p className={styles.error}>{error}</p>}
+      <FormError error={error} />
       <Button
         type="submit"
         loading={loading}

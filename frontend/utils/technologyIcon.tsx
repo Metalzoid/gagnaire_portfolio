@@ -2,6 +2,7 @@
 
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { getBackendImageUrl } from "@/services/api";
+import { isImagePath } from "@/utils/image";
 import {
   FaReact,
   FaNode,
@@ -59,15 +60,6 @@ const ICON_MAP: Record<string, IconType> = {
   SiVercel,
   SiGraphql,
 };
-
-function isImagePath(icon: string): boolean {
-  return (
-    icon.startsWith("/uploads/") ||
-    icon.startsWith("/images/") ||
-    icon.startsWith("http://") ||
-    icon.startsWith("https://")
-  );
-}
 
 /** Indique si une icône sera affichée (présente dans le map ou chemin image) */
 export function canRenderTechIcon(icon?: string | null): boolean {

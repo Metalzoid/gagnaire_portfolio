@@ -72,3 +72,113 @@
     animation: none;
   }
 }
+
+// ==========================================================================
+// AI prompts page
+// ==========================================================================
+
+.admin-ai-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.admin-ai-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__preview {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+    max-height: 4.5em;
+    overflow: hidden;
+  }
+
+  &__meta {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+}
+
+.admin-ai-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+
+  &__label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    resize: vertical;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+  }
+
+  &__row {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+  }
+
+  &__field {
+    flex: 1;
+  }
+
+  &__slider {
+    width: 100%;
+  }
+
+  &__select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+  }
+}
+
+// ==========================================================================
+// Confirm dialog
+// ==========================================================================
+
+.admin-confirm-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+}

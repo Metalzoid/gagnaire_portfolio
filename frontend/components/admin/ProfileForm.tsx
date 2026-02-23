@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { FormField } from "./FormField";
+import { FormError } from "./FormError";
+import { SocialLinksEditor } from "./SocialLinksEditor";
 import { ProfileMediaManager } from "./ProfileMediaManager";
-import { OrderableList } from "./OrderableList";
 import { Button } from "@/components/ui/button";
+import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { UpdateProfileSchemaType, Profile, SocialLink } from "shared";
 
 const defaultPitch = { who: "", what: "", why: "", method: "" };
@@ -28,18 +30,10 @@ export function ProfileForm({ defaultValues, onSubmit, onSocialReorder }: Profil
   const [social, setSocial] = useState<SocialLink[]>(
     defaultValues?.social ?? defaultSocial,
   );
-  const [socialIds, setSocialIds] = useState<string[]>(() =>
-    (defaultValues?.social ?? defaultSocial).map(() => crypto.randomUUID()),
-  );
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { error, loading, handleSubmit } = useFormSubmit();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      await onSubmit({
+  return (
+    <form onSubmit={handleSubmit(() => onSubmit({
         firstName,
         lastName,
         role,
@@ -49,16 +43,7 @@ export function ProfileForm({ defaultValues, onSubmit, onSocialReorder }: Profil
         cv,
         pitch,
         social,
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="admin-profile-form">
+      }))} className="admin-profile-form">
       <section className="admin-profile-form__section">
         <h3 className="admin-profile-form__title">Identité</h3>
         <div className="admin-profile-form__row">
@@ -140,82 +125,18 @@ export function ProfileForm({ defaultValues, onSubmit, onSocialReorder }: Profil
           }
         />
       </section>
-      <section className="admin-profile-form__section admin-profile-form__section--social">
-        <h3 className="admin-profile-form__title">Réseaux sociaux</h3>
-        <OrderableList<SocialLink>
-          items={social.map((s, i) => ({ id: socialIds[i] ?? crypto.randomUUID(), data: s }))}
-          onReorder={(items) => {
-            const nextData = items.map((item) => item.data);
-            const nextIds = items.map((item) => item.id);
-            setSocial(nextData);
-            setSocialIds(nextIds);
-            onSocialReorder?.(nextData);
-          }}
-          renderItem={({ data, id }) => {
-            const idx = socialIds.indexOf(id);
-            if (idx < 0) return null;
-            return (
-              <div className="admin-profile-form__social-item">
-                <div className="admin-profile-form__social-fields">
-                  <FormField
-                    label="Label"
-                    name={`social.${idx}.label`}
-                    value={data.label}
-                    onChange={(e) => {
-                      const next = [...social];
-                      next[idx] = { ...next[idx], label: (e.target as HTMLInputElement).value };
-                      setSocial(next);
-                    }}
-                  />
-                  <FormField
-                    label="Valeur"
-                    name={`social.${idx}.url`}
-                    value={data.url}
-                    onChange={(e) => {
-                      const next = [...social];
-                      next[idx] = { ...next[idx], url: (e.target as HTMLInputElement).value };
-                      setSocial(next);
-                    }}
-                  />
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSocial(social.filter((_, i) => i !== idx));
-                    setSocialIds(socialIds.filter((_, i) => i !== idx));
-                  }}
-                  ariaLabel="Supprimer le lien"
-                  className="admin-profile-form__social-remove"
-                >
-                  Supprimer
-                </Button>
-              </div>
-            );
-          }}
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setSocial([...social, { label: "", url: "" }]);
-            setSocialIds([...socialIds, crypto.randomUUID()]);
-          }}
-          ariaLabel="Ajouter un lien"
-          className="admin-profile-form__social-add"
-        >
-          + Ajouter un lien
-        </Button>
-      </section>
+      <SocialLinksEditor
+        value={social}
+        onChange={setSocial}
+        onReorder={onSocialReorder}
+      />
       <ProfileMediaManager
         photo={photo}
         cv={cv}
         onPhotoChange={setPhoto}
         onCvChange={setCv}
       />
-      {error && <p className="admin-form-error" role="alert">{error}</p>}
+      <FormError error={error} />
       <Button
         type="submit"
         loading={loading}
