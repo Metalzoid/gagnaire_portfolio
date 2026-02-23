@@ -71,16 +71,18 @@ RUN apk update && apk upgrade --no-cache && apk add --no-cache curl
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Standalone n'inclut pas public ni .next/static → copie manuelle obligatoire
+# Standalone (build dans frontend/) → standalone/frontend/ et éventuellement standalone/node_modules
+# On copie tout le standalone puis on ajoute static + public dans frontend/
 COPY --from=builder /app/frontend/.next/standalone ./
-COPY --from=builder /app/frontend/.next/static ./.next/static
-# Assets statiques (icon.svg, images/*.svg, etc.) servis par le serveur Next.js
-COPY --from=builder /app/frontend/public ./public
+# Standalone n'inclut pas public ni .next/static → copie dans frontend/
+COPY --from=builder /app/frontend/.next/static ./frontend/.next/static
+COPY --from=builder /app/frontend/public ./frontend/public
 
 # Vérifier que les SVG par défaut sont bien présents dans l'image
-RUN test -f ./public/icon.svg && test -f ./public/images/profile/photo.svg && test -f ./public/images/placeholder-project.svg || (echo "ERREUR: assets statiques (SVG) manquants dans public/" && exit 1)
+RUN test -f ./frontend/public/icon.svg && test -f ./frontend/public/images/profile/photo.svg && test -f ./frontend/public/images/placeholder-project.svg || (echo "ERREUR: assets statiques (SVG) manquants dans public/" && exit 1)
 
 EXPOSE 3000
+WORKDIR /app/frontend
 CMD ["node", "server.js"]
 
 # =============================================================================

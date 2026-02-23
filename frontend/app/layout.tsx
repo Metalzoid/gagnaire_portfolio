@@ -23,6 +23,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/icon.svg",
+  },
   title: {
     template: "%s | Florian Gagnaire",
     default: "Florian Gagnaire - Développeur Web Fullstack",
