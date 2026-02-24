@@ -137,25 +137,8 @@
   transition: transform 300ms ease;
   will-change: transform;
 
-  // CSS custom property consommée par les snap sections pour éviter le double padding
-  --nav-top-offset: 0px;
-
-  // Tablet & mobile : réserver l'espace pour la topBar (burger + theme) afin
-  // d'éviter que le contenu passe sous le bouton menu
-  @include respond-to("tablet") {
-    --nav-top-offset: calc(var(--spacing-md) + 48px);
-    padding-top: var(--nav-top-offset);
-  }
-
-  @include respond-to("mobile") {
-    --nav-top-offset: calc(var(--spacing-sm) + 44px);
-    padding-top: var(--nav-top-offset);
-  }
-
-  @include respond-to-landscape("phone") {
-    --nav-top-offset: calc(var(--spacing-xs) + 40px);
-    padding-top: var(--nav-top-offset);
-  }
+  // Le burger est en position fixed et flotte au-dessus du contenu,
+  // aucun padding-top n'est nécessaire.
 }
 
 // Quand le menu est ouvert, le contenu se décale et se réduit
