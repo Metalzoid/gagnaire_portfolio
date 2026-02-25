@@ -11,7 +11,7 @@ import { getBackendImageUrl } from "@/services/api";
 import styles from "./HomeFeaturedProjects.module.scss";
 
 // --------------------------------------------------------------------------
-// Rendu d'une carte projet (partagé entre grille et carousel)
+// Rendu d'une carte projet (partagé entre carousels)
 // --------------------------------------------------------------------------
 const renderProjectCard = (project: Project) => (
   <Card
@@ -31,24 +31,17 @@ const renderProjectCard = (project: Project) => (
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
-const FEATURED_MAX = 3;
-
 export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
-  const displayProjects = useMemo(
-    () => projects.slice(0, FEATURED_MAX),
-    [projects],
-  );
-
-  // Groupes de 3 pour le carousel paysage
+  // Groupes de 3 pour le carousel desktop/tablette/paysage
   const projectChunks = useMemo(() => {
     const chunks: Project[][] = [];
-    for (let i = 0; i < displayProjects.length; i += 3) {
-      chunks.push(displayProjects.slice(i, i + 3));
+    for (let i = 0; i < projects.length; i += 3) {
+      chunks.push(projects.slice(i, i + 3));
     }
     return chunks;
-  }, [displayProjects]);
+  }, [projects]);
 
   return (
     <div
@@ -60,22 +53,13 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
         Une sélection de mes réalisations les plus récentes.
       </p>
 
-      {/* Grille desktop / tablette */}
-      <div className={styles.grid}>
-        {displayProjects.map((project) => (
-          <div key={project.slug} className={styles.gridItem}>
-            {renderProjectCard(project)}
-          </div>
-        ))}
-      </div>
-
       {/* Carousel mobile portrait (1 projet par slide) */}
       <div className={styles.mobileCarousel}>
         <Carousel
-          items={displayProjects}
+          items={projects}
           renderItem={(project) => renderProjectCard(project)}
           showDots={true}
-          showArrows={true}
+          showArrows={false}
           showCounter={false}
           autoPlay={true}
           autoPlayInterval={10000}
@@ -84,7 +68,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
         />
       </div>
 
-      {/* Carousel paysage (3 projets par slide) */}
+      {/* Carousel desktop/tablette/paysage (3 projets par slide) */}
       <div className={styles.landscapeCarousel}>
         <Carousel
           items={projectChunks}
@@ -99,6 +83,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
           )}
           showDots={true}
           showArrows={true}
+          arrowsDesktopOnly={true}
           autoPlay={true}
           autoPlayInterval={10000}
           loop={true}

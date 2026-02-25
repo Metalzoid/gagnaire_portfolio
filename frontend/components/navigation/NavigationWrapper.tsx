@@ -2,12 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useLockBodyScroll from "@/hooks/useLockBodyScroll";
 import useKeyPress from "@/hooks/useKeyPress";
 import BurgerButton from "./BurgerButton";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import Link from "next/link";
 import Image from "next/image";
 import styles from "./NavigationWrapper.module.scss";
 

@@ -2,6 +2,7 @@
 // Carousel - Composant UI réutilisable
 // ==========================================================================
 @use "../../../styles/abstracts/mixins" as *;
+@use "../../../styles/abstracts/variables" as *;
 
 // --------------------------------------------------------------------------
 // Container principal
@@ -9,6 +10,19 @@
 .carousel {
   position: relative;
   width: 100%;
+}
+
+// --------------------------------------------------------------------------
+// Flèches uniquement sur desktop (≥769px)
+// --------------------------------------------------------------------------
+.carousel--arrowsDesktopOnly {
+  .arrow {
+    display: none;
+
+    @media (min-width: $bp-tablet + 1) {
+      display: flex;
+    }
+  }
 }
 
 // --------------------------------------------------------------------------
