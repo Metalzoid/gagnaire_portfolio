@@ -216,8 +216,9 @@
   }
 }
 
+
 // --------------------------------------------------------------------------
-// Footer du menu (toggle thème) — visible sur mobile et paysage phone
+// Footer du menu (toggle thème) — visible sur mobile uniquement
 // --------------------------------------------------------------------------
 .footer {
   display: none;
@@ -225,18 +226,11 @@
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--color-border);
 
-  // Tablet portrait : visible (car le toggle desktop peut manquer de place)
-  @include respond-to("tablet") {
+  @include respond-to("mobile") {
     display: block;
   }
 
-  // Paysage phone : masqué (le toggle reste dans la topBar)
   @include respond-to-landscape("phone") {
-    display: none;
-  }
-
-  // Paysage tablet : visible
-  @include respond-to-landscape("tablet") {
     display: block;
     padding-top: var(--spacing-md);
   }

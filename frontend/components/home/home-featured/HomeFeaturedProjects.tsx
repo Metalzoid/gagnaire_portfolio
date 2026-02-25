@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import type { Project } from "shared";
 import { Card } from "@/components/ui/card";
@@ -33,6 +34,15 @@ const renderProjectCard = (project: Project) => (
 export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
+  // Groupes de 3 pour le carousel paysage
+  const projectChunks = useMemo(() => {
+    const chunks: Project[][] = [];
+    for (let i = 0; i < projects.length; i += 3) {
+      chunks.push(projects.slice(i, i + 3));
+    }
+    return chunks;
+  }, [projects]);
+
   return (
     <div
       ref={ref}
@@ -52,7 +62,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
         ))}
       </div>
 
-      {/* Carousel mobile uniquement */}
+      {/* Carousel mobile portrait (1 projet par slide) */}
       <div className={styles.mobileCarousel}>
         <Carousel
           items={projects}
@@ -60,6 +70,28 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
           showDots={true}
           showArrows={true}
           showCounter={false}
+          autoPlay={true}
+          autoPlayInterval={10000}
+          loop={true}
+          ariaLabel="Projets à la une"
+        />
+      </div>
+
+      {/* Carousel paysage (3 projets par slide) */}
+      <div className={styles.landscapeCarousel}>
+        <Carousel
+          items={projectChunks}
+          renderItem={(chunk) => (
+            <div className={styles.slideGrid}>
+              {chunk.map((project) => (
+                <div key={project.slug} className={styles.slideGridItem}>
+                  {renderProjectCard(project)}
+                </div>
+              ))}
+            </div>
+          )}
+          showDots={true}
+          showArrows={true}
           autoPlay={true}
           autoPlayInterval={10000}
           loop={true}

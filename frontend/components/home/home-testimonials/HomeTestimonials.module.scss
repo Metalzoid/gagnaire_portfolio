@@ -148,9 +148,9 @@
   }
 
   .card {
-    flex: 0 0 300px;
+    flex: 0 0 min(300px, 80vw);
     scroll-snap-align: start;
-    min-width: 300px;
+    min-width: min(300px, 80vw);
     padding: var(--spacing-md);
   }
 

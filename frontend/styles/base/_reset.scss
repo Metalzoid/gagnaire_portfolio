@@ -18,14 +18,22 @@
 // Prévention du débordement horizontal
 html {
   overflow-x: hidden;
+  background-color: var(--color-bg-primary);
   // Scroll fluide (désactivé si prefers-reduced-motion)
   scroll-behavior: smooth;
   // Hauteur dynamique pour mobile (barre d'adresse)
   height: 100%;
+  // Largeur pleine sur tous les mobiles (portrait + paysage, iOS + Android)
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 body {
   min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   // Layout flex colonne pour coller le footer en bas
   display: flex;
@@ -36,9 +44,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-// Le main prend tout l'espace restant (pousse le footer en bas)
+// Le main prend tout l'espace restant et toute la largeur (pousse le footer en bas)
 main {
   flex: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 // Images et médias responsives

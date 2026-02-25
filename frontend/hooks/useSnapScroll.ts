@@ -22,6 +22,12 @@ const useSnapScroll = ({
   const context = useSnapScrollContext();
   const { currentSection, setCurrentSection } = context;
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const currentSectionRef = useRef(currentSection);
+
+  // Synchroniser le ref avec l'état
+  useEffect(() => {
+    currentSectionRef.current = currentSection;
+  }, [currentSection]);
 
   // Retirer l'ancre de l'URL après un scroll
   useEffect(() => {
@@ -82,6 +88,41 @@ const useSnapScroll = ({
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [enabled, totalSections, setCurrentSection]);
+
+  // Re-snap après resize/orientation change
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let sectionAtResizeStart: number | null = null;
+
+    const handleResize = () => {
+      // Capturer la section au premier événement resize, avant que
+      // l'IntersectionObserver ne mette à jour currentSection
+      if (sectionAtResizeStart === null) {
+        sectionAtResizeStart = currentSectionRef.current;
+      }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (!containerRef.current || sectionAtResizeStart === null) return;
+        const sections = containerRef.current.querySelectorAll<HTMLElement>(
+          "[data-snap-section]",
+        );
+        if (sections[sectionAtResizeStart]) {
+          sections[sectionAtResizeStart].scrollIntoView({
+            behavior: "instant",
+          });
+        }
+        sectionAtResizeStart = null;
+      }, 150);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   // Navigation clavier
   useEffect(() => {
