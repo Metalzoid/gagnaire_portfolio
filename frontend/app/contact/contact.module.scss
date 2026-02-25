@@ -2,6 +2,14 @@
 
 .page {
   padding: var(--spacing-3xl) 0;
+
+  @include respond-to("tablet") {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  @include respond-to("mobile") {
+    padding: var(--spacing-xl) 0;
+  }
 }
 
 .header {
@@ -13,6 +21,10 @@
   font-size: var(--font-size-4xl);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-md);
+
+  @include respond-to("mobile") {
+    font-size: var(--font-size-3xl);
+  }
 }
 
 .intro {
@@ -24,13 +36,13 @@
 
 .content {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--spacing-2xl);
   max-width: 900px;
   margin: 0 auto;
 
-  @include respond-to("tablet") {
-    grid-template-columns: 1fr 1fr;
+  @include respond-to("mobile") {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -9,7 +9,7 @@ import {
   useMemo,
 } from "react";
 import { useTypewriter, formatTerminalLines } from "@/hooks/useTypewriter";
-import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { useDeviceType } from "@/hooks/useDeviceType";
 import { useInteractiveTerminal } from "@/hooks/useInteractiveTerminal";
 import type { Profile, SkillCategory, Project } from "shared";
 import { useSnapScrollContext } from "@/contexts/SnapScrollContext";
@@ -40,7 +40,7 @@ export function TerminalHero({
   const contentRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const { isDesktop } = useBreakpoint();
+  const { isDesktopDevice } = useDeviceType();
 
   // IntersectionObserver : démarrer l'animation uniquement quand le terminal est visible
   useEffect(() => {
@@ -87,7 +87,7 @@ export function TerminalHero({
     focusInput,
   } = useInteractiveTerminal(terminalContext, {
     goToSectionById: (sectionId: string) => {
-      if (isDesktop) goToSectionById(sectionId);
+      if (isDesktopDevice) goToSectionById(sectionId);
     },
     openContactModal,
   });
@@ -97,7 +97,7 @@ export function TerminalHero({
     [displayedText],
   );
   const showCursor = linesDisplay.length > 0;
-  const isInteractive = isComplete && isDesktop;
+  const isInteractive = isComplete && isDesktopDevice;
   const [isFocused, setIsFocused] = useState(false);
 
   // Scroll en bas - une seule RAF par changement (réduit la charge sur le main thread)
@@ -181,7 +181,7 @@ export function TerminalHero({
             ? "Terminal interactif, cliquez pour taper une commande"
             : undefined
         }
-        inert={!isDesktop}
+        inert={!isDesktopDevice}
       >
         {/* Barre de titre */}
         <div className={styles.titleBar}>

@@ -93,3 +93,31 @@
   gap: var(--spacing-xs);
   margin-top: auto;
 }
+
+@include respond-to("mobile") {
+  .body {
+    padding: var(--spacing-sm);
+  }
+  .title {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@include respond-to-landscape("phone") {
+  .imageWrapper {
+    aspect-ratio: 3 / 1;
+  }
+  .body {
+    padding: var(--spacing-xs);
+    gap: 2px;
+  }
+  .title {
+    font-size: var(--font-size-sm);
+  }
+  .description {
+    display: none;
+  }
+  .tags {
+    display: none;
+  }
+}

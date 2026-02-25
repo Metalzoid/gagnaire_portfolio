@@ -67,34 +67,54 @@
   }
 }
 
+.landscapeCarousel {
+  display: none;
+}
+
+.slideGrid {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.slideGridItem {
+  flex: 0 1 calc((100% - 2 * var(--spacing-sm)) / 3);
+  min-width: 0;
+  display: flex;
+  min-height: 0;
+}
+
 .cta {
   display: flex;
   justify-content: center;
 }
 
 // --------------------------------------------------------------------------
-// Paysage téléphone : grille → scroll horizontal
+// Paysage téléphone : carousel 3 par slide, cartes compactes
 // --------------------------------------------------------------------------
 @include respond-to-landscape("phone") {
   .grid {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-    max-width: 100%;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-
-    &::-webkit-scrollbar {
-      height: 4px;
-    }
+    display: none;
   }
 
-  .gridItem {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-    min-width: 260px;
+  .mobileCarousel {
+    display: none;
+  }
+
+  .landscapeCarousel {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .intro {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
   }
 }
 
@@ -103,7 +123,11 @@
 // --------------------------------------------------------------------------
 @include respond-to-landscape("tablet") {
   .grid {
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    display: none;
+  }
+
+  .landscapeCarousel {
+    display: block;
+    margin-bottom: var(--spacing-sm);
   }
 }

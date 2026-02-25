@@ -1,6 +1,7 @@
 // ==========================================================================
 // Dashboard administration - Tableau de bord
 // ==========================================================================
+@use "../../styles/abstracts/mixins" as *;
 
 .dashboard {
   max-width: 900px;
@@ -47,11 +48,11 @@
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--spacing-md);
 
-  @media (max-width: 768px) {
+  @include respond-to("tablet") {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 480px) {
+  @include respond-to("mobile") {
     grid-template-columns: 1fr;
   }
 }

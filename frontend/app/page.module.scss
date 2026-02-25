@@ -34,7 +34,7 @@
 .snapSection {
   scroll-snap-align: start;
   scroll-snap-stop: always; // Force l'arrêt à chaque section (pas de skip par momentum)
-  min-height: 100dvh;
+  height: 100dvh; // Hauteur fixe pour snap fiable (pas min-height)
   overflow: hidden; // Filet de sécurité si contenu déborde
   display: flex;
   flex-direction: column;
@@ -47,16 +47,13 @@
 
   @include respond-to("tablet") {
     padding: var(--spacing-xl);
-    // Absorber le nav-top-offset au lieu d'avoir un double padding
-    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-xl));
+    padding-top: var(--spacing-xl);
   }
 
   @include respond-to("mobile") {
-    height: 100dvh; // Hauteur fixe pour snap fiable
-    min-height: unset; // Override du min-height
     justify-content: flex-start;
     padding: var(--spacing-lg);
-    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-xl));
+    padding-top: var(--spacing-2xl);
   }
 
   @include respond-to("small-mobile") {
@@ -76,10 +73,10 @@
   flex-direction: column;
   justify-content: center;
   min-height: 0;
+  overflow-y: auto; // Scroll interne si le contenu dépasse la section
 
   @include respond-to("mobile") {
     justify-content: flex-start;
-    overflow-y: auto;
   }
 }
 
@@ -99,12 +96,47 @@
 }
 
 // --------------------------------------------------------------------------
-// Paysage téléphone : snap conservé, padding réduit pour garder le contenu lisible
+// Paysage téléphone : largeur pleine + snap conservé, padding réduit
+// (pas de 100vw : provoque scroll horizontal sur certains navigateurs)
 // --------------------------------------------------------------------------
 @include respond-to-landscape("phone") {
+  .homeWrapper {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .snapContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
   .snapSection {
     padding: var(--spacing-lg) var(--spacing-xl);
-    padding-top: max(var(--nav-top-offset, 0px), var(--spacing-lg));
+    padding-top: var(--spacing-lg);
+  }
+
+  .sectionContent {
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+}
+
+// Fallback largeur pleine : certains mobiles (ex. Android) ne rapportent pas
+// orientation: landscape correctement → on cible aussi par aspect-ratio + hauteur
+@media (min-aspect-ratio: 4/3) and (max-height: 500px) {
+  .homeWrapper {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .snapContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
   }
 }
 

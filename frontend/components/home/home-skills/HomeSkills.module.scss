@@ -116,13 +116,13 @@
 // --------------------------------------------------------------------------
 @include respond-to-landscape("phone") {
   .iconGrid {
-    display: grid; // Override explicite du display: none mobile
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
+    display: none; // Carousel utilisé en landscape phone (viewport trop court pour la grille)
   }
 
   .mobileCarousel {
-    display: none; // Cacher le carousel en landscape phone
+    display: block;
+    max-width: 400px;
+    margin-bottom: var(--spacing-md);
   }
 
   .iconItem {

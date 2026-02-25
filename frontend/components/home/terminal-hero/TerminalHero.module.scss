@@ -16,6 +16,7 @@
   @include respond-to("mobile") {
     max-width: 100%;
     padding: 0 var(--spacing-md);
+    margin-top: var(--spacing-2xl);
   }
 }
 
@@ -243,6 +244,11 @@
   width: 160px;
   background-color: var(--color-bg-tertiary, var(--color-bg-secondary));
   border-radius: var(--border-radius-md);
+
+  @include respond-to-landscape("phone") {
+    height: 36px;
+    width: 120px;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -256,8 +262,15 @@
 
   @include respond-to("mobile") {
     flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 280px;
+  }
+
+  @include respond-to-landscape("phone") {
+    width: 100%;
+    justify-content: center;
+    gap: var(--spacing-sm);
   }
 }
 
@@ -268,7 +281,7 @@
   .wrapper {
     flex-direction: row;
     flex-wrap: wrap;
-    max-width: 100%;
+    max-width: 520px;
     gap: var(--spacing-md);
   }
 
