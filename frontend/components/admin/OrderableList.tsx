@@ -18,6 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { ReactNode } from "react";
+import { RiDraggable } from "react-icons/ri";
 
 export interface OrderableItem<T> {
   id: string;
@@ -42,6 +43,7 @@ function SortableItem<T>({
     attributes,
     listeners,
     setNodeRef,
+    setActivatorNodeRef,
     transform,
     transition,
     isDragging,
@@ -56,11 +58,19 @@ function SortableItem<T>({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className={`admin-orderable-item ${isDragging ? "admin-orderable-item--dragging" : ""}`}
-      aria-label={`Réordonner l'élément`}
     >
+      <button
+        ref={setActivatorNodeRef}
+        {...attributes}
+        {...listeners}
+        type="button"
+        className="admin-orderable-item__handle"
+        aria-label="Réordonner l'élément"
+        tabIndex={0}
+      >
+        <RiDraggable size={16} />
+      </button>
       {renderItem(item)}
     </div>
   );

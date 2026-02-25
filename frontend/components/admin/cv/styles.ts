@@ -51,7 +51,7 @@ export const cvStyles = StyleSheet.create({
     flexDirection: "column",
   },
   headerRight: {
-    width: 70,
+    width: 100,
     alignItems: "center",
   },
   name: {
@@ -71,9 +71,10 @@ export const cvStyles = StyleSheet.create({
     lineHeight: 1.4,
   },
   photo: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 90,
+    height: 90,
+    objectFit: "cover",
+    objectPosition: "center",
   },
   // Sections
   section: {

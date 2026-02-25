@@ -2,13 +2,24 @@
 
 .wrapper {
   margin-bottom: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
 }
 
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-xs);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .icon {
@@ -22,9 +33,15 @@
   color: var(--color-text-primary);
 }
 
+.level {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
 .progressWrapper {
   height: 8px;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
   border-radius: var(--border-radius-full);
   overflow: hidden;
 }

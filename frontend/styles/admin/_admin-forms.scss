@@ -46,15 +46,26 @@
 
 .admin-skill-form {
   margin: var(--spacing-md) 0;
+  width: 100%;
 
-  &__row {
+  &__inputs {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+
+    @include respond-to("tablet") {
+      grid-template-columns: 1fr;
+    }
+
+    > * {
+      min-width: 0;
+    }
   }
 
   &__level {
+    margin-bottom: var(--spacing-md);
+
     label {
       display: block;
       font-size: var(--font-size-sm);
@@ -73,8 +84,8 @@
 
   &__actions {
     display: flex;
+    justify-content: flex-end;
     gap: var(--spacing-sm);
-    margin-top: var(--spacing-md);
   }
 }
 
@@ -148,6 +159,11 @@
         var(--color-accent-primary) 6%,
         var(--color-bg-primary)
       );
+    }
+
+    .admin-skill-form {
+      flex: 1;
+      min-width: 0;
     }
   }
 

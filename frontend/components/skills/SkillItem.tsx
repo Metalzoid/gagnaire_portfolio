@@ -11,8 +11,11 @@ export const SkillItem = memo(function SkillItem({ skill, icon }: SkillItemProps
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        {icon && <span className={styles.icon}>{icon}</span>}
-        <span className={styles.name}>{skill.name}</span>
+        <div className={styles.headerLeft}>
+          {icon && <span className={styles.icon}>{icon}</span>}
+          <span className={styles.name}>{skill.name}</span>
+        </div>
+        <span className={styles.level}>{skill.level} %</span>
       </div>
       <div className={styles.progressWrapper}>
         <div
