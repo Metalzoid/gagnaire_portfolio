@@ -1,6 +1,7 @@
 @use "../../styles/abstracts/mixins" as *;
 
 .wrapper {
+  position: relative;
   margin-bottom: var(--spacing-xl);
 }
 
