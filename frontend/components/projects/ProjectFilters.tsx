@@ -1,7 +1,6 @@
 "use client";
 
 import { Tag } from "@/components/ui/tag";
-import { Button } from "@/components/ui/button";
 import styles from "./ProjectFilters.module.scss";
 
 interface ProjectFiltersProps {
@@ -28,17 +27,14 @@ export function ProjectFilters({
             onClick={() => onToggleTag(tag)}
           />
         ))}
+        {selectedTags.size > 0 && (
+          <Tag
+            label="Tout afficher"
+            onClick={onClear}
+            className={styles.clearTag}
+          />
+        )}
       </div>
-      {selectedTags.size > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onClear}
-          ariaLabel="Tout afficher"
-        >
-          Tout afficher
-        </Button>
-      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ import { getBackendImageUrl } from "@/services/api";
 import styles from "./HomeFeaturedProjects.module.scss";
 
 // --------------------------------------------------------------------------
-// Rendu d'une carte projet (partagé entre grille et carousel)
+// Rendu d'une carte projet (partagé entre carousels)
 // --------------------------------------------------------------------------
 const renderProjectCard = (project: Project) => (
   <Card
@@ -34,7 +34,7 @@ const renderProjectCard = (project: Project) => (
 export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
 
-  // Groupes de 3 pour le carousel paysage
+  // Groupes de 3 pour le carousel desktop/tablette/paysage
   const projectChunks = useMemo(() => {
     const chunks: Project[][] = [];
     for (let i = 0; i < projects.length; i += 3) {
@@ -53,22 +53,13 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
         Une sélection de mes réalisations les plus récentes.
       </p>
 
-      {/* Grille desktop / tablette */}
-      <div className={styles.grid}>
-        {projects.map((project) => (
-          <div key={project.slug} className={styles.gridItem}>
-            {renderProjectCard(project)}
-          </div>
-        ))}
-      </div>
-
       {/* Carousel mobile portrait (1 projet par slide) */}
       <div className={styles.mobileCarousel}>
         <Carousel
           items={projects}
           renderItem={(project) => renderProjectCard(project)}
           showDots={true}
-          showArrows={true}
+          showArrows={false}
           showCounter={false}
           autoPlay={true}
           autoPlayInterval={10000}
@@ -77,7 +68,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
         />
       </div>
 
-      {/* Carousel paysage (3 projets par slide) */}
+      {/* Carousel desktop/tablette/paysage (3 projets par slide) */}
       <div className={styles.landscapeCarousel}>
         <Carousel
           items={projectChunks}
@@ -92,6 +83,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
           )}
           showDots={true}
           showArrows={true}
+          arrowsDesktopOnly={true}
           autoPlay={true}
           autoPlayInterval={10000}
           loop={true}

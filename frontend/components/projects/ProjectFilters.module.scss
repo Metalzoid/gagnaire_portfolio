@@ -11,5 +11,22 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--spacing-sm);
 }
+
+// « Tout afficher » : style inverse des tags (accent plein)
+.clearTag {
+  background-color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+
+  @include on-hover {
+    &:hover {
+      filter: brightness(1.1);
+      border-color: var(--color-accent-primary);
+      color: var(--color-bg-primary);
+    }
+  }
+}
+

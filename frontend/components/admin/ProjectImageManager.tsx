@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { adminApi } from "@/services/admin-api";
 import { getUploadUrl } from "@/utils/url";
 import {
@@ -25,6 +25,10 @@ export function ProjectImageManager({
   const [uploadError, setUploadError] = useState("");
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const imagesRef = useRef(images);
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
 
   const handleDelete = async (image: ProjectImage) => {
     if (!confirm("Supprimer cette image ?")) return;
@@ -139,7 +143,11 @@ export function ProjectImageManager({
           multiple
           onUpload={async (file) => {
             const img = await adminApi.projects.uploadImage(projectId, file);
-            onImagesChange([...images, img].sort((a, b) => a.order - b.order));
+            const next = [...imagesRef.current, img].sort(
+              (a, b) => a.order - b.order,
+            );
+            imagesRef.current = next;
+            onImagesChange(next);
             return img.path;
           }}
           onError={(msg) => setUploadError(msg)}

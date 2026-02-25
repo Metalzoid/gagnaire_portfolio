@@ -26,6 +26,8 @@ interface CarouselProps<T> {
   showDots?: boolean;
   /** Afficher les flèches de navigation */
   showArrows?: boolean;
+  /** Flèches visibles uniquement sur desktop (min-width 769px) */
+  arrowsDesktopOnly?: boolean;
   /** Afficher le compteur de page (ex: 1 / 3) */
   showCounter?: boolean;
   /** Boucle infinie */
@@ -52,6 +54,7 @@ function Carousel<T>({
   autoPlayInterval = 5000,
   showDots = false,
   showArrows = true,
+  arrowsDesktopOnly = false,
   showCounter = false,
   loop = true,
   ariaLabel = "Carousel",
@@ -286,7 +289,11 @@ function Carousel<T>({
   const canGoPrev = loop || currentIndex > 0;
   const canGoNext = loop || currentIndex < total - 1;
 
-  const wrapperClasses = [styles.carousel, className ?? ""]
+  const wrapperClasses = [
+    styles.carousel,
+    arrowsDesktopOnly ? styles["carousel--arrowsDesktopOnly"] : "",
+    className ?? "",
+  ]
     .filter(Boolean)
     .join(" ");
 

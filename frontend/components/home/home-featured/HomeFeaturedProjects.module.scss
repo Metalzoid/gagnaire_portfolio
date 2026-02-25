@@ -2,6 +2,7 @@
 // HomeFeaturedProjects - Cartes projets featured
 // ==========================================================================
 @use "../../../styles/abstracts/mixins" as *;
+@use "../../../styles/abstracts/variables" as *;
 
 .wrapper {
   opacity: 0;
@@ -47,47 +48,24 @@
   }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-  width: 100%;
-  max-width: min(760px, 92vw);
-  margin-left: auto;
-  margin-right: auto;
-  align-items: stretch;
-
-  @include respond-to("desktop") {
-    max-width: min(720px, 90vw);
-    gap: var(--spacing-sm);
-  }
-
-  @include respond-to("tablet") {
-    max-width: min(640px, 94vw);
-  }
-
-  @include respond-to("mobile") {
-    display: none;
-  }
-}
-
-.gridItem {
-  display: flex;
-  min-height: 0;
-}
-
+// Mobile portrait : 1 projet par slide
 .mobileCarousel {
   display: none;
   margin-bottom: var(--spacing-xl);
 
-  @include respond-to("mobile") {
+  @include respond-to-portrait("phone") {
     display: block;
   }
 }
 
+// Mobile paysage + tablette + desktop : 3 projets par slide
 .landscapeCarousel {
-  display: none;
+  display: block;
+  margin-bottom: var(--spacing-xl);
+
+  @include respond-to-portrait("phone") {
+    display: none;
+  }
 }
 
 .slideGrid {
@@ -97,11 +75,26 @@
   width: 100%;
 }
 
+// Desktop : cartes + carousel contraint pour rapprocher les flèches des cards
+@include respond-only("wide") {
+  .landscapeCarousel {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .slideGrid {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
+
 .slideGridItem {
   flex: 0 1 calc((100% - 2 * var(--spacing-sm)) / 3);
   min-width: 0;
   display: flex;
   min-height: 0;
+  margin: 5px;
 }
 
 .cta {
@@ -113,10 +106,6 @@
 // Paysage téléphone : carousel 3 par slide, cartes compactes
 // --------------------------------------------------------------------------
 @include respond-to-landscape("phone") {
-  .grid {
-    display: none;
-  }
-
   .mobileCarousel {
     display: none;
   }
@@ -138,13 +127,9 @@
 }
 
 // --------------------------------------------------------------------------
-// Paysage tablette : grille standard, gaps réduits
+// Paysage tablette : carousel 3 par slide
 // --------------------------------------------------------------------------
 @include respond-to-landscape("tablet") {
-  .grid {
-    display: none;
-  }
-
   .landscapeCarousel {
     display: block;
     margin-bottom: var(--spacing-sm);
