@@ -8,7 +8,8 @@ ARG NODE_ENV=production
 
 FROM node:lts-alpine3.22 AS base
 
-RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && npm install -g npm@11.10.1
+RUN apk update && apk upgrade --no-cache && apk add --no-cache curl && \
+  for i in 1 2 3; do npm install -g npm@11.10.1 && exit 0; echo "Retry $i..."; sleep 15; done; exit 1
 
 WORKDIR /app
 
@@ -19,11 +20,22 @@ COPY frontend/.npmrc ./frontend/
 COPY shared/package.json ./shared/
 
 # 2. Installation des dépendances (layer caché tant que package*.json ne change pas)
+# NPM_TOKEN passé en secret (CI) pour éviter le rate limit du registry
 WORKDIR /app/frontend
-RUN npm ci
+RUN --mount=type=secret,id=NPM_TOKEN \
+  for i in 1 2 3; do \
+    export NODE_AUTH_TOKEN=`cat /run/secrets/NPM_TOKEN`; \
+    npm ci && exit 0; \
+    echo "Retry $$i..."; sleep 15; \
+  done; exit 1
 
 WORKDIR /app/shared
-RUN npm install
+RUN --mount=type=secret,id=NPM_TOKEN \
+  for i in 1 2 3; do \
+    export NODE_AUTH_TOKEN=`cat /run/secrets/NPM_TOKEN`; \
+    npm install && exit 0; \
+    echo "Retry $$i..."; sleep 15; \
+  done; exit 1
 
 # 3. Copie du code source complet
 WORKDIR /app

@@ -29,6 +29,8 @@ jobs:
           tags: gagnaire-portfolio-frontend:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          secrets: |
+            NPM_TOKEN=${{ secrets.NPM_TOKEN }}
 
       - name: Build backend Docker image
         uses: docker/build-push-action@v5
@@ -39,3 +41,5 @@ jobs:
           tags: gagnaire-portfolio-backend:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          secrets: |
+            NPM_TOKEN=${{ secrets.NPM_TOKEN }}
