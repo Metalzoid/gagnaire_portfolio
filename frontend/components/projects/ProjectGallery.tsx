@@ -14,6 +14,19 @@ interface ProjectGalleryProps {
   title: string;
 }
 
+/** Précharge l'image via un élément natif pour un cache HTTP direct (sans pipeline Next.js). */
+function PreloadImage({ src }: { src: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      aria-hidden
+      style={{ position: "absolute", left: -9999, width: 1, height: 1 }}
+    />
+  );
+}
+
 export function ProjectGallery({ images, title }: ProjectGalleryProps) {
   const sortedImages = [...(images ?? [])].sort((a, b) => a.order - b.order);
   const allPaths = sortedImages
@@ -32,6 +45,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
             fill
             className={styles.mainImage}
             sizes="(max-width: 768px) 100vw, 800px"
+            unoptimized
           />
         </div>
       </div>
@@ -40,6 +54,13 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
 
   return (
     <div className={styles.wrapper}>
+      {/* Précharge immédiatement toutes les images (sauf l'active) via img natif */}
+      {allPaths.map(
+        (src, i) =>
+          i !== activeIndex && (
+            <PreloadImage key={sortedImages[i]?.id ?? src} src={src} />
+          ),
+      )}
       <div className={styles.mainWrapper}>
         <ImageWithFallback
           src={mainImage}
@@ -48,6 +69,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
           className={styles.mainImage}
           sizes="(max-width: 768px) 100vw, 800px"
           priority
+          unoptimized
         />
       </div>
       {allPaths.length > 1 && (
@@ -67,6 +89,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
                 fill
                 sizes="120px"
                 className={styles.thumbImage}
+                unoptimized
               />
             </button>
           ))}

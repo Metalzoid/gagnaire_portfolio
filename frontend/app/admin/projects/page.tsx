@@ -56,7 +56,7 @@ export default function AdminProjectsPage() {
       key: "featured",
       header: "Featured",
       render: (p: ProjectWithId) =>
-        p.featured ? <StatusBadge variant="featured">Oui</StatusBadge> : "—",
+        p.featured ? <StatusBadge variant="featured">Oui</StatusBadge> : <StatusBadge variant="no">Non</StatusBadge>,
     },
     { key: "date", header: "Date", render: (p: ProjectWithId) => p.date },
     ...(aiEnabled
