@@ -31,17 +31,24 @@ const renderProjectCard = (project: Project) => (
 // --------------------------------------------------------------------------
 // Composant
 // --------------------------------------------------------------------------
+const FEATURED_MAX = 3;
+
 export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
   const [ref, isVisible] = useScrollAnimation({ threshold: 0.2 });
+
+  const displayProjects = useMemo(
+    () => projects.slice(0, FEATURED_MAX),
+    [projects],
+  );
 
   // Groupes de 3 pour le carousel paysage
   const projectChunks = useMemo(() => {
     const chunks: Project[][] = [];
-    for (let i = 0; i < projects.length; i += 3) {
-      chunks.push(projects.slice(i, i + 3));
+    for (let i = 0; i < displayProjects.length; i += 3) {
+      chunks.push(displayProjects.slice(i, i + 3));
     }
     return chunks;
-  }, [projects]);
+  }, [displayProjects]);
 
   return (
     <div
@@ -55,7 +62,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
 
       {/* Grille desktop / tablette */}
       <div className={styles.grid}>
-        {projects.map((project) => (
+        {displayProjects.map((project) => (
           <div key={project.slug} className={styles.gridItem}>
             {renderProjectCard(project)}
           </div>
@@ -65,7 +72,7 @@ export function HomeFeaturedProjects({ projects }: { projects: Project[] }) {
       {/* Carousel mobile portrait (1 projet par slide) */}
       <div className={styles.mobileCarousel}>
         <Carousel
-          items={projects}
+          items={displayProjects}
           renderItem={(project) => renderProjectCard(project)}
           showDots={true}
           showArrows={true}
