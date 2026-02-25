@@ -6,7 +6,6 @@ import { ContactModalProvider, useContactModal } from "@/contexts/ContactModalCo
 import { SnapScrollProvider } from "@/contexts/SnapScrollContext";
 import { NavigationWrapper } from "@/components/navigation";
 import { LayoutContent } from "@/components/layout/LayoutContent";
-import { PageFadeOverlay } from "@/components/layout/PageFadeOverlay";
 import { homeSections } from "@/data/sections";
 
 const ContactModal = dynamic(
@@ -40,7 +39,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <main id="main-content">{children}</main>
           </LayoutContent>
         </NavigationWrapper>
-        <PageFadeOverlay />
         <ContactModalGate />
       </SnapScrollProvider>
     </ContactModalProvider>

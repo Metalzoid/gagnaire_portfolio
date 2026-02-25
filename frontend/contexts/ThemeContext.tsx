@@ -23,7 +23,7 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const THEME_ATTR = "data-theme";
 
-/** Durée pendant laquelle on masque les overlays sensibles (ex: PageFadeOverlay) */
+/** Durée de la transition de thème */
 const THEME_TRANSITION_MS = 450;
 
 interface ThemeProviderProps {
