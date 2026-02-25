@@ -54,7 +54,7 @@ export function SkillForm({
         icon: icon.trim() || undefined,
         ...(hideCategory ? {} : { categoryId: effectiveCategoryId }),
       }))} className="admin-skill-form">
-      <div className="admin-skill-form__row">
+      <div className="admin-skill-form__inputs">
         {!hideCategory && categoryOptions.length > 0 && (
           <FormField
             label="Catégorie"
@@ -74,24 +74,24 @@ export function SkillForm({
           required
           placeholder="Ex: React"
         />
-        <div className="admin-skill-form__level">
-          <label>
-            Niveau : {level}%
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={level}
-              onChange={(e) => setLevel(Number(e.target.value))}
-              className="admin-skill-form__slider"
-            />
-          </label>
-        </div>
         <IconPicker
           label="Icône (optionnel)"
           value={icon || null}
           onChange={(v) => setIcon(v ?? "")}
         />
+      </div>
+      <div className="admin-skill-form__level">
+        <label>
+          Niveau : {level}%
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={level}
+            onChange={(e) => setLevel(Number(e.target.value))}
+            className="admin-skill-form__slider"
+          />
+        </label>
       </div>
       <FormError error={error} />
       <div className="admin-skill-form__actions">

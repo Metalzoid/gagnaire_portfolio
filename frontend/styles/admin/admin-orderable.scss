@@ -6,17 +6,43 @@
 }
 
 .admin-orderable-item {
-  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
+  cursor: default;
 
   &--dragging {
     opacity: 0.5;
+  }
+
+  &__handle {
+    flex-shrink: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-sm);
+    background: none;
+    border: none;
+    border-right: 1px solid var(--color-border);
+    color: var(--color-text-muted, #888);
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+      background-color: color-mix(in srgb, var(--color-accent-primary) 6%, var(--color-bg-secondary));
+    }
+  }
+
+  // Le contenu (renderItem) prend tout l'espace restant
+  & > *:not(.admin-orderable-item__handle) {
+    flex: 1;
+    min-width: 0;
   }
 }
