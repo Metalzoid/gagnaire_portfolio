@@ -15,7 +15,7 @@
 }
 
 .mainImage {
-  object-fit: cover;
+  object-fit: contain;
   transition: opacity 0.3s ease;
 }
 
@@ -52,5 +52,5 @@
 }
 
 .thumbImage {
-  object-fit: cover;
+  object-fit: contain;
 }
