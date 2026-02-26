@@ -90,7 +90,8 @@ $z-base: 1;
 $z-dropdown: 100;
 $z-sticky: 200;
 $z-overlay: 300;
-$z-modal: 400;
+$z-modal: 99999; // Z-index maximal de l'app — la modal doit toujours être au-dessus
+$z-modal-above: 100000; // Dropdowns / popovers à l'intérieur d'une modal (ex. DatePicker)
 $z-burger: 500;
 $z-admin-sidebar: 600;
 $z-toast: 700;
