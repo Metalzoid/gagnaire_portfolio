@@ -11,6 +11,16 @@
   gap: var(--spacing-sm);
   scroll-snap-align: center;
 
+  @media (orientation: portrait) and (min-width: #{$bp-tablet + 1px}) and (max-width: $bp-desktop) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    width: 100%;
+    padding: var(--spacing-md) 0;
+    scroll-snap-align: none;
+  }
+
   @include respond-to("mobile") {
     flex-direction: row;
     align-items: center;
@@ -36,6 +46,15 @@
   border-radius: var(--border-radius-md);
   min-width: 44px;
   min-height: 44px;
+
+  @media (orientation: portrait) and (min-width: #{$bp-tablet + 1px}) and (max-width: $bp-desktop) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    min-width: 0;
+    width: 100%;
+  }
 
   @include respond-to("mobile") {
     flex-direction: row;
@@ -83,6 +102,10 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   white-space: nowrap;
+
+  @media (orientation: portrait) and (min-width: #{$bp-tablet + 1px}) and (max-width: $bp-desktop) {
+    white-space: normal;
+  }
 
   @include respond-to("mobile") {
     white-space: normal;

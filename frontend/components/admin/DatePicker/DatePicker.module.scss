@@ -71,8 +71,8 @@
 }
 
 .popover {
-  /* Au-dessus des modals (z-modal: 400) quand le DatePicker est dans une modal d'édition */
-  z-index: $z-admin-sidebar;
+  /* Au-dessus du contenu modal quand le DatePicker est dans une modal d'édition */
+  z-index: $z-modal-above;
   min-width: 280px;
   padding: var(--spacing-md);
   background-color: var(--color-bg-primary);

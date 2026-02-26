@@ -97,7 +97,7 @@
 .modal {
   position: fixed;
   inset: 0;
-  z-index: $z-admin-sidebar;
+  z-index: $z-modal-above; /* Au-dessus de la modal parente (formulaires admin) */
   display: flex;
   align-items: center;
   justify-content: center;

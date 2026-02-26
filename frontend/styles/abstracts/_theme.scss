@@ -87,7 +87,7 @@ html[data-theme="light"] {
   --color-error: #{$light-red};
   --color-info: #{$light-cyan-accessible};
   --color-highlight: #{$light-yellow};
-  --color-border: darken($light-current, 10%);
+  --color-border: darken($light-current, 25%);
   --color-chart-grid-inactive: #d4d4cc;
   --color-overlay: rgba(0, 0, 0, 0.5);
 
