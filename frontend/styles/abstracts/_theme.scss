@@ -4,15 +4,15 @@
 @use "variables" as *;
 
 // --------------------------------------------------------------------------
-// Dark mode (défaut / :root)
+// Dark mode (défaut / :root, renforcé par html pour priorité)
 // --------------------------------------------------------------------------
 :root,
-[data-theme="dark"] {
+html[data-theme="dark"] {
   // Couleurs
   --color-bg-primary: #{$dracula-bg};
   --color-bg-secondary: #{$dracula-current};
   --color-text-primary: #{$dracula-fg};
-  --color-text-secondary: #{$dracula-comment};
+  --color-text-secondary: #{$dracula-text-secondary};
   --color-accent-primary: #{$dracula-purple};
   --color-accent-secondary: #{$dracula-pink};
   --color-link: #{$dracula-cyan};
@@ -23,6 +23,7 @@
   --color-highlight: #{$dracula-yellow};
   --color-border: #{$dracula-current};
   --color-chart-grid-inactive: #3d3f4d;
+  --color-overlay: rgba(0, 0, 0, 0.6);
 
   // Espacement
   --spacing-xs: #{$spacing-xs};
@@ -69,21 +70,26 @@
 // --------------------------------------------------------------------------
 // Light mode
 // --------------------------------------------------------------------------
-[data-theme="light"] {
+html[data-theme="light"] {
+  // Polices (mêmes que dark — Inter/Geist via variables body)
+  --font-family-sans: #{$font-family-sans};
+  --font-family-mono: #{$font-family-mono};
+  // Couleurs
   --color-bg-primary: #{$light-bg};
   --color-bg-secondary: #{$light-current};
   --color-text-primary: #{$light-fg};
-  --color-text-secondary: #{$light-comment};
+  --color-text-secondary: #{$light-comment-accessible};
   --color-accent-primary: #{$light-purple};
-  --color-accent-secondary: #{$light-pink};
-  --color-link: #{$light-cyan};
+  --color-accent-secondary: #{$light-pink-accessible};
+  --color-link: #{$light-cyan-accessible};
   --color-success: #{$light-green};
   --color-warning: #{$light-orange};
   --color-error: #{$light-red};
-  --color-info: #{$light-cyan};
+  --color-info: #{$light-cyan-accessible};
   --color-highlight: #{$light-yellow};
   --color-border: darken($light-current, 10%);
   --color-chart-grid-inactive: #d4d4cc;
+  --color-overlay: rgba(0, 0, 0, 0.5);
 
   // Ombres plus douces en light mode
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
