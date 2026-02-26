@@ -13,6 +13,13 @@ const FRENCH_MONTHS: Record<string, string> = {
   "12": "Déc",
 };
 
+/** Format court mois-année (ex. "Jan 2024") pour labels timeline */
+export function formatMonthYear(dateStr: string): string {
+  const [year, month] = dateStr.split("-");
+  const monthLabel = FRENCH_MONTHS[month] || month;
+  return `${monthLabel} ${year}`;
+}
+
 export function formatDateRange(
   startDate: string,
   endDate: string | null,

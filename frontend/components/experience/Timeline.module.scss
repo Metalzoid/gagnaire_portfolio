@@ -1,27 +1,97 @@
+@use "../../styles/abstracts/variables" as *;
 @use "../../styles/abstracts/mixins" as *;
 
 .wrapper {
   position: relative;
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-2xl) 0;
 }
 
-.line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: var(--color-border);
-  transform: translateX(-50%);
-
-  @include respond-to("mobile") {
-    left: var(--spacing-md);
-  }
-}
-
-.list {
+// --------------------------------------------------------------------------
+// Desktop + tablette paysage (min-width: 769px) : timeline verticale
+// --------------------------------------------------------------------------
+.listDesktop {
   list-style: none;
   margin: 0;
   padding: 0;
   position: relative;
+  display: none;
+
+  @media (min-width: #{$bp-tablet + 1px}) {
+    display: block;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-border);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Mobile + tablette portrait (max-width: 768px) : points + modal
+// --------------------------------------------------------------------------
+.listMobile {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: var(--spacing-md) var(--spacing-xl);
+  -webkit-overflow-scrolling: touch;
+
+  @media (min-width: #{$bp-tablet + 1px}) {
+    display: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: var(--spacing-xl);
+    right: var(--spacing-xl);
+    top: calc(var(--spacing-md) + 24px);
+    height: 2px;
+    background-color: var(--color-border);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @include respond-to("mobile") {
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding: var(--spacing-md) 0 var(--spacing-md) var(--spacing-md);
+    gap: 0;
+    scroll-snap-type: none;
+
+    &::before {
+      left: calc(24px + var(--spacing-md));
+      right: auto;
+      top: calc(24px + var(--spacing-md));
+      bottom: calc(24px + var(--spacing-md));
+      width: 2px;
+      height: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listMobile {
+    scroll-behavior: auto;
+  }
 }
