@@ -20,7 +20,7 @@ const useSnapScroll = ({
   totalSections,
 }: UseSnapScrollOptions): UseSnapScrollReturn => {
   const context = useSnapScrollContext();
-  const { currentSection, setCurrentSection } = context;
+  const { currentSection, setCurrentSection, sections } = context;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const currentSectionRef = useRef(currentSection);
 
@@ -29,13 +29,16 @@ const useSnapScroll = ({
     currentSectionRef.current = currentSection;
   }, [currentSection]);
 
-  // Retirer l'ancre de l'URL après un scroll
+  // Retirer l'ancre de l'URL uniquement quand la section affichée correspond au hash (après scroll)
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.location.hash) {
+    const hash = window.location.hash.slice(1).trim().toLowerCase();
+    if (!hash) return;
+    const section = sections[currentSection];
+    if (section && section.id === hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }
-  }, [currentSection]);
+  }, [currentSection, sections]);
 
   const goToSection = useCallback(
     (index: number) => {
@@ -56,6 +59,18 @@ const useSnapScroll = ({
   useEffect(() => {
     context.registerScrollHandler(goToSection);
   }, [context, goToSection]);
+
+  // Au chargement (ex. navigation depuis une autre page vers /#temoignages), scroller vers la section ciblée
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash.slice(1).trim().toLowerCase();
+    if (!hash) return;
+    const id = hash;
+    const t = setTimeout(() => {
+      context.goToSectionById(id);
+    }, 150);
+    return () => clearTimeout(t);
+  }, [context]);
 
   // IntersectionObserver — tracking passif de la section visible
   useEffect(() => {

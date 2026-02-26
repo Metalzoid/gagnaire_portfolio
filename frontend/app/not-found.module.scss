@@ -42,13 +42,13 @@
   border-radius: 50%;
 
   &[data-color="red"] {
-    background-color: #ff5f56;
+    background-color: var(--color-error);
   }
   &[data-color="yellow"] {
-    background-color: #ffbd2e;
+    background-color: var(--color-highlight);
   }
   &[data-color="green"] {
-    background-color: #27ca40;
+    background-color: var(--color-success);
   }
 }
 

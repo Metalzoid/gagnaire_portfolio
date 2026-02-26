@@ -36,7 +36,9 @@
 
   &[data-focused="true"] {
     border-color: var(--color-accent-primary);
-    box-shadow: var(--shadow-xl), 0 0 0 2px var(--color-accent-primary);
+    box-shadow:
+      var(--shadow-xl),
+      0 0 0 2px var(--color-accent-primary);
     outline: none;
   }
 }
@@ -68,13 +70,13 @@
   border-radius: 50%;
 
   &[data-color="red"] {
-    background-color: #ff5f56;
+    background-color: var(--color-error);
   }
   &[data-color="yellow"] {
-    background-color: #ffbd2e;
+    background-color: var(--color-highlight);
   }
   &[data-color="green"] {
-    background-color: #27ca40;
+    background-color: var(--color-success);
   }
 }
 

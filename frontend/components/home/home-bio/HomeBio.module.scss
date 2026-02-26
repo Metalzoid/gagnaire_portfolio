@@ -75,9 +75,16 @@
 
 .bio {
   font-size: var(--font-size-lg);
-  color: var(--color-text-secondary);
   line-height: 1.7;
   margin: 0 0 var(--spacing-lg);
+
+  // Light: variable du thème
+  color: var(--color-text-secondary);
+
+  // Dark: override direct (contourne bugs var()/load order)
+  :global(html[data-theme="dark"]) & {
+    color: #d0daf0 !important;
+  }
 }
 
 .cta {

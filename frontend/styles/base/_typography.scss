@@ -8,7 +8,7 @@
 // Body
 // --------------------------------------------------------------------------
 body {
-  font-family: var(--font-family-sans);
+  font-family: var(--font-family-sans, "Inter", system-ui, -apple-system, sans-serif);
   font-size: var(--font-size-base);
   line-height: $line-height-normal;
   font-weight: $font-weight-normal;

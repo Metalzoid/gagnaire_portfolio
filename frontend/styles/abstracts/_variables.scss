@@ -9,12 +9,21 @@ $dracula-bg: #282a36;
 $dracula-current: #44475a;
 $dracula-fg: #f8f8f2;
 $dracula-comment: #6272a4;
+// text-secondary accessible (≥ 4.5:1 sur #282a36 et #44475a)
+$dracula-comment-accessible: #b8c8e8;
+// text-secondary plus visible en dark (mieux contrasté)
+$dracula-text-secondary: #d0daf0;
 $dracula-cyan: #8be9fd;
 $dracula-green: #50fa7b;
 $dracula-orange: #ffb86c;
 $dracula-pink: #ff79c6;
+// accent-secondary accessible (≥ 4.5:1 sur #44475a pour code, tags)
+$dracula-pink-accessible: #ffb3dd;
 $dracula-purple: #bd93f9;
-$dracula-red: #ff5555;
+// accent-primary accessible (≥ 4.5:1 sur #44475a pour terminal, liens, etc.)
+$dracula-purple-accessible: #c9b8f9;
+// accessible (≥ 4.5:1 sur #282a36)
+$dracula-red: #ff7070;
 $dracula-yellow: #f1fa8c;
 
 // --------------------------------------------------------------------------
@@ -24,13 +33,23 @@ $light-bg: #f8f8f2;
 $light-current: #e8e8e2;
 $light-fg: #282a36;
 $light-comment: #6272a4;
+// text-secondary accessible (≥ 4.5:1 sur #f8f8f2)
+$light-comment-accessible: #5a6378;
 $light-cyan: #0d7e8c;
-$light-green: #1b9e3e;
-$light-orange: #c7600a;
+// link accessible (≥ 4.5:1 sur #f8f8f2 et #e8e8e2)
+$light-cyan-accessible: #0a5f6b;
+// accessible (≥ 4.5:1 sur #f8f8f2)
+$light-green: #166534;
+// accessible (≥ 4.5:1 sur #f8f8f2)
+$light-orange: #9a4700;
 $light-pink: #d63384;
+// accent-secondary accessible (≥ 4.5:1 sur #e8e8e2 et #f8f8f2)
+$light-pink-accessible: #b71c6b;
 $light-purple: #7c3aed;
-$light-red: #dc2626;
-$light-yellow: #a16207;
+// accessible (≥ 4.5:1 sur #f8f8f2)
+$light-red: #b91c1c;
+// accessible (≥ 4.5:1 sur #f8f8f2)
+$light-yellow: #854d0e;
 
 // --------------------------------------------------------------------------
 // Echelle d'espacement (base 4px)
@@ -81,11 +100,11 @@ $z-skip-link: 9999; // Accessibilité
 // Typographie
 // --------------------------------------------------------------------------
 $font-family-sans:
-  var(--font-inter),
+  var(--font-inter, "Inter"),
   system-ui,
   -apple-system,
   sans-serif;
-$font-family-mono: var(--font-geist-mono), "Fira Code", monospace;
+$font-family-mono: var(--font-geist-mono, "Geist Mono"), "Fira Code", monospace;
 
 $font-size-xs: 0.7875rem; // ~12.6px
 $font-size-sm: 0.91875rem; // ~14.7px
