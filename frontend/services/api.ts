@@ -140,7 +140,7 @@ export async function getSkills(): Promise<SkillCategory[]> {
 // --------------------------------------------------------------------------
 export async function getExperience(): Promise<Experience[]> {
   const data = await fetchWithFallback<Experience[]>("/experience", []);
-  return [...data].sort((a, b) => b.startDate.localeCompare(a.startDate));
+  return [...data].sort((a, b) => a.startDate.localeCompare(b.startDate));
 }
 
 // --------------------------------------------------------------------------

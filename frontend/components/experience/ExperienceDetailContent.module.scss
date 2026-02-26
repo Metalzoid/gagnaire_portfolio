@@ -1,0 +1,52 @@
+@use "../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  position: relative;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-xs);
+}
+
+.date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-primary);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-md);
+}
+
+.techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.iconDeco {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2rem;
+  color: var(--color-border);
+  opacity: 0.5;
+}

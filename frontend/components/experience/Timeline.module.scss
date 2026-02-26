@@ -2,21 +2,7 @@
 
 .wrapper {
   position: relative;
-  padding: var(--spacing-xl) 0;
-}
-
-.line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: var(--color-border);
-  transform: translateX(-50%);
-
-  @include respond-to("mobile") {
-    left: var(--spacing-md);
-  }
+  padding: var(--spacing-2xl) 0;
 }
 
 .list {
@@ -24,4 +10,52 @@
   margin: 0;
   padding: 0;
   position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: var(--spacing-md) var(--spacing-xl);
+  -webkit-overflow-scrolling: touch;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: var(--spacing-xl);
+    right: var(--spacing-xl);
+    top: calc(var(--spacing-md) + 24px);
+    height: 2px;
+    background-color: var(--color-border);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @include respond-to("mobile") {
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding: var(--spacing-md) 0 var(--spacing-md) var(--spacing-md);
+    gap: 0;
+    scroll-snap-type: none;
+
+    &::before {
+      left: calc(24px + var(--spacing-md));
+      right: auto;
+      top: calc(24px + var(--spacing-md));
+      bottom: calc(24px + var(--spacing-md));
+      width: 2px;
+      height: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list {
+    scroll-behavior: auto;
+  }
 }

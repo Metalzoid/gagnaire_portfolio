@@ -1,0 +1,99 @@
+@use "../../styles/abstracts/variables" as *;
+@use "../../styles/abstracts/mixins" as *;
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  scroll-snap-align: center;
+
+  @include respond-to("mobile") {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    width: 100%;
+    padding: var(--spacing-md) 0;
+    scroll-snap-align: none;
+  }
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  border-radius: var(--border-radius-md);
+  min-width: 44px;
+  min-height: 44px;
+
+  @include respond-to("mobile") {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    min-width: 0;
+    width: 100%;
+  }
+
+  @include focus-visible;
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-accent-primary);
+  color: var(--color-bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--color-bg-primary);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease;
+
+  @include on-hover {
+    &:hover {
+      transform: scale(1.08);
+    }
+  }
+
+  .point:focus-visible & {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+}
+
+.dotIcon {
+  font-size: 1.25rem;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  @include respond-to("mobile") {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition: none;
+  }
+  .dot:hover {
+    transform: none;
+  }
+}

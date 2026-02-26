@@ -23,6 +23,8 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   size?: ModalSize;
+  /** Origine de l'animation d'ouverture (ex. "35% 60%" pour partir du point cliqué) */
+  transformOrigin?: string;
   children: React.ReactNode;
 }
 
@@ -34,6 +36,7 @@ const Modal = ({
   onClose,
   title,
   size = "sm",
+  transformOrigin,
   children,
 }: ModalProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -177,6 +180,7 @@ const Modal = ({
         <div
           ref={dialogRef}
           className={dialogClass}
+          style={transformOrigin ? { transformOrigin } : undefined}
           role="dialog"
           aria-modal="true"
           aria-labelledby={title ? titleId : undefined}
