@@ -1,3 +1,4 @@
+@use "../../styles/abstracts/variables" as *;
 @use "../../styles/abstracts/mixins" as *;
 
 .wrapper {
@@ -5,7 +6,38 @@
   padding: var(--spacing-2xl) 0;
 }
 
-.list {
+// --------------------------------------------------------------------------
+// Desktop + tablette paysage (min-width: 769px) : timeline verticale
+// --------------------------------------------------------------------------
+.listDesktop {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: none;
+
+  @media (min-width: #{$bp-tablet + 1px}) {
+    display: block;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-border);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// Mobile + tablette portrait (max-width: 768px) : points + modal
+// --------------------------------------------------------------------------
+.listMobile {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -21,6 +53,10 @@
   scroll-behavior: smooth;
   padding: var(--spacing-md) var(--spacing-xl);
   -webkit-overflow-scrolling: touch;
+
+  @media (min-width: #{$bp-tablet + 1px}) {
+    display: none;
+  }
 
   &::before {
     content: "";
@@ -55,7 +91,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .list {
+  .listMobile {
     scroll-behavior: auto;
   }
 }

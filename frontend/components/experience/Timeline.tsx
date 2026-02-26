@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { TimelineItem } from "./TimelineItem";
 import { TimelinePoint } from "./TimelinePoint";
 import { ExperienceDetailModal } from "./ExperienceDetailModal";
 import type { Experience } from "shared";
@@ -30,7 +31,24 @@ export function Timeline({ items }: { items: Experience[] }) {
 
   return (
     <div className={styles.wrapper}>
-      <ul className={styles.list} aria-label="Parcours professionnel et formation">
+      {/* Desktop + tablette paysage : timeline verticale avec cartes au hover */}
+      <ul
+        className={styles.listDesktop}
+        aria-label="Parcours professionnel et formation"
+      >
+        {items.map((item, index) => (
+          <TimelineItem
+            key={`${item.type}-${item.title}-${item.startDate}-${index}`}
+            item={item}
+            index={index}
+          />
+        ))}
+      </ul>
+      {/* Mobile + tablette portrait : points + modal au clic */}
+      <ul
+        className={styles.listMobile}
+        aria-label="Parcours professionnel et formation"
+      >
         {items.map((item, index) => (
           <TimelinePoint
             key={`${item.type}-${item.title}-${item.startDate}-${index}`}
