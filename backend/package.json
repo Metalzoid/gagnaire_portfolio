@@ -13,7 +13,12 @@
     "console": "node dist/console.js",
     "studio": "node scripts/studio.mjs",
     "typecheck": "prisma generate && tsc --noEmit",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run src/__tests__/unit",
+    "test:integration": "vitest run src/__tests__/integration",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -48,12 +53,16 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^25.2.3",
     "@types/pg": "^8.16.0",
+    "@types/supertest": "^7.2.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^10.0.0",
     "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0"
+    "typescript-eslint": "^8.56.0",
+    "vitest": "^4.0.18"
   },
   "overrides": {
     "lodash": "^4.17.23",
