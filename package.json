@@ -20,6 +20,8 @@
     "lint": "npm run lint --workspaces --if-present",
     "lint:frontend": "npm run lint --workspace=frontend",
     "lint:backend": "npm run lint --workspace=backend",
+    "test": "npm run test --workspaces --if-present",
+    "test:backend": "npm run test --workspace=backend",
     "install:all": "npm install",
     "docker:lock": "npm run lock:backend && npm run lock:frontend",
     "docker:dev": "docker compose -f docker-compose.dev.yml up --build",

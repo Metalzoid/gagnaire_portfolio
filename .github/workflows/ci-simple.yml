@@ -60,6 +60,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      DATABASE_URL: postgresql://portfolio:portfolio_dev@localhost:5432/portfolio_test_db
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: portfolio
+          POSTGRES_PASSWORD: portfolio_dev
+          POSTGRES_DB: portfolio_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U portfolio -d portfolio_test_db"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -88,19 +104,22 @@ jobs:
         run: npm run build --workspace=shared
 
       - name: Generate Prisma client
-        env:
-          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
-        run: npx prisma generate --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma generate
+
+      - name: Apply Prisma migrations
+        working-directory: backend
+        run: npx prisma migrate deploy
 
       - name: TypeScript check
-        env:
-          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
         run: npm run typecheck --workspace=backend
 
       - name: Build backend
-        env:
-          DATABASE_URL: postgresql://localhost:5432/portfolio_ci
         run: npm run build --workspace=backend
 
       - name: Validate Prisma schema
-        run: npx prisma validate --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma validate
+
+      - name: Run tests
+        run: npm run test --workspace=backend
