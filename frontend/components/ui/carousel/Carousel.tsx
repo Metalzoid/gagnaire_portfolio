@@ -79,6 +79,9 @@ function Carousel<T>({
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const isDraggingRef = useRef(false);
+  const gestureDirectionRef = useRef<"none" | "horizontal" | "vertical">(
+    "none",
+  );
 
   const prefersReducedMotion = useSyncExternalStore(
     (onStoreChange) => {
@@ -219,6 +222,7 @@ function Carousel<T>({
       e.stopPropagation();
       touchStartX.current = e.touches[0].clientX;
       touchStartY.current = e.touches[0].clientY;
+      gestureDirectionRef.current = "none";
       isDraggingRef.current = true;
       setIsDragging(true);
       el.style.setProperty("--carousel-drag", "0px");
@@ -231,12 +235,28 @@ function Carousel<T>({
       const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
       const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current);
 
-      // Empêcher le scroll vertical si le geste est horizontal
-      if (deltaX > deltaY && deltaX > 5) {
-        e.preventDefault();
+      // Verrouillage de direction au premier mouvement significatif
+      if (gestureDirectionRef.current === "none") {
+        const threshold = 5;
+        if (deltaX > threshold || deltaY > threshold) {
+          gestureDirectionRef.current =
+            deltaX > deltaY ? "horizontal" : "vertical";
+        } else {
+          return;
+        }
       }
 
-      // Suivi du doigt en temps réel
+      // Geste vertical → laisser le navigateur gérer (overflow-y de la card)
+      if (gestureDirectionRef.current === "vertical") {
+        el.style.removeProperty("--carousel-drag");
+        isDraggingRef.current = false;
+        setIsDragging(false);
+        return;
+      }
+
+      // Geste horizontal → carousel swipe, bloquer le scroll vertical
+      e.preventDefault();
+
       const currentX = e.touches[0].clientX;
       let delta = touchStartX.current - currentX;
 
@@ -254,19 +274,24 @@ function Carousel<T>({
 
     const onEnd = (e: TouchEvent) => {
       e.stopPropagation();
-      const endX = e.changedTouches?.[0]?.clientX;
-      const diff = endX != null ? touchStartX.current - endX : 0;
 
-      if (!isTransitioningRef.current && Math.abs(diff) > SWIPE_THRESHOLD) {
-        if (diff > 0) {
-          goNextRef.current();
-        } else {
-          goPrevRef.current();
+      // Swipe carousel uniquement si le geste était horizontal
+      if (gestureDirectionRef.current === "horizontal") {
+        const endX = e.changedTouches?.[0]?.clientX;
+        const diff = endX != null ? touchStartX.current - endX : 0;
+
+        if (!isTransitioningRef.current && Math.abs(diff) > SWIPE_THRESHOLD) {
+          if (diff > 0) {
+            goNextRef.current();
+          } else {
+            goPrevRef.current();
+          }
         }
       }
 
       el.style.removeProperty("--carousel-drag");
       isDraggingRef.current = false;
+      gestureDirectionRef.current = "none";
       setIsDragging(false);
     };
 

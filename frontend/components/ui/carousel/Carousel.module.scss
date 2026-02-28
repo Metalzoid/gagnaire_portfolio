@@ -43,8 +43,9 @@
   min-width: 0;
   overflow: hidden;
   border-radius: var(--border-radius-lg);
-  // Capturer tous les gestes tactiles sur le carousel (pas de scroll page)
-  touch-action: none;
+  // Vertical : le navigateur gère (scroll interne des cards)
+  // Horizontal : JS gère (swipe carousel)
+  touch-action: pan-y;
 }
 
 // --------------------------------------------------------------------------
