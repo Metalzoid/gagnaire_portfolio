@@ -60,9 +60,7 @@ export function TestimonialForm({
         required
       />
       <div className={styles.photoField}>
-        <label className={formFieldStyles.label}>
-          Photo <span className={formFieldStyles.required}>*</span>
-        </label>
+        <label className={formFieldStyles.label}>Photo</label>
         <FileUpload
           accept="image/jpeg,image/png,image/webp,image/svg+xml"
           category="testimonial-photo"

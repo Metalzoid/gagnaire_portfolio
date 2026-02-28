@@ -5,7 +5,7 @@ export const createTestimonialSchema = z.object({
   role: z.string().min(1),
   company: z.string().min(1),
   quote: z.string().min(1),
-  photo: z.string().min(1),
+  photo: z.string().optional(),
   order: z.number().int().min(0).optional(),
 });
 
