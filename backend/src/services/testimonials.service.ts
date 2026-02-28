@@ -28,7 +28,7 @@ export async function getAllTestimonials() {
 }
 
 export async function createTestimonial(data: CreateTestimonialSchemaType) {
-  return prisma.testimonial.create({ data });
+  return prisma.testimonial.create({ data: { ...data, photo: data.photo ?? "" } });
 }
 
 export async function updateTestimonial(

@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import type { Admin, RefreshToken } from "@prisma/client";
 
 // Doit être appelé avant l'import du service pour que le mock soit en place
 vi.mock("../../../config/database.js");
 
 import { login, refreshAccessToken, logout, getAdminById } from "../../../services/auth.service.js";
 import { prisma } from "../../../config/database.js";
-import { AppError } from "../../../utils/AppError.js";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -18,13 +18,7 @@ const mockRefreshToken = vi.mocked(prisma.refreshToken);
 // Données de test
 const MOCK_CRED = "correct-login-cred";
 const WRONG_CRED = "invalid-login-attempt";
-let mockAdminRecord: {
-  id: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+let mockAdminRecord: Admin;
 
 describe("auth.service", () => {
   beforeEach(async () => {
@@ -44,8 +38,8 @@ describe("auth.service", () => {
   // ─────────────────────────────────────
   describe("login()", () => {
     it("retourne accessToken + refreshToken + expiresIn avec des identifiants valides", async () => {
-      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord as any);
-      mockRefreshToken.create.mockResolvedValue({} as any);
+      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord);
+      mockRefreshToken.create.mockResolvedValue({} as RefreshToken);
 
       const result = await login({ email: mockAdminRecord.email, password: MOCK_CRED });
 
@@ -67,7 +61,7 @@ describe("auth.service", () => {
     });
 
     it("throw AppError 401 BAD_CREDENTIALS si le mot de passe est incorrect", async () => {
-      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord as any);
+      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord);
 
       await expect(
         login({ email: mockAdminRecord.email, password: WRONG_CRED }),
@@ -94,9 +88,9 @@ describe("auth.service", () => {
         admin: mockAdminRecord,
       };
 
-      mockRefreshToken.findUnique.mockResolvedValue(storedToken as any);
-      mockRefreshToken.delete.mockResolvedValue({} as any);
-      mockRefreshToken.create.mockResolvedValue({} as any);
+      mockRefreshToken.findUnique.mockResolvedValue(storedToken as RefreshToken & { admin: Admin });
+      mockRefreshToken.delete.mockResolvedValue({} as RefreshToken);
+      mockRefreshToken.create.mockResolvedValue({} as RefreshToken);
 
       const result = await refreshAccessToken(refreshJwt);
 
@@ -143,8 +137,8 @@ describe("auth.service", () => {
         admin: mockAdminRecord,
       };
 
-      mockRefreshToken.findUnique.mockResolvedValue(expiredToken as any);
-      mockRefreshToken.delete.mockResolvedValue({} as any);
+      mockRefreshToken.findUnique.mockResolvedValue(expiredToken as RefreshToken & { admin: Admin });
+      mockRefreshToken.delete.mockResolvedValue({} as RefreshToken);
 
       await expect(refreshAccessToken(refreshJwt)).rejects.toMatchObject({
         statusCode: 401,
@@ -186,7 +180,7 @@ describe("auth.service", () => {
   // ─────────────────────────────────────
   describe("getAdminById()", () => {
     it("retourne l'admin quand il existe", async () => {
-      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord as any);
+      mockAdmin.findUnique.mockResolvedValue(mockAdminRecord);
 
       const result = await getAdminById(mockAdminRecord.id);
       expect(result).toEqual(mockAdminRecord);

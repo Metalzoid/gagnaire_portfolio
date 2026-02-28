@@ -22,7 +22,7 @@ COPY shared/package.json ./shared/
 WORKDIR /app/backend
 RUN --mount=type=secret,id=NPM_TOKEN \
   for i in 1 2 3; do \
-    export NODE_AUTH_TOKEN=`cat /run/secrets/NPM_TOKEN`; \
+    [ -f /run/secrets/NPM_TOKEN ] && export NODE_AUTH_TOKEN=$(cat /run/secrets/NPM_TOKEN); \
     npm ci && exit 0; \
     echo "Retry $$i..."; sleep 15; \
   done; exit 1
@@ -30,7 +30,7 @@ RUN --mount=type=secret,id=NPM_TOKEN \
 WORKDIR /app/shared
 RUN --mount=type=secret,id=NPM_TOKEN \
   for i in 1 2 3; do \
-    export NODE_AUTH_TOKEN=`cat /run/secrets/NPM_TOKEN`; \
+    [ -f /run/secrets/NPM_TOKEN ] && export NODE_AUTH_TOKEN=$(cat /run/secrets/NPM_TOKEN); \
     npm install && exit 0; \
     echo "Retry $$i..."; sleep 15; \
   done; exit 1
@@ -74,7 +74,7 @@ FROM node:22-alpine AS production
 RUN --mount=type=secret,id=NPM_TOKEN \
   apk update && apk upgrade --no-cache && apk add --no-cache curl && \
   for i in 1 2 3; do \
-    export NODE_AUTH_TOKEN=`cat /run/secrets/NPM_TOKEN`; \
+    [ -f /run/secrets/NPM_TOKEN ] && export NODE_AUTH_TOKEN=$(cat /run/secrets/NPM_TOKEN); \
     npm install -g tsx && exit 0; \
     echo "Retry $$i..."; sleep 15; \
   done; exit 1
